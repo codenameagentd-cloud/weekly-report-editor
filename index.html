@@ -156,7 +156,7 @@
     <p class="meta" id="outputMeta"></p>
     <div class="output-btns">
       <button class="btn-secondary" onclick="downloadHTML()">Download</button>
-      <button class="btn-secondary" onclick="copyHTML()">Copy HTML</button>
+      <button class="btn-secondary" onclick="publishAndCopy()">Publish & Copy URL</button>
       <button class="btn-secondary" onclick="openNewTab()">Open in New Tab</button>
     </div>
   </div>
@@ -544,6 +544,43 @@ function downloadHTML() {
   URL.revokeObjectURL(a.href);
   showToast('Downloaded');
 }
+async function publishAndCopy() {
+  if (!generatedHTML) return;
+  const key = document.getElementById('aiKey').value.trim() || localStorage.getItem('wr-gh-token');
+  if (!key) { showToast('Enter GitHub token first (needed to publish)'); return; }
+  const btn = event.target;
+  btn.disabled = true; btn.textContent = 'Publishing…';
+  const date = new Date().toISOString().slice(0,10);
+  const path = 'output/' + date + '.html';
+  const content = btoa(unescape(encodeURIComponent(generatedHTML)));
+  try {
+    // Check if file exists (to get sha for update)
+    let sha;
+    try {
+      const existing = await fetch('https://api.github.com/repos/codenameagentd-cloud/weekly-report-editor/contents/' + path + '?ref=gh-pages', {
+        headers: { 'Authorization': 'Bearer ' + key }
+      });
+      if (existing.ok) { const d = await existing.json(); sha = d.sha; }
+    } catch(e) {}
+    const body = { message: 'publish report ' + date, content, branch: 'gh-pages' };
+    if (sha) body.sha = sha;
+    const res = await fetch('https://api.github.com/repos/codenameagentd-cloud/weekly-report-editor/contents/' + path, {
+      method: 'PUT',
+      headers: { 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Failed'); }
+    const url = 'https://codenameagentd-cloud.github.io/weekly-report-editor/' + path;
+    await navigator.clipboard.writeText(url);
+    showToast('Published! URL copied');
+    document.getElementById('outputMeta').innerHTML = document.getElementById('outputMeta').textContent + ' · <a href="' + url + '" target="_blank" style="color:var(--accent)">' + url + '</a>';
+  } catch(e) {
+    console.error(e);
+    showToast('Publish failed: ' + e.message);
+  }
+  btn.disabled = false; btn.textContent = 'Publish & Copy URL';
+}
+
 function openNewTab() {
   if (!generatedHTML) return;
   const w = window.open('', '_blank');
@@ -551,11 +588,7 @@ function openNewTab() {
   else showToast('Pop-up blocked — allow pop-ups for this site');
 }
 
-function copyHTML() {
-  if (!generatedHTML) return;
-  navigator.clipboard.writeText(generatedHTML);
-  showToast('Copied to clipboard');
-}
+
 
 /* --- AI Polish --- */
 // Load saved token on page load
