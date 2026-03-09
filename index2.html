@@ -376,7 +376,7 @@ const templates = {
     textSecondary: '#999',
     accent: '#2c2c2c',
     border: 'rgba(0,0,0,0.06)',
-    font: "'Playfair Display', Georgia, serif",
+    font: "'Georgia', 'Times New Roman', serif",
     sectionBg: '#fff',
   }
 };
@@ -408,7 +408,7 @@ function buildSlides(data, tmpl) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Weekly Report — ${week}</title>
 <style>
-  ${tmpl === 'soft' ? "@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap');" : ''}
+  
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -602,20 +602,6 @@ function generate() {
   generatedHTML = buildSlides(data, selectedTemplate);
   document.getElementById('output').classList.add('active');
   document.getElementById('codeBlock').textContent = generatedHTML;
-  // Show skipped notice
-  const allSections = ['Summary','Progress','Newsletter','Others','Top of Mind'];
-  const ids = ['summary','progress','newsletter','others','topofmind'];
-  const skipped = ids.filter(id => !document.getElementById(id).value.trim());
-  if (skipped.length > 0) {
-    const names = skipped.map((id,i) => allSections[ids.indexOf(id)]);
-    const note = document.createElement('p');
-    note.style.cssText = 'color:#999;font-size:13px;margin-top:12px;';
-    note.textContent = 'Skipped: ' + names.join(', ');
-    const existing = document.querySelector('#output .skip-note');
-    if (existing) existing.remove();
-    note.className = 'skip-note';
-    document.getElementById('output').appendChild(note);
-  }
 }
 
 function preview() {
