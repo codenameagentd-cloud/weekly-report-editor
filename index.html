@@ -264,7 +264,7 @@ const styleDefs = {
     labelColors: ['rgba(0,0,0,0.4)'],
     radius: () => rand([6, 8, 10]) + 'px',
   },
-  monochrome: {
+  monochrome: { _fixContrast: true,
     bgs: ['#fff','#000','#f5f5f5','#111'],
     accents: ['#000','#fff','#333','#ddd'],
     fonts: [
@@ -282,13 +282,18 @@ function generateTheme(styleName) {
   const s = styleDefs[styleName];
   const bg = rand(s.bgs);
   const accent = rand(s.accents);
-  const isDark = bg === '#000' || bg === '#0a0a0a' || bg === '#111' || bg === '#1a0a2e';
+  const isDark = ['#000','#0a0a0a','#111','#1a0a2e'].includes(bg);
   const text = isDark ? '#fff' : '#1a1a1a';
   const textSec = isDark ? 'rgba(255,255,255,0.45)' : (s.labelColors ? rand(s.labelColors) : 'rgba(0,0,0,0.4)');
   const fi = Math.floor(Math.random() * s.fonts.length);
   const font = s.fonts[fi];
   const gf = s.googleFont[fi] || s.googleFont[0];
-  return { bg, accent, text, textSec, font, gf, radius: s.radius(), isDark };
+  // Ensure accent contrasts with bg for monochrome
+    if (s._fixContrast) {
+      if (isDark && (accent === '#000' || accent === '#333')) accent = '#fff';
+      if (!isDark && (accent === '#fff' || accent === '#ddd')) accent = '#000';
+    }
+    return { bg, accent, text, textSec, font, gf, radius: s.radius(), isDark };
 }
 
 function buildSlides(data, styleName) {
@@ -408,18 +413,18 @@ async function polishAll() {
   const fields = ['summary','progress','newsletter','others','topofmind'];
   const labels = ['Summary','Progress Status','Newsletter','Others','Top of Mind'];
 
-  for (let i = 0; i < fields.length; i++) {
-    const el = document.getElementById(fields[i]);
+  await Promise.all(fields.map(async (fid, i) => {
+    const el = document.getElementById(fid);
     const text = el.value.trim();
-    if (!text) continue;
+    if (!text) return;
     try {
       const polished = await callAI(model, key, labels[i], text);
       if (polished) el.value = polished;
     } catch(e) {
       console.error(e);
-      showToast(`Error polishing ${labels[i]}`);
+      showToast('Error polishing ' + labels[i]);
     }
-  }
+  }));
   btn.disabled = false; btn.textContent = 'Polish';
   showToast('Polish complete');
 }
