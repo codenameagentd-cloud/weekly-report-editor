@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status — March 10, 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  background: #FAFAFA;
+  color: #111111;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Progress Bar ── */
+.progress-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #E5E7EB;
+  z-index: 1000;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 20%;
+  background: #5B21B6;
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Slides ── */
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.slide-inner {
+  width: 100%;
+  max-width: 960px;
+  padding: 0 48px;
+}
+
+/* ── Animations ── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes expandWidth {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+@keyframes expandHighlight {
+  from { width: 0; }
+  to   { width: auto; }
+}
+
+@keyframes scaleX {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* All animatable elements start invisible */
+.animate-in,
+.animate-left,
+.animate-drop,
+.animate-word {
+  opacity: 0;
+}
+
+/* Active triggers */
+.slide.active .animate-in {
+  animation: fadeSlideUp 0.6s ease forwards;
+}
+
+.slide.active .animate-in:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.slide.active .animate-in:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.slide.active .animate-in:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.slide.active .animate-in:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+.slide.active .animate-left {
+  animation: fadeSlideLeft 0.6s ease forwards;
+}
+
+.slide.active .animate-drop {
+  animation: dropIn 0.5s ease forwards;
+}
+
+/* ── Slide 1: Title ── */
+.title-word {
+  display: block;
+  font-size: 96px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -3px;
+  opacity: 0;
+}
+
+.slide.active .title-word-1 {
+  animation: fadeSlideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0s;
+}
+
+.slide.active .title-word-2 {
+  animation: fadeSlideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.2s;
+}
+
+.title-underline {
+  height: 3px;
+  background: #5B21B6;
+  margin-top: 24px;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.slide.active .title-underline {
+  animation: scaleX 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.4s;
+}
+
+.title-date {
+  font-size: 20px;
+  font-weight: 400;
+  color: #6B7280;
+  margin-top: 32px;
+  letter-spacing: 0.5px;
+  opacity: 0;
+}
+
+.slide.active .title-date {
+  animation: fadeSlideUp 0.6s ease forwards;
+  animation-delay: 0.6s;
+}
+
+/* ── Slide 2: Summary ── */
+.section-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: #5B21B6;
+  margin-bottom: 32px;
+  opacity: 0;
+}
+
+.slide.active .section-label {
+  animation: dropIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.summary-text {
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.5px;
+  color: #111111;
+  opacity: 0;
+}
+
+.slide.active .summary-text {
+  animation: fadeSlideLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.15s;
+}
+
+.highlight-metric {
+  display: inline;
+  position: relative;
+  color: #FAFAFA;
+  z-index: 1;
+  padding: 0 8px;
+  margin: 0 2px;
+}
+
+.highlight-metric::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 0;
+  background: #5B21B6;
+  border-radius: 4px;
+  z-index: -1;
+}
+
+.slide.active .highlight-metric::before {
+  animation: expandWidth 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.6s;
+}
+
+/* ── Slide 3: Progress ── */
+.progress-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.progress-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 32px;
+  background: #FFFFFF;
+  opacity: 0;
+}
+
+.slide.active .progress-card:nth-child(1) {
+  animation: fadeSlideLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.1s;
+}
+
+.slide.active .progress-card:nth-child(2) {
+  animation: fadeSlideLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.25s;
+}
+
+.slide.active .progress-card:nth-child(3) {
+  animation: fadeSlideLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.4s;
+}
+
+.card-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-green  { background: #10B981; }
+.dot-purple { background: #5B21B6; }
+.dot-red    { background: #EF4444; }
+
+.card-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #111111;
+}
+
+.card-subtitle {
+  font-size: 14px;
+  color: #6B7280;
+  margin-top: 2px;
+}
+
+.status-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 6px;
+  opacity: 0;
+  flex-shrink: 0;
+}
+
+.label-done {
+  color: #10B981;
+  background: #ECFDF5;
+}
+
+.label-progress {
+  color: #5B21B6;
+  background: #EDE9FE;
+}
+
+.label-blocked {
+  color: #EF4444;
+  background: #FEF2F2;
+}
+
+.slide.active .progress-card:nth-child(1) .status-label {
+  animation: dropIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.45s;
+}
+
+.slide.active .progress-card:nth-child(2) .status-label {
+  animation: dropIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.6s;
+}
+
+.slide.active .progress-card:nth-child(3) .status-label {
+  animation: dropIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.75s;
+}
+
+/* ── Slide 4: Newsletter ── */
+.newsletter-text {
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.3px;
+  color: #111111;
+  opacity: 0;
+}
+
+.slide.active .newsletter-text {
+  animation: fadeSlideLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.15s;
+}
+
+.inline-underline {
+  display: inline;
+  position: relative;
+}
+
+.inline-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  height: 3px;
+  width: 0;
+  background: #5B21B6;
+  border-radius: 2px;
+}
+
+.slide.active .inline-underline::after {
+  animation: expandWidth 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.65s;
+}
+
+/* ── Slide 5: Top of Mind ── */
+.mind-text {
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.3px;
+}
+
+.mind-text .word {
+  display: inline-block;
+  opacity: 0;
+  margin-right: 0.3em;
+}
+
+.slide.active .mind-text .word {
+  animation: fadeSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Navigation Hint ── */
+.nav-hint {
+  position: fixed;
+  bottom: 32px;
+  right: 40px;
+  font-size: 12px;
+  color: #9CA3AF;
+  letter-spacing: 0.5px;
+  z-index: 999;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 1.5s;
+}
+
+.nav-hint kbd {
+  display: inline-block;
+  padding: 2px 8px;
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  margin: 0 2px;
+}
+
+/* ── Slide Counter ── */
+.slide-counter {
+  position: fixed;
+  bottom: 32px;
+  left: 40px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #9CA3AF;
+  z-index: 999;
+  letter-spacing: 0.5px;
+}
+
+.slide-counter .current {
+  color: #111111;
+  font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-track">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<!-- Slide Counter -->
+<div class="slide-counter">
+  <span class="current" id="counterCurrent">1</span>
+  <span>/ 5</span>
+</div>
+
+<!-- Navigation Hint -->
+<div class="nav-hint">
+  <kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 1: Title                         -->
+<!-- ═══════════════════════════════════════ -->
+<div class="slide active" data-slide="1">
+  <div class="slide-inner" style="text-align:center;">
+    <div>
+      <span class="title-word title-word-1">Weekly</span>
+      <span class="title-word title-word-2">Status</span>
+    </div>
+    <div class="title-underline" style="max-width:280px;margin-left:auto;margin-right:auto;margin-top:24px;"></div>
+    <div class="title-date">March 10, 2026</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 2: Summary                       -->
+<!-- ═══════════════════════════════════════ -->
+<div class="slide" data-slide="2">
+  <div class="slide-inner">
+    <div class="section-label">Summary</div>
+    <div class="summary-text">Copilot adoption reached <span class="highlight-metric">85%</span> across all engineering teams, exceeding our Q1 target of 75%.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 3: Progress                      -->
+<!-- ═══════════════════════════════════════ -->
+<div class="slide" data-slide="3">
+  <div class="slide-inner">
+    <div class="section-label">Progress</div>
+    <div class="progress-cards">
+      <div class="progress-card">
+        <div class="card-left">
+          <div class="status-dot dot-green"></div>
+          <div>
+            <div class="card-title">Design System v3</div>
+            <div class="card-subtitle">Shipped to production</div>
+          </div>
+        </div>
+        <div class="status-label label-done">Done</div>
+      </div>
+      <div class="progress-card">
+        <div class="card-left">
+          <div class="status-dot dot-purple"></div>
+          <div>
+            <div class="card-title">AI Assistant Integration</div>
+            <div class="card-subtitle">Development at 70%</div>
+          </div>
+        </div>
+        <div class="status-label label-progress">In Progress</div>
+      </div>
+      <div class="progress-card">
+        <div class="card-left">
+          <div class="status-dot dot-red"></div>
+          <div>
+            <div class="card-title">Accessibility Audit</div>
+            <div class="card-subtitle">Blocked by vendor response</div>
+          </div>
+        </div>
+        <div class="status-label label-blocked">Blocked</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 4: Newsletter                    -->
+<!-- ═══════════════════════════════════════ -->
+<div class="slide" data-slide="4">
+  <div class="slide-inner">
+    <div class="section-label">Newsletter</div>
+    <div class="newsletter-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <span class="inline-underline">23%</span>.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 5: Top of Mind                   -->
+<!-- ═══════════════════════════════════════ -->
+<div class="slide" data-slide="5">
+  <div class="slide-inner">
+    <div class="section-label">Top of Mind</div>
+    <div class="mind-text" id="mindText"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ── Word-stagger for Slide 5 ──
+  const mindSentence = "Scaling the design review process without creating bottlenecks on senior designers.";
+  const mindEl = document.getElementById('mindText');
+  mindSentence.split(' ').forEach(function(word, i) {
+    const span = document.createElement('span');
+    span.className = 'word';
+    span.textContent = word;
+    span.style.animationDelay = (0.15 + i * 0.05) + 's';
+    mindEl.appendChild(span);
+  });
+
+  // ── Slide engine ──
+  const slides = document.querySelectorAll('.slide');
+  const progressFill = document.getElementById('progressFill');
+  const counterCurrent = document.getElementById('counterCurrent');
+  let current = 0;
+  let transitioning = false;
+
+  function goTo(index) {
+    if (index < 0 || index >= slides.length || index === current || transitioning) return;
+    transitioning = true;
+
+    // Reset animations on the leaving slide by removing active
+    slides[current].classList.remove('active');
+
+    // Reset all animated elements in the leaving slide so they can re-animate
+    resetSlideAnimations(slides[current]);
+
+    current = index;
+
+    // Small delay so the opacity transition out starts before the new one fades in
+    requestAnimationFrame(function() {
+      slides[current].classList.add('active');
+      progressFill.style.width = ((current + 1) / slides.length * 100) + '%';
+      counterCurrent.textContent = current + 1;
+
+      setTimeout(function() {
+        transitioning = false;
+      }, 500);
+    });
+  }
+
+  function resetSlideAnimations(slide) {
+    // Reset all elements that have animation classes
+    var animatedEls = slide.querySelectorAll('.title-word, .title-underline, .title-date, .section-label, .summary-text, .highlight-metric, .progress-card, .status-label, .newsletter-text, .inline-underline, .word');
+    animatedEls.forEach(function(el) {
+      el.style.animation = 'none';
+      // Force reflow
+      el.offsetHeight;
+      el.style.animation = '';
+    });
+  }
+
+  document.addEventListener('keydown', function(e) {
+    switch(e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        e.preventDefault();
+        goTo(current + 1);
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        e.preventDefault();
+        goTo(current - 1);
+        break;
+    }
+  });
+})();
+</script>
+</body>
+</html>
