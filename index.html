@@ -157,6 +157,7 @@
     <div class="output-btns">
       <button class="btn-secondary" onclick="downloadHTML()">Download</button>
       <button class="btn-secondary" onclick="copyHTML()">Copy HTML</button>
+      <button class="btn-secondary" onclick="openNewTab()">Open in New Tab</button>
     </div>
   </div>
 </div>
@@ -543,6 +544,13 @@ function downloadHTML() {
   URL.revokeObjectURL(a.href);
   showToast('Downloaded');
 }
+function openNewTab() {
+  if (!generatedHTML) return;
+  const w = window.open('', '_blank');
+  if (w) { w.document.write(generatedHTML); w.document.close(); }
+  else showToast('Pop-up blocked — allow pop-ups for this site');
+}
+
 function copyHTML() {
   if (!generatedHTML) return;
   navigator.clipboard.writeText(generatedHTML);
