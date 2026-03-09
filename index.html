@@ -127,16 +127,19 @@
         <label style="margin-bottom:4px">Model</label>
         <select id="aiModel">
           <option value="">None (skip)</option>
+          <option value="gpt-5.2">GPT-5.2</option>
+          <option value="gpt-4.1">GPT-4.1</option>
           <option value="gpt-4o">GPT-4o</option>
-          <option value="gpt-4o-mini">GPT-4o mini</option>
-          <option value="claude-sonnet-4">Claude Sonnet</option>
-          <option value="Phi-4">Phi-4</option>
-          <option value="Llama-3.3-70B-Instruct">Llama 3.3 70B</option>
+          <option value="gpt-5-mini">GPT-5 mini</option>
+          <option value="claude-opus-4.6">Claude Opus 4.6</option>
+          <option value="claude-sonnet-4.6">Claude Sonnet 4.6</option>
+          <option value="gemini-3-pro-preview">Gemini 3 Pro</option>
+          <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
         </select>
       </div>
       <div class="field">
         <label style="margin-bottom:4px">API Key</label>
-        <input type="password" id="aiKey" placeholder="GitHub token" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;">
+        <input type="password" id="aiKey" placeholder="GitHub token (saved locally)" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;">
       </div>
       <button class="btn-secondary" onclick="polishAll()" id="polishBtn">Polish</button>
     </div>
@@ -401,6 +404,14 @@ function copyHTML() {
 }
 
 /* --- AI Polish --- */
+// Load saved token on page load
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('wr-gh-token');
+  if (saved) document.getElementById('aiKey').value = saved;
+  const savedModel = localStorage.getItem('wr-ai-model');
+  if (savedModel) document.getElementById('aiModel').value = savedModel;
+});
+
 async function polishAll() {
   const model = document.getElementById('aiModel').value;
   const key = document.getElementById('aiKey').value.trim();
@@ -426,6 +437,8 @@ async function polishAll() {
     }
   }));
   btn.disabled = false; btn.textContent = 'Polish';
+  localStorage.setItem('wr-gh-token', key);
+  localStorage.setItem('wr-ai-model', model);
   showToast('Polish complete');
 }
 
