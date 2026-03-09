@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Report \u2014 Week of 2026-03-09</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-snap-type:y mandatory;overflow-y:scroll;scroll-behavior:smooth}
+body{font-family:'Source Serif 4',Georgia,serif;background:#f9f4ef;color:#1a1a1a}
+h1,.label-big,.title-inner h1{font-family:'Playfair Display',Georgia,serif}
+.title-slide{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;padding:10vh 10vw}
+.title-inner .week{font-size:13px;color:rgba(0,0,0,0.35);text-transform:uppercase;letter-spacing:1px}
+.label{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:rgba(0,0,0,0.35);margin-bottom:20px}
+.content p{font-size:clamp(18px,2.5vw,26px);line-height:1.7;margin-bottom:14px}
+.content ul{list-style:none;padding:0}
+.content li{font-size:clamp(17px,2.2vw,24px);line-height:1.7;padding-left:22px;position:relative;margin-bottom:10px}
+.content li::before{content:'\2014';position:absolute;left:0;color:rgba(0,0,0,0.35)}
+.progress{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:10}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,0.35);opacity:0.3;transition:opacity 0.3s}
+.dot.active{opacity:1;background:#a0522d}
+.hint{position:fixed;bottom:20px;right:24px;font-size:11px;color:rgba(0,0,0,0.35);opacity:0.5}
+.accent-deco{border-left:3px solid #a0522d;padding-left:24px}
+.slide{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;padding:10vh 12vw}
+.slide-inner{max-width:720px;width:100%}
+.editorial-summary .content p{font-size:clamp(26px,3.8vw,42px) !important;line-height:1.4 !important;font-weight:500;letter-spacing:-0.5px}
+@media(max-width:768px){.slide,.title-slide{padding:8vh 7vw !important}.progress{display:none}.split-label{display:none !important}.slide{display:flex !important;grid-template-columns:unset !important}}
+</style>
+</head>
+<body>
+<section class="title-slide">
+  <div class="title-inner" style="text-align:center">
+    <h1 style="font-size:clamp(32px,5vw,52px);font-weight:600;letter-spacing:-1px">Weekly Report</h1>
+    <div class="week" style="margin-top:12px">Week of 2026-03-09</div>
+  </div>
+</section>
+<section class="slide editorial-summary">
+  <div class="slide-inner">
+    <span class="label">Summary</span>
+    <div class="content accent-deco"><p>Copilot adoption reached 85% across engineering teams this week.</p></div>
+  </div>
+</section><section class="slide">
+  <div class="slide-inner">
+    <span class="label">Progress</span>
+    <div class="content accent-deco"><ul><li>Design system v3: ✅ shipped to production</li>
+<li>AI assistant: 🔵 in progress (70%)</li>
+<li>Accessibility audit: 🟡 blocked by vendor</li></ul></div>
+  </div>
+</section><section class="slide">
+  <div class="slide-inner">
+    <span class="label">Newsletter</span>
+    <div class="content accent-deco"><p>We published the Q1 design retrospective. Key insight: reducing visual noise improved task completion by 23%.</p></div>
+  </div>
+</section><section class="slide">
+  <div class="slide-inner">
+    <span class="label">Others</span>
+    <div class="content accent-deco"><p>Cross-team sync with Platform team scheduled for Thursday.</p></div>
+  </div>
+</section><section class="slide">
+  <div class="slide-inner">
+    <span class="label">Top of Mind</span>
+    <div class="content accent-deco"><p>How to scale the design review process without bottlenecking on senior designers.</p></div>
+  </div>
+</section>
+<div class="progress" id="progress"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+<div class="hint">\u2193 scroll \u00b7 \u2190 \u2192 keys</div>
+<script>
+const sl=document.querySelectorAll('.slide,.title-slide'),dots=document.querySelectorAll('.dot');
+sl.forEach(s=>new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=[...sl].indexOf(e.target);dots.forEach((d,j)=>d.classList.toggle('active',j===i))}})},{threshold:0.5}).observe(s));
+document.addEventListener('keydown',e=>{const c=[...sl].findIndex(s=>{const r=s.getBoundingClientRect();return r.top>=-100&&r.top<=innerHeight/2});if(e.key==='ArrowDown'||e.key==='ArrowRight'){e.preventDefault();sl[Math.min(c+1,sl.length-1)].scrollIntoView({behavior:'smooth'})}if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();sl[Math.max(c-1,0)].scrollIntoView({behavior:'smooth'})}});
+</script>
+</body>
+</html>
