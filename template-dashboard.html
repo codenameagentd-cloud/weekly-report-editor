@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status Update — Design Engineering</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #f4f6f9;
+  --accent: #0052cc;
+  --text: #1a1a2e;
+  --text-secondary: #5a5f7a;
+  --card-bg: #ffffff;
+  --green: #16a34a;
+  --blue: #0052cc;
+  --yellow: #eab308;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --radius: 12px;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Slide container */
+.deck {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Slide inner wrapper */
+.slide-inner {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 60px 48px 48px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Section number */
+.section-num {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* ——————————————————————————
+   Slide 1 — Title
+   —————————————————————————— */
+.slide--title {
+  background: var(--bg);
+}
+
+.slide--title .banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: var(--accent);
+}
+
+.slide--title .slide-inner {
+  justify-content: center;
+}
+
+.slide--title h1 {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.slide--title .subtitle {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.slide--title .subtitle span {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  vertical-align: middle;
+  margin: 0 10px;
+}
+
+/* ——————————————————————————
+   Slide 2 — Summary / Big Number
+   —————————————————————————— */
+.slide--summary .slide-inner {
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.big-number {
+  font-size: 128px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+}
+
+.big-number-caption {
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 560px;
+}
+
+/* ——————————————————————————
+   Slide 3 — Progress Cards
+   —————————————————————————— */
+.slide--progress .heading {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.card-grid .status-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.status-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px 28px;
+  border-left: 4px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-card--green  { border-left-color: var(--green); }
+.status-card--blue   { border-left-color: var(--blue); }
+.status-card--yellow { border-left-color: var(--yellow); }
+
+.status-card .card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.status-card .card-desc {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: 6px;
+  width: fit-content;
+  margin-top: 4px;
+}
+
+.badge--green  { background: #dcfce7; color: #15803d; }
+.badge--blue   { background: #dbeafe; color: #1d4ed8; }
+.badge--yellow { background: #fef9c3; color: #a16207; }
+
+/* ——————————————————————————
+   Slide 4 — Newsletter
+   —————————————————————————— */
+.slide--newsletter .heading {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+
+.newsletter-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 36px 36px 32px;
+}
+
+.newsletter-card p {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.metric-highlight {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.metric-highlight .metric-value {
+  font-size: 56px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.metric-highlight .metric-label {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* ——————————————————————————
+   Slide 5 — Top of Mind
+   —————————————————————————— */
+.slide--topofmind .heading {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+
+.topofmind-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 36px 36px 32px;
+  border-top: 4px solid var(--accent);
+}
+
+.topofmind-card p {
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* ——————————————————————————
+   Page indicator dots
+   —————————————————————————— */
+.page-dots {
+  position: fixed;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+}
+
+.page-dots .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #c8cdd8;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.page-dots .dot:hover {
+  background: #9ba3b4;
+}
+
+.page-dots .dot.active {
+  background: var(--accent);
+  transform: scale(1.25);
+}
+
+/* ——————————————————————————
+   Responsive
+   —————————————————————————— */
+@media (max-width: 720px) {
+  .slide-inner {
+    padding: 40px 24px 32px;
+  }
+
+  .slide--title h1 {
+    font-size: 32px;
+  }
+
+  .big-number {
+    font-size: 80px;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-dots {
+    right: 16px;
+  }
+
+  .metric-highlight {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .metric-highlight .metric-value {
+    font-size: 40px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- Slide 1 — Title -->
+  <div class="slide slide--title active" data-slide="0">
+    <div class="banner"></div>
+    <div class="slide-inner">
+      <div class="section-num">01</div>
+      <h1>Weekly Status Update</h1>
+      <p class="subtitle">Week of March 9, 2025<span></span>Design Engineering</p>
+    </div>
+  </div>
+
+  <!-- Slide 2 — Summary -->
+  <div class="slide slide--summary" data-slide="1">
+    <div class="slide-inner">
+      <div class="section-num">02 &mdash; Summary</div>
+      <div class="big-number">85%</div>
+      <p class="big-number-caption">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</p>
+    </div>
+  </div>
+
+  <!-- Slide 3 — Progress -->
+  <div class="slide slide--progress" data-slide="2">
+    <div class="slide-inner">
+      <div class="section-num">03</div>
+      <div class="heading">Progress</div>
+      <div class="card-grid">
+        <div class="status-card status-card--green">
+          <div class="card-title">Design System v3</div>
+          <div class="card-desc">Shipped to production</div>
+          <div class="badge badge--green">COMPLETE</div>
+        </div>
+        <div class="status-card status-card--blue">
+          <div class="card-title">AI Assistant Integration</div>
+          <div class="card-desc">Development at 70%</div>
+          <div class="badge badge--blue">IN PROGRESS</div>
+        </div>
+        <div class="status-card status-card--yellow">
+          <div class="card-title">Accessibility Audit</div>
+          <div class="card-desc">Blocked by vendor response</div>
+          <div class="badge badge--yellow">BLOCKED</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4 — Newsletter -->
+  <div class="slide slide--newsletter" data-slide="3">
+    <div class="slide-inner">
+      <div class="section-num">04</div>
+      <div class="heading">Newsletter</div>
+      <div class="newsletter-card">
+        <p>Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</p>
+        <div class="metric-highlight">
+          <span class="metric-value">23%</span>
+          <span class="metric-label">improvement in task<br>completion rate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5 — Top of Mind -->
+  <div class="slide slide--topofmind" data-slide="4">
+    <div class="slide-inner">
+      <div class="section-num">05</div>
+      <div class="heading">Top of Mind</div>
+      <div class="topofmind-card">
+        <p>Scaling the design review process without creating bottlenecks on senior designers.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Page indicator dots -->
+<nav class="page-dots" id="pageDots" aria-label="Slide navigation"></nav>
+
+<script>
+(function () {
+  var deck = document.getElementById('deck');
+  var slides = deck.querySelectorAll('.slide');
+  var dotsContainer = document.getElementById('pageDots');
+  var current = 0;
+  var total = slides.length;
+  var transitioning = false;
+
+  // Build dots
+  for (var i = 0; i < total; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.dataset.index = i;
+    dotsContainer.appendChild(dot);
+  }
+
+  var dots = dotsContainer.querySelectorAll('.dot');
+
+  function goTo(index) {
+    if (index < 0 || index >= total || index === current || transitioning) return;
+    transitioning = true;
+
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+
+    current = index;
+
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+
+    setTimeout(function () {
+      transitioning = false;
+    }, 520);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goTo(current - 1);
+    }
+  });
+
+  // Dot click navigation
+  dotsContainer.addEventListener('click', function (e) {
+    if (e.target.classList.contains('dot')) {
+      goTo(parseInt(e.target.dataset.index, 10));
+    }
+  });
+
+  // Touch swipe support
+  var touchStartY = 0;
+  var touchStartX = 0;
+
+  document.addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (e) {
+    var dx = e.changedTouches[0].screenX - touchStartX;
+    var dy = e.changedTouches[0].screenY - touchStartY;
+
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) goTo(current + 1);
+      else goTo(current - 1);
+    } else if (Math.abs(dy) > 50) {
+      if (dy < 0) goTo(current + 1);
+      else goTo(current - 1);
+    }
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

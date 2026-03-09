@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status Update</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Inter:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Title Slide (full-width split) ── */
+
+.slide-title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  z-index: 10;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.slide-title.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.title-left {
+  width: 40%;
+  background: #1a1a2e;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px 56px;
+  position: relative;
+  overflow: hidden;
+}
+
+.title-left::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  left: -40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.title-left h1 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+}
+
+.title-left p {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.title-right {
+  width: 60%;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.title-date {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: #1e293b;
+  z-index: 1;
+}
+
+.title-date span {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  color: #64748b;
+  margin-top: 6px;
+}
+
+/* Decorative geometric elements on right panel */
+.geo-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(99, 102, 241, 0.12);
+}
+
+.geo-circle-1 {
+  width: 340px;
+  height: 340px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.geo-circle-2 {
+  width: 220px;
+  height: 220px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-color: rgba(99, 102, 241, 0.08);
+}
+
+.geo-circle-3 {
+  width: 500px;
+  height: 500px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-color: rgba(99, 102, 241, 0.06);
+}
+
+.geo-line {
+  position: absolute;
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.geo-line-1 {
+  width: 1px;
+  height: 120px;
+  top: 60px;
+  right: 100px;
+}
+
+.geo-line-2 {
+  width: 80px;
+  height: 1px;
+  bottom: 100px;
+  left: 60px;
+}
+
+.geo-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6366f1;
+  opacity: 0.3;
+}
+
+.geo-dot-1 { top: 60px; right: 100px; }
+.geo-dot-2 { bottom: 100px; left: 140px; }
+.geo-dot-3 { top: 50%; right: 60px; transform: translateY(-50%); opacity: 0.15; width: 8px; height: 8px; }
+
+/* ── Sidebar ── */
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 280px;
+  height: 100vh;
+  background: #1a1a2e;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.sidebar.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sidebar-brand {
+  padding: 0 32px;
+  margin-bottom: 56px;
+}
+
+.sidebar-brand h2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.2px;
+}
+
+.sidebar-brand p {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.sidebar-nav {
+  list-style: none;
+  flex: 1;
+}
+
+.sidebar-nav li {
+  position: relative;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 32px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.25s ease, background 0.25s ease;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  margin-left: -1px;
+}
+
+.sidebar-nav a::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #475569;
+  flex-shrink: 0;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.sidebar-nav li.active a {
+  color: #ffffff;
+  font-weight: 500;
+  background: rgba(99, 102, 241, 0.06);
+  border-left-color: #6366f1;
+}
+
+.sidebar-nav li.active a::before {
+  background: #6366f1;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+}
+
+.sidebar-footer {
+  padding: 0 32px;
+  font-size: 11px;
+  color: #475569;
+  letter-spacing: 0.3px;
+}
+
+/* ── Content slides ── */
+
+.content-area {
+  position: fixed;
+  left: 280px;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  background: #fafafa;
+  z-index: 15;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.content-area.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.content-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px 80px;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+
+.content-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.content-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #6366f1;
+  margin-bottom: 20px;
+}
+
+.content-heading {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.35;
+  letter-spacing: -0.3px;
+  max-width: 620px;
+  margin-bottom: 24px;
+}
+
+.content-body {
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #475569;
+  line-height: 1.7;
+  max-width: 600px;
+}
+
+/* ── Progress timeline ── */
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 580px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 24px;
+  position: relative;
+}
+
+.timeline-track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 20px;
+  padding-top: 2px;
+}
+
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.timeline-dot.green { background: #22c55e; box-shadow: 0 0 10px rgba(34, 197, 94, 0.25); }
+.timeline-dot.indigo { background: #6366f1; box-shadow: 0 0 10px rgba(99, 102, 241, 0.25); }
+.timeline-dot.amber { background: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.25); }
+
+.timeline-line {
+  width: 2px;
+  flex: 1;
+  background: #e2e8f0;
+  min-height: 40px;
+}
+
+.timeline-content {
+  padding-bottom: 40px;
+}
+
+.timeline-item:last-child .timeline-content {
+  padding-bottom: 0;
+}
+
+.timeline-item:last-child .timeline-line {
+  display: none;
+}
+
+.timeline-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.timeline-status {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.timeline-status.shipped { color: #16a34a; }
+.timeline-status.progress { color: #6366f1; }
+.timeline-status.blocked { color: #d97706; }
+
+/* ── Page indicator dots ── */
+
+.page-dots {
+  position: fixed;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.page-dots.visible {
+  opacity: 1;
+}
+
+.page-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  transition: background 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.page-dot.active {
+  background: #6366f1;
+  transform: scale(1.3);
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 900px) {
+  .title-left {
+    width: 100%;
+    padding: 48px 32px;
+    min-height: 50vh;
+  }
+
+  .title-right {
+    width: 100%;
+    min-height: 50vh;
+  }
+
+  .slide-title {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: 56px;
+    flex-direction: row;
+    padding: 0 16px;
+    align-items: center;
+  }
+
+  .sidebar-brand {
+    display: none;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .sidebar-nav a {
+    padding: 16px 14px;
+    font-size: 13px;
+    white-space: nowrap;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+
+  .sidebar-nav li.active a {
+    border-left-color: transparent;
+    border-bottom-color: #6366f1;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .content-area {
+    left: 0;
+    top: 56px;
+    height: calc(100vh - 56px);
+  }
+
+  .content-slide {
+    padding: 40px 28px;
+  }
+
+  .content-heading {
+    font-size: 24px;
+  }
+
+  .content-body {
+    font-size: 16px;
+  }
+
+  .page-dots {
+    right: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .title-left h1 {
+    font-size: 30px;
+  }
+
+  .title-date {
+    font-size: 17px;
+  }
+
+  .content-heading {
+    font-size: 22px;
+  }
+
+  .timeline-title {
+    font-size: 15px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════ SLIDE 1: TITLE ════════════ -->
+<div class="slide-title" id="slide-title">
+  <div class="title-left">
+    <h1>Weekly Status<br>Update</h1>
+    <p>Design Engineering</p>
+  </div>
+  <div class="title-right">
+    <div class="geo-circle geo-circle-1"></div>
+    <div class="geo-circle geo-circle-2"></div>
+    <div class="geo-circle geo-circle-3"></div>
+    <div class="geo-line geo-line-1"></div>
+    <div class="geo-line geo-line-2"></div>
+    <div class="geo-dot geo-dot-1"></div>
+    <div class="geo-dot geo-dot-2"></div>
+    <div class="geo-dot geo-dot-3"></div>
+    <div class="title-date">
+      Week of March 9, 2025
+      <span>Monday &mdash; Friday</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ SIDEBAR ════════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <h2>Status Update</h2>
+    <p>Design Engineering</p>
+  </div>
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <li class="active" data-slide="0"><a>Summary</a></li>
+    <li data-slide="1"><a>Progress</a></li>
+    <li data-slide="2"><a>Newsletter</a></li>
+    <li data-slide="3"><a>Top of Mind</a></li>
+  </ul>
+  <div class="sidebar-footer">Week of March 9, 2025</div>
+</nav>
+
+<!-- ════════════ CONTENT AREA ════════════ -->
+<div class="content-area" id="content-area">
+
+  <!-- Slide 2: Summary -->
+  <div class="content-slide active" data-index="0">
+    <div class="content-label">Summary</div>
+    <div class="content-heading">Key Highlight</div>
+    <div class="content-body">
+      Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.
+    </div>
+  </div>
+
+  <!-- Slide 3: Progress -->
+  <div class="content-slide" data-index="1">
+    <div class="content-label">Progress</div>
+    <div class="content-heading">Project Updates</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-track">
+          <div class="timeline-dot green"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-title">Design System v3</div>
+          <div class="timeline-status shipped">Shipped to production</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-track">
+          <div class="timeline-dot indigo"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-title">AI Assistant Integration</div>
+          <div class="timeline-status progress">Development at 70%</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-track">
+          <div class="timeline-dot amber"></div>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-title">Accessibility Audit</div>
+          <div class="timeline-status blocked">Blocked by vendor response</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: Newsletter -->
+  <div class="content-slide" data-index="2">
+    <div class="content-label">Newsletter</div>
+    <div class="content-heading">Q1 Design Retrospective</div>
+    <div class="content-body">
+      Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.
+    </div>
+  </div>
+
+  <!-- Slide 5: Top of Mind -->
+  <div class="content-slide" data-index="3">
+    <div class="content-label">Top of Mind</div>
+    <div class="content-heading">Looking Ahead</div>
+    <div class="content-body">
+      Scaling the design review process without creating bottlenecks on senior designers.
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════ PAGE DOTS ════════════ -->
+<div class="page-dots" id="page-dots"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var TOTAL_SLIDES = 5; // 1 title + 4 content
+  var current = 0;
+
+  var slideTitle = document.getElementById('slide-title');
+  var sidebar = document.getElementById('sidebar');
+  var contentArea = document.getElementById('content-area');
+  var sidebarNav = document.getElementById('sidebar-nav');
+  var pageDots = document.getElementById('page-dots');
+
+  var contentSlides = document.querySelectorAll('.content-slide');
+  var navItems = sidebarNav.querySelectorAll('li');
+
+  // Build page dots
+  for (var i = 0; i < TOTAL_SLIDES; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'page-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('data-slide', i);
+    pageDots.appendChild(dot);
+  }
+  var dots = pageDots.querySelectorAll('.page-dot');
+
+  function goTo(index) {
+    if (index < 0 || index >= TOTAL_SLIDES) return;
+    current = index;
+
+    // Title slide visibility
+    if (current === 0) {
+      slideTitle.classList.remove('hidden');
+      sidebar.classList.remove('visible');
+      contentArea.classList.remove('visible');
+      pageDots.classList.remove('visible');
+    } else {
+      slideTitle.classList.add('hidden');
+      sidebar.classList.add('visible');
+      contentArea.classList.add('visible');
+      pageDots.classList.add('visible');
+
+      // Activate the correct content slide
+      var contentIndex = current - 1;
+      contentSlides.forEach(function (s, i) {
+        s.classList.toggle('active', i === contentIndex);
+      });
+
+      // Sidebar active state
+      navItems.forEach(function (li, i) {
+        li.classList.toggle('active', i === contentIndex);
+      });
+    }
+
+    // Dots
+    dots.forEach(function (d, i) {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goTo(current - 1);
+    }
+  });
+
+  // Click on dots
+  pageDots.addEventListener('click', function (e) {
+    var target = e.target;
+    if (target.classList.contains('page-dot')) {
+      goTo(parseInt(target.getAttribute('data-slide'), 10));
+    }
+  });
+
+  // Click on sidebar nav
+  navItems.forEach(function (li) {
+    li.addEventListener('click', function () {
+      var slideIndex = parseInt(li.getAttribute('data-slide'), 10);
+      goTo(slideIndex + 1); // offset by 1 because title is slide 0
+    });
+  });
+
+  // Initialize
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>
