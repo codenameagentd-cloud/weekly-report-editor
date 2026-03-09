@@ -213,148 +213,290 @@ function textToHTML(text) {
   }).join('\n').replace(/(<li>[^]*?<\/li>\n?)+/g, m => `<ul>${m}</ul>`);
 }
 
-/* --- Style system: each style defines a base + randomization --- */
+/* --- Style system: real layout variety per style --- */
 
 function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-function randBetween(a, b) { return a + Math.random() * (b - a); }
+
+function lum(hex) {
+  if (hex.length === 4) hex = '#' + hex[1]+hex[1] + hex[2]+hex[2] + hex[3]+hex[3];
+  const r = parseInt(hex.slice(1,3),16)/255;
+  const g = parseInt(hex.slice(3,5),16)/255;
+  const b = parseInt(hex.slice(5,7),16)/255;
+  return 0.299*r + 0.587*g + 0.114*b;
+}
+
+/* Font pairs: heading + body can differ */
+const fontPairs = {
+  minimal: [
+    { h:"'Inter'", b:"'Inter'", hF:'sans-serif', bF:'sans-serif', gf:'Inter:wght@400;500;600;700' },
+    { h:"'DM Sans'", b:"'Inter'", hF:'sans-serif', bF:'sans-serif', gf:'DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500' },
+    { h:"'Space Grotesk'", b:"'Inter'", hF:'sans-serif', bF:'sans-serif', gf:'Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500' },
+  ],
+  bold: [
+    { h:"'Space Grotesk'", b:"'Inter'", hF:'sans-serif', bF:'sans-serif', gf:'Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500' },
+    { h:"'Syne'", b:"'Space Grotesk'", hF:'sans-serif', bF:'sans-serif', gf:'Syne:wght@400;600;700;800&family=Space+Grotesk:wght@400;500' },
+    { h:"'Inter'", b:"'Inter'", hF:'sans-serif', bF:'sans-serif', gf:'Inter:wght@400;500;600;700;800' },
+  ],
+  warm: [
+    { h:"'Playfair Display'", b:"'Source Serif 4'", hF:'Georgia,serif', bF:'Georgia,serif', gf:'Playfair+Display:wght@400;600;700&family=Source+Serif+4:wght@400;500' },
+    { h:"'Lora'", b:"'Inter'", hF:'Georgia,serif', bF:'sans-serif', gf:'Lora:wght@400;600;700&family=Inter:wght@400;500' },
+    { h:"'Source Serif 4'", b:"'Lora'", hF:'Georgia,serif', bF:'Georgia,serif', gf:'Source+Serif+4:wght@400;600;700&family=Lora:wght@400;500' },
+  ],
+  corporate: [
+    { h:"'Inter'", b:"'Inter'", hF:'sans-serif', bF:'sans-serif', gf:'Inter:wght@400;500;600;700' },
+    { h:"'DM Sans'", b:"'Inter'", hF:'sans-serif', bF:'sans-serif', gf:'DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500' },
+    { h:"'Plus Jakarta Sans'", b:"'Inter'", hF:'sans-serif', bF:'sans-serif', gf:'Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500' },
+  ],
+  monochrome: [
+    { h:"'Space Mono'", b:"'Space Mono'", hF:'monospace', bF:'monospace', gf:'Space+Mono:wght@400;700' },
+    { h:"'JetBrains Mono'", b:"'JetBrains Mono'", hF:'monospace', bF:'monospace', gf:'JetBrains+Mono:wght@400;500;600' },
+    { h:"'IBM Plex Mono'", b:"'IBM Plex Mono'", hF:'monospace', bF:'monospace', gf:'IBM+Plex+Mono:wght@400;500;600' },
+  ],
+};
 
 const styleDefs = {
   minimal: {
-    bgs: ['#fff','#fafafa','#f8f8f8','#fdfdfd'],
-    accents: ['#000','#111','#222'],
-    fonts: [
-      "'Inter', system-ui, sans-serif",
-      "'SF Pro Display', system-ui, sans-serif",
-      "'Helvetica Neue', Helvetica, sans-serif",
-    ],
-    googleFont: ['Inter:wght@400;500;600','DM+Sans:wght@400;500;600','Space+Grotesk:wght@400;500;600'],
-    labelColors: ['rgba(0,0,0,0.35)','rgba(0,0,0,0.4)'],
-    radius: () => rand([0, 4, 8]) + 'px',
+    bgs: ['#fff','#fafafa','#f8f8f8'],
+    accents: ['#000','#111','#333'],
+    layouts: ['centered','left-aligned','editorial'],
+    accentEls: ['none','underline','top-border'],
+    titleVars: ['centered','left-large'],
+    radius: () => rand([0, 4, 8]),
   },
   bold: {
     bgs: ['#000','#0a0a0a','#111','#1a0a2e'],
     accents: ['#ff3b30','#ff9500','#5856d6','#00d4aa','#ff2d55'],
-    fonts: [
-      "'Space Grotesk', sans-serif",
-      "'Inter', sans-serif",
-      "'Syne', sans-serif",
-    ],
-    googleFont: ['Space+Grotesk:wght@400;600;700','Syne:wght@400;600;700','Inter:wght@400;600;700'],
-    labelColors: ['rgba(255,255,255,0.4)'],
-    radius: () => rand([0, 6, 12]) + 'px',
+    layouts: ['left-aligned','split','card'],
+    accentEls: ['left-bar','top-border','underline'],
+    titleVars: ['left-large','accent-block'],
+    radius: () => rand([0, 6, 12]),
   },
   warm: {
     bgs: ['#faf8f5','#f5f0eb','#fdf6f0','#f9f4ef'],
-    accents: ['#c45d35','#b8532f','#d4764e','#a0522d','#c06830'],
-    fonts: [
-      "'Playfair Display', Georgia, serif",
-      "'Lora', Georgia, serif",
-      "'Source Serif 4', Georgia, serif",
-    ],
-    googleFont: ['Playfair+Display:wght@400;600','Lora:wght@400;600','Source+Serif+4:wght@400;600'],
-    labelColors: ['rgba(0,0,0,0.35)'],
-    radius: () => rand([8, 12, 16]) + 'px',
+    accents: ['#c45d35','#b8532f','#d4764e','#a0522d'],
+    layouts: ['card','editorial','centered'],
+    accentEls: ['left-bar','underline','top-border'],
+    titleVars: ['centered','left-large','accent-block'],
+    radius: () => rand([8, 12, 16]),
   },
   corporate: {
     bgs: ['#f4f6f9','#eef1f5','#f0f2f5','#e8ecf1'],
     accents: ['#0052cc','#1a56db','#2563eb','#0747a6'],
-    fonts: [
-      "'Inter', system-ui, sans-serif",
-      "'Segoe UI', system-ui, sans-serif",
-      "'DM Sans', system-ui, sans-serif",
-    ],
-    googleFont: ['Inter:wght@400;500;600','DM+Sans:wght@400;500;600'],
-    labelColors: ['rgba(0,0,0,0.4)'],
-    radius: () => rand([6, 8, 10]) + 'px',
+    layouts: ['split','card','left-aligned'],
+    accentEls: ['left-bar','top-border','none'],
+    titleVars: ['centered','left-large'],
+    radius: () => rand([6, 8, 10]),
   },
-  monochrome: { _fixContrast: true,
+  monochrome: {
+    _fixContrast: true,
     bgs: ['#fff','#000','#f5f5f5','#111'],
     accents: ['#000','#fff','#333','#ddd'],
-    fonts: [
-      "'Space Mono', monospace",
-      "'JetBrains Mono', monospace",
-      "'IBM Plex Mono', monospace",
-    ],
-    googleFont: ['Space+Mono:wght@400;700','JetBrains+Mono:wght@400;600','IBM+Plex+Mono:wght@400;600'],
-    labelColors: null, // derived
-    radius: () => rand([0, 2, 4]) + 'px',
+    layouts: ['left-aligned','editorial','centered'],
+    accentEls: ['none','left-bar','underline'],
+    titleVars: ['centered','left-large'],
+    radius: () => rand([0, 2, 4]),
   }
 };
 
 function generateTheme(styleName) {
   const s = styleDefs[styleName];
   const bg = rand(s.bgs);
-  const accent = rand(s.accents);
-  const isDark = ['#000','#0a0a0a','#111','#1a0a2e'].includes(bg);
+  let accent = rand(s.accents);
+  const isDark = lum(bg) < 0.4;
   const text = isDark ? '#fff' : '#1a1a1a';
-  const textSec = isDark ? 'rgba(255,255,255,0.45)' : (s.labelColors ? rand(s.labelColors) : 'rgba(0,0,0,0.4)');
-  const fi = Math.floor(Math.random() * s.fonts.length);
-  const font = s.fonts[fi];
-  const gf = s.googleFont[fi] || s.googleFont[0];
-  // Ensure accent contrasts with bg for monochrome
-    if (s._fixContrast) {
-      if (isDark && (accent === '#000' || accent === '#333')) accent = '#fff';
-      if (!isDark && (accent === '#fff' || accent === '#ddd')) accent = '#000';
-    }
-    return { bg, accent, text, textSec, font, gf, radius: s.radius(), isDark };
+  const textSec = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
+  const fp = rand(fontPairs[styleName]);
+
+  if (s._fixContrast) {
+    if (isDark && lum(accent) < 0.4) accent = '#fff';
+    if (!isDark && lum(accent) > 0.6) accent = '#000';
+  }
+
+  return {
+    bg, accent, text, textSec, isDark,
+    hFont: `${fp.h},${fp.hF}`, bFont: `${fp.b},${fp.bF}`, gf: fp.gf,
+    layout: rand(s.layouts),
+    accentEl: rand(s.accentEls),
+    titleVar: rand(s.titleVars),
+    radius: s.radius(),
+    surface: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.025)',
+    border: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+  };
 }
+
+/* --- Title slide HTML variants --- */
+
+function titleHTML(week, t) {
+  if (t.titleVar === 'left-large') {
+    return `<section class="title-slide" style="justify-content:flex-start;padding-left:12vw">
+  <div class="title-inner" style="text-align:left">
+    <h1 style="font-size:clamp(42px,6.5vw,68px);font-weight:700;letter-spacing:-2.5px;line-height:1.08">Weekly<br>Report</h1>
+    <div class="week" style="margin-top:18px">${week}</div>
+  </div>
+</section>`;
+  }
+  if (t.titleVar === 'accent-block') {
+    return `<section class="title-slide" style="justify-content:flex-start;padding-left:12vw">
+  <div class="title-inner" style="text-align:left">
+    <div style="width:48px;height:4px;background:${t.accent};margin-bottom:28px;border-radius:2px"></div>
+    <h1 style="font-size:clamp(36px,5.5vw,58px);font-weight:700;letter-spacing:-1.5px;line-height:1.12">Weekly Report</h1>
+    <div class="week" style="margin-top:14px">${week}</div>
+  </div>
+</section>`;
+  }
+  // centered
+  return `<section class="title-slide">
+  <div class="title-inner" style="text-align:center">
+    <h1 style="font-size:clamp(32px,5vw,52px);font-weight:600;letter-spacing:-1px">Weekly Report</h1>
+    <div class="week" style="margin-top:12px">${week}</div>
+  </div>
+</section>`;
+}
+
+/* --- Content slide HTML per layout --- */
+
+function slideHTML(sec, t) {
+  const html = textToHTML(sec.content);
+
+  if (t.layout === 'split') {
+    return `<section class="slide">
+  <div class="split-label"><span class="label-big">${sec.title}</span></div>
+  <div class="split-content"><div class="content accent-deco">${html}</div></div>
+</section>`;
+  }
+
+  if (t.layout === 'card') {
+    return `<section class="slide">
+  <div class="slide-inner">
+    <span class="label">${sec.title}</span>
+    <div class="card"><div class="content accent-deco">${html}</div></div>
+  </div>
+</section>`;
+  }
+
+  if (t.layout === 'editorial' && sec.type === 'summary') {
+    return `<section class="slide editorial-summary">
+  <div class="slide-inner">
+    <span class="label">${sec.title}</span>
+    <div class="content accent-deco">${html}</div>
+  </div>
+</section>`;
+  }
+
+  // centered, left-aligned, editorial non-summary
+  return `<section class="slide">
+  <div class="slide-inner">
+    <span class="label">${sec.title}</span>
+    <div class="content accent-deco">${html}</div>
+  </div>
+</section>`;
+}
+
+/* --- CSS generation per layout --- */
+
+function accentDecoCSS(t) {
+  if (t.accentEl === 'left-bar')
+    return `.accent-deco{border-left:3px solid ${t.accent};padding-left:24px}`;
+  if (t.accentEl === 'top-border')
+    return `.accent-deco{border-top:2px solid ${t.accent};padding-top:20px}`;
+  if (t.accentEl === 'underline')
+    return `.label::after{content:'';display:block;width:24px;height:2px;background:${t.accent};margin-top:8px}`;
+  return '';
+}
+
+function layoutCSS(t) {
+  // Shared base
+  const base = `*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-snap-type:y mandatory;overflow-y:scroll;scroll-behavior:smooth}
+body{font-family:${t.bFont};background:${t.bg};color:${t.text}}
+h1,.label-big,.title-inner h1{font-family:${t.hFont}}
+.title-slide{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;padding:10vh 10vw}
+.title-inner .week{font-size:13px;color:${t.textSec};text-transform:uppercase;letter-spacing:1px}
+.label{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:${t.textSec};margin-bottom:20px}
+.content p{font-size:clamp(18px,2.5vw,26px);line-height:1.7;margin-bottom:14px}
+.content ul{list-style:none;padding:0}
+.content li{font-size:clamp(17px,2.2vw,24px);line-height:1.7;padding-left:22px;position:relative;margin-bottom:10px}
+.content li::before{content:'\\2014';position:absolute;left:0;color:${t.textSec}}
+.progress{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:10}
+.dot{width:6px;height:6px;border-radius:50%;background:${t.textSec};opacity:0.3;transition:opacity 0.3s}
+.dot.active{opacity:1;background:${t.accent}}
+.hint{position:fixed;bottom:20px;right:24px;font-size:11px;color:${t.textSec};opacity:0.5}
+${accentDecoCSS(t)}
+`;
+
+  const mob = `@media(max-width:768px){.slide,.title-slide{padding:8vh 7vw !important}.progress{display:none}.split-label{display:none !important}.slide{display:flex !important;grid-template-columns:unset !important}}`;
+
+  let layout = '';
+
+  if (t.layout === 'centered') {
+    layout = `.slide{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;padding:10vh 10vw;text-align:center}
+.slide-inner{max-width:620px;width:100%}
+.label::after{margin-left:auto;margin-right:auto}`;
+  }
+
+  else if (t.layout === 'left-aligned') {
+    layout = `.slide{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;padding:10vh 10vw 10vh 14vw}
+.slide-inner{max-width:680px;width:100%}`;
+  }
+
+  else if (t.layout === 'card') {
+    layout = `.slide{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;padding:10vh 10vw}
+.slide-inner{max-width:660px;width:100%}
+.card{background:${t.surface};border:1px solid ${t.border};border-radius:${t.radius}px;padding:44px 40px}`;
+  }
+
+  else if (t.layout === 'split') {
+    layout = `.slide{min-height:100vh;scroll-snap-align:start;display:grid;grid-template-columns:0.8fr 1.2fr;align-items:center;padding:10vh 8vw;gap:5vw}
+.split-label{display:flex;align-items:center;justify-content:flex-end;padding-right:4vw;border-right:1px solid ${t.border};min-height:120px}
+.label-big{font-size:clamp(18px,2.8vw,32px);font-weight:600;letter-spacing:-0.5px;color:${t.textSec};text-transform:uppercase;text-align:right;line-height:1.3}
+.split-content{padding-left:1vw}
+.split-content .content p{font-size:clamp(17px,2.2vw,24px)}`;
+  }
+
+  else if (t.layout === 'editorial') {
+    layout = `.slide{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;padding:10vh 12vw}
+.slide-inner{max-width:720px;width:100%}
+.editorial-summary .content p{font-size:clamp(26px,3.8vw,42px) !important;line-height:1.4 !important;font-weight:500;letter-spacing:-0.5px}`;
+  }
+
+  return base + layout + '\n' + mob;
+}
+
+/* --- Main build --- */
 
 function buildSlides(data, styleName) {
   const t = generateTheme(styleName);
   const week = getWeekLabel();
 
   const sections = [];
-  sections.push({ title: 'Summary', content: data.summary });
-  sections.push({ title: 'Progress', content: data.progress });
-  if (data.newsletter) sections.push({ title: 'Newsletter', content: data.newsletter });
-  if (data.others) sections.push({ title: 'Others', content: data.others });
-  if (data.topofmind) sections.push({ title: 'Top of Mind', content: data.topofmind });
+  sections.push({ type:'summary', title:'Summary', content: data.summary });
+  sections.push({ type:'progress', title:'Progress', content: data.progress });
+  if (data.newsletter) sections.push({ type:'default', title:'Newsletter', content: data.newsletter });
+  if (data.others) sections.push({ type:'default', title:'Others', content: data.others });
+  if (data.topofmind) sections.push({ type:'default', title:'Top of Mind', content: data.topofmind });
 
-  const slideHTML = sections.map(s => `
-    <section class="slide">
-      <div class="slide-inner">
-        <span class="label">${s.title}</span>
-        <div class="content">${textToHTML(s.content)}</div>
-      </div>
-    </section>`).join('');
-
-  const dotHTML = ['<div class="dot active"></div>'].concat(sections.map(() => '<div class="dot"></div>')).join('');
+  const total = sections.length + 1;
+  const dotHTML = Array.from({length:total},(_,i) => `<div class="dot${i===0?' active':''}"></div>`).join('');
+  const slidesOut = sections.map(s => slideHTML(s, t)).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weekly Report — ${week}</title>
+<title>Weekly Report \\u2014 ${week}</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=${t.gf}&display=swap');
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-snap-type:y mandatory;overflow-y:scroll;scroll-behavior:smooth}
-body{font-family:${t.font};background:${t.bg};color:${t.text}}
-.slide,.title-slide{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;padding:10vh 10vw}
-.slide-inner,.title-inner{max-width:620px;width:100%}
-.title-inner h1{font-size:clamp(32px,5vw,52px);font-weight:600;letter-spacing:-1px}
-.title-inner .week{font-size:14px;color:${t.textSec};margin-top:10px}
-.label{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:${t.textSec};margin-bottom:20px}
-.content p{font-size:clamp(18px,2.5vw,24px);line-height:1.7;margin-bottom:14px}
-.content ul{list-style:none;padding:0}
-.content li{font-size:clamp(17px,2.2vw,22px);line-height:1.7;padding-left:20px;position:relative;margin-bottom:8px}
-.content li::before{content:'—';position:absolute;left:0;color:${t.textSec}}
-.progress{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px}
-.dot{width:6px;height:6px;border-radius:50%;background:${t.textSec};opacity:0.3;transition:opacity 0.3s}
-.dot.active{opacity:1;background:${t.accent}}
-.hint{position:fixed;bottom:20px;right:24px;font-size:11px;color:${t.textSec};opacity:0.5}
-@media(max-width:768px){.slide,.title-slide{padding:8vh 7vw}.progress{display:none}}
+${layoutCSS(t)}
 </style>
 </head>
 <body>
-<section class="title-slide"><div class="title-inner"><h1>Weekly Report</h1><div class="week">${week}</div></div></section>
-${slideHTML}
+${titleHTML(week, t)}
+${slidesOut}
 <div class="progress" id="progress">${dotHTML}</div>
-<div class="hint">↓ scroll · ← → keys</div>
+<div class="hint">\\u2193 scroll \\u00b7 \\u2190 \\u2192 keys</div>
 <script>
 const sl=document.querySelectorAll('.slide,.title-slide'),dots=document.querySelectorAll('.dot');
-new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=[...sl].indexOf(e.target);dots.forEach((d,j)=>d.classList.toggle('active',j===i))}})},{threshold:0.5}).observe||0;
 sl.forEach(s=>new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=[...sl].indexOf(e.target);dots.forEach((d,j)=>d.classList.toggle('active',j===i))}})},{threshold:0.5}).observe(s));
 document.addEventListener('keydown',e=>{const c=[...sl].findIndex(s=>{const r=s.getBoundingClientRect();return r.top>=-100&&r.top<=innerHeight/2});if(e.key==='ArrowDown'||e.key==='ArrowRight'){e.preventDefault();sl[Math.min(c+1,sl.length-1)].scrollIntoView({behavior:'smooth'})}if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();sl[Math.max(c-1,0)].scrollIntoView({behavior:'smooth'})}});
 <\/script>
