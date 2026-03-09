@@ -10,306 +10,151 @@
     --surface: #fff;
     --border: #e5e5e5;
     --text: #1a1a1a;
-    --text-secondary: #666;
+    --text-secondary: #888;
     --accent: #0066cc;
-    --radius: 12px;
+    --radius: 10px;
     --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.5; }
+  .container { max-width: 680px; margin: 0 auto; padding: 48px 24px 80px; }
+  h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: 36px; }
 
-  body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    min-height: 100vh;
+  .field { margin-bottom: 24px; }
+  .field label { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 6px; }
+  .field label .tag { font-size: 10px; font-weight: 500; color: #fff; background: var(--text); border-radius: 3px; padding: 1px 5px; text-transform: uppercase; }
+  .field label .tag.optional { background: #ccc; }
+  textarea { width: 100%; min-height: 100px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); font-family: var(--font); font-size: 14px; line-height: 1.6; color: var(--text); background: var(--surface); resize: vertical; transition: border-color 0.15s; }
+  textarea:focus { outline: none; border-color: var(--accent); }
+  textarea::placeholder { color: #c0c0c0; }
+
+  .row { display: flex; gap: 12px; margin-bottom: 24px; }
+  .row > * { flex: 1; }
+
+  .picker label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 8px; }
+  .options { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opt { padding: 8px 16px; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; background: var(--surface); transition: all 0.15s; user-select: none; }
+  .opt:hover { border-color: #bbb; }
+  .opt.active { border-color: var(--text); background: var(--text); color: #fff; }
+
+  select { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-family: var(--font); font-size: 14px; color: var(--text); background: var(--surface); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M3 5l3 3 3-3'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
+  select:focus { outline: none; border-color: var(--accent); }
+
+  .actions { display: flex; gap: 10px; margin-top: 32px; }
+  button { padding: 10px 24px; border-radius: var(--radius); font-family: var(--font); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; border: none; }
+  .btn-primary { background: var(--text); color: #fff; }
+  .btn-primary:hover { background: #333; }
+  .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+  .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: #f0f0f0; }
+
+  .output { display: none; margin-top: 32px; padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+  .output.active { display: block; }
+  .output h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .output .meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; }
+  .output-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 13px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 200; }
+  .toast.show { opacity: 1; }
+
+  .preview-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; }
+  .preview-overlay.active { display: flex; }
+  .preview-frame { width: 92vw; height: 88vh; background: #fff; border-radius: 14px; overflow: hidden; position: relative; }
+  .preview-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.06); border: none; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; }
+  .preview-iframe { width: 100%; height: 100%; border: none; }
+
+  .ai-section { margin-top: 32px; padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+  .ai-section h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 12px; }
+  .ai-row { display: flex; gap: 10px; align-items: end; }
+  .ai-row .field { flex: 1; margin-bottom: 0; }
+  .ai-row select { margin-top: 4px; }
+  .ai-row button { white-space: nowrap; }
+
+  @media (max-width: 600px) {
+    .row { flex-direction: column; gap: 16px; }
+    .ai-row { flex-direction: column; align-items: stretch; }
   }
-
-  .container {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 48px 24px;
-  }
-
-  h1 {
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-    margin-bottom: 8px;
-  }
-
-  .subtitle {
-    color: var(--text-secondary);
-    font-size: 15px;
-    margin-bottom: 40px;
-  }
-
-  .section {
-    margin-bottom: 32px;
-  }
-
-  .section label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-  }
-
-  textarea {
-    width: 100%;
-    min-height: 120px;
-    padding: 16px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-family: var(--font);
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--text);
-    background: var(--surface);
-    resize: vertical;
-    transition: border-color 0.2s;
-  }
-
-  textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
-
-  textarea::placeholder {
-    color: #bbb;
-  }
-
-  .template-picker {
-    margin-bottom: 40px;
-  }
-
-  .template-picker label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-secondary);
-    margin-bottom: 12px;
-  }
-
-  .templates {
-    display: flex;
-    gap: 12px;
-  }
-
-  .template-card {
-    flex: 1;
-    padding: 20px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all 0.2s;
-    background: var(--surface);
-  }
-
-  .template-card:hover {
-    border-color: #ccc;
-  }
-
-  .template-card.active {
-    border-color: var(--accent);
-  }
-
-  .template-card h3 {
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .template-card p {
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-
-  .actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 40px;
-  }
-
-  button {
-    padding: 12px 28px;
-    border-radius: var(--radius);
-    font-family: var(--font);
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-  }
-
-  .btn-primary {
-    background: var(--text);
-    color: #fff;
-  }
-
-  .btn-primary:hover {
-    background: #333;
-  }
-
-  .btn-secondary {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-
-  .btn-secondary:hover {
-    background: #f5f5f5;
-  }
-
-  /* Preview overlay */
-  .preview-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 100;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .preview-overlay.active {
-    display: flex;
-  }
-
-  .preview-frame {
-    width: 90vw;
-    height: 85vh;
-    background: #fff;
-    border-radius: 16px;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .preview-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.06);
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-  }
-
-  .preview-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-
-  .output-section {
-    display: none;
-    margin-top: 40px;
-    padding: 24px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-  }
-
-  .output-section.active { display: block; }
-
-  .output-section h3 {
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-
-  .output-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 16px;
-  }
-
-  .code-block {
-    background: #f5f5f5;
-    border-radius: 8px;
-    padding: 16px;
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    font-size: 13px;
-    overflow-x: auto;
-    max-height: 200px;
-    overflow-y: auto;
-    display: none;
-  }
-
-  .code-block.active { display: block; margin-top: 12px; }
 </style>
 </head>
 <body>
 
 <div class="container">
   <h1>Weekly Report</h1>
-  <p class="subtitle">Fill in the sections below. Choose a template. Generate slides.</p>
+  <p class="subtitle">Fill sections, pick a style, generate slides.</p>
 
-  <div class="template-picker">
-    <label>Template</label>
-    <div class="templates">
-      <div class="template-card active" data-template="mono" onclick="selectTemplate(this)">
-        <h3>Mono</h3>
-        <p>Black and white. Pure typography.</p>
-      </div>
-      <div class="template-card" data-template="soft" onclick="selectTemplate(this)">
-        <h3>Soft</h3>
-        <p>Warm neutrals. Gentle contrast.</p>
+  <div class="field">
+    <label>Summary <span class="tag">required</span></label>
+    <textarea id="summary" placeholder="One-line conclusion of the week" rows="2"></textarea>
+  </div>
+
+  <div class="field">
+    <label>Progress Status <span class="tag">required</span></label>
+    <textarea id="progress" placeholder="- Feature A: ✅ shipped&#10;- Feature B: 🔵 in progress&#10;- Feature C: 🟡 blocked"></textarea>
+  </div>
+
+  <div class="field">
+    <label>Newsletter <span class="tag optional">optional</span></label>
+    <textarea id="newsletter" placeholder="Design direction, team updates, insights"></textarea>
+  </div>
+
+  <div class="field">
+    <label>Others <span class="tag optional">optional</span></label>
+    <textarea id="others" placeholder="Meetings, cross-team work, misc"></textarea>
+  </div>
+
+  <div class="field">
+    <label>Top of Mind <span class="tag optional">optional</span></label>
+    <textarea id="topofmind" placeholder="1-2 things on your mind" rows="2"></textarea>
+  </div>
+
+  <div class="row">
+    <div class="picker">
+      <label>Style</label>
+      <div class="options" id="styleOptions">
+        <div class="opt active" data-style="minimal" onclick="pickStyle(this)">Minimal</div>
+        <div class="opt" data-style="bold" onclick="pickStyle(this)">Bold</div>
+        <div class="opt" data-style="warm" onclick="pickStyle(this)">Warm</div>
+        <div class="opt" data-style="corporate" onclick="pickStyle(this)">Corporate</div>
+        <div class="opt" data-style="monochrome" onclick="pickStyle(this)">Monochrome</div>
       </div>
     </div>
   </div>
 
-  <div class="section">
-    <label>Summary</label>
-    <textarea id="summary" placeholder="High-level overview of this week"></textarea>
-  </div>
-
-  <div class="section">
-    <label>Progress Status</label>
-    <textarea id="progress" placeholder="Feature progress, milestones hit"></textarea>
-  </div>
-
-  <div class="section">
-    <label>Newsletter</label>
-    <textarea id="newsletter" placeholder="Design direction, team updates"></textarea>
-  </div>
-
-  <div class="section">
-    <label>Others</label>
-    <textarea id="others" placeholder="Anything else worth noting"></textarea>
-  </div>
-
-  <div class="section">
-    <label>Top of Mind</label>
-    <textarea id="topofmind" placeholder="What's occupying your thoughts this week"></textarea>
+  <div class="ai-section">
+    <h3>AI Polish</h3>
+    <div class="ai-row">
+      <div class="field">
+        <label style="margin-bottom:4px">Model</label>
+        <select id="aiModel">
+          <option value="">None (skip)</option>
+          <option value="gpt-4o">GPT-4o</option>
+          <option value="gpt-4o-mini">GPT-4o mini</option>
+          <option value="claude-sonnet-4">Claude Sonnet</option>
+          <option value="Phi-4">Phi-4</option>
+          <option value="Llama-3.3-70B-Instruct">Llama 3.3 70B</option>
+        </select>
+      </div>
+      <div class="field">
+        <label style="margin-bottom:4px">API Key</label>
+        <input type="password" id="aiKey" placeholder="GitHub token" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;">
+      </div>
+      <button class="btn-secondary" onclick="polishAll()" id="polishBtn">Polish</button>
+    </div>
+    <p style="font-size:11px;color:var(--text-secondary);margin-top:8px;">Polishes tone and accuracy. Does not generate new content.</p>
   </div>
 
   <div class="actions">
-    <button class="btn-primary" onclick="generate()">Generate Slides</button>
+    <button class="btn-primary" onclick="generate()" id="genBtn">Generate Slides</button>
     <button class="btn-secondary" onclick="preview()">Preview</button>
   </div>
 
-  <div class="output-section" id="output">
-    <h3>Generated</h3>
-    <div class="output-actions">
-      <button class="btn-secondary" onclick="downloadHTML()">Download HTML</button>
-      <button class="btn-secondary" onclick="toggleCode()">View Source</button>
+  <div class="output" id="output">
+    <h3>Ready</h3>
+    <p class="meta" id="outputMeta"></p>
+    <div class="output-btns">
+      <button class="btn-secondary" onclick="downloadHTML()">Download</button>
       <button class="btn-secondary" onclick="copyHTML()">Copy HTML</button>
     </div>
-    <pre class="code-block" id="codeBlock"></pre>
   </div>
 </div>
 
@@ -320,14 +165,23 @@
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-let selectedTemplate = 'mono';
+let selectedStyle = 'minimal';
 let generatedHTML = '';
 
-function selectTemplate(el) {
-  document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active'));
+function pickStyle(el) {
+  document.querySelectorAll('.opt').forEach(o => o.classList.remove('active'));
   el.classList.add('active');
-  selectedTemplate = el.dataset.template;
+  selectedStyle = el.dataset.style;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
 
 function getData() {
@@ -342,64 +196,121 @@ function getData() {
 
 function getWeekLabel() {
   const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  const week = Math.ceil(((now - start) / 86400000 + start.getDay() + 1) / 7);
-  return `Week ${week}, ${now.getFullYear()}`;
+  const mon = new Date(now);
+  mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  return `Week of ${mon.getFullYear()}-${String(mon.getMonth()+1).padStart(2,'0')}-${String(mon.getDate()).padStart(2,'0')}`;
 }
 
 function textToHTML(text) {
   if (!text) return '';
   return text.split('\n').filter(l => l.trim()).map(l => {
-    const trimmed = l.trim();
-    if (trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
-      return `<li>${trimmed.slice(2)}</li>`;
-    }
-    return `<p>${trimmed}</p>`;
-  }).join('\n').replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`);
+    const t = l.trim();
+    if (t.startsWith('- ') || t.startsWith('• ')) return `<li>${t.slice(2)}</li>`;
+    return `<p>${t}</p>`;
+  }).join('\n').replace(/(<li>[^]*?<\/li>\n?)+/g, m => `<ul>${m}</ul>`);
 }
 
-const templates = {
-  mono: {
-    bg: '#000',
-    surface: '#111',
-    text: '#fff',
-    textSecondary: 'rgba(255,255,255,0.5)',
-    accent: '#fff',
-    border: 'rgba(255,255,255,0.1)',
-    font: "'SF Pro Display', -apple-system, system-ui, sans-serif",
-    sectionBg: '#111',
+/* --- Style system: each style defines a base + randomization --- */
+
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function randBetween(a, b) { return a + Math.random() * (b - a); }
+
+const styleDefs = {
+  minimal: {
+    bgs: ['#fff','#fafafa','#f8f8f8','#fdfdfd'],
+    accents: ['#000','#111','#222'],
+    fonts: [
+      "'Inter', system-ui, sans-serif",
+      "'SF Pro Display', system-ui, sans-serif",
+      "'Helvetica Neue', Helvetica, sans-serif",
+    ],
+    googleFont: ['Inter:wght@400;500;600','DM+Sans:wght@400;500;600','Space+Grotesk:wght@400;500;600'],
+    labelColors: ['rgba(0,0,0,0.35)','rgba(0,0,0,0.4)'],
+    radius: () => rand([0, 4, 8]) + 'px',
   },
-  soft: {
-    bg: '#f5f0eb',
-    surface: '#fff',
-    text: '#2c2c2c',
-    textSecondary: '#999',
-    accent: '#2c2c2c',
-    border: 'rgba(0,0,0,0.06)',
-    font: "'Playfair Display', Georgia, serif",
-    sectionBg: '#fff',
+  bold: {
+    bgs: ['#000','#0a0a0a','#111','#1a0a2e'],
+    accents: ['#ff3b30','#ff9500','#5856d6','#00d4aa','#ff2d55'],
+    fonts: [
+      "'Space Grotesk', sans-serif",
+      "'Inter', sans-serif",
+      "'Syne', sans-serif",
+    ],
+    googleFont: ['Space+Grotesk:wght@400;600;700','Syne:wght@400;600;700','Inter:wght@400;600;700'],
+    labelColors: ['rgba(255,255,255,0.4)'],
+    radius: () => rand([0, 6, 12]) + 'px',
+  },
+  warm: {
+    bgs: ['#faf8f5','#f5f0eb','#fdf6f0','#f9f4ef'],
+    accents: ['#c45d35','#b8532f','#d4764e','#a0522d','#c06830'],
+    fonts: [
+      "'Playfair Display', Georgia, serif",
+      "'Lora', Georgia, serif",
+      "'Source Serif 4', Georgia, serif",
+    ],
+    googleFont: ['Playfair+Display:wght@400;600','Lora:wght@400;600','Source+Serif+4:wght@400;600'],
+    labelColors: ['rgba(0,0,0,0.35)'],
+    radius: () => rand([8, 12, 16]) + 'px',
+  },
+  corporate: {
+    bgs: ['#f4f6f9','#eef1f5','#f0f2f5','#e8ecf1'],
+    accents: ['#0052cc','#1a56db','#2563eb','#0747a6'],
+    fonts: [
+      "'Inter', system-ui, sans-serif",
+      "'Segoe UI', system-ui, sans-serif",
+      "'DM Sans', system-ui, sans-serif",
+    ],
+    googleFont: ['Inter:wght@400;500;600','DM+Sans:wght@400;500;600'],
+    labelColors: ['rgba(0,0,0,0.4)'],
+    radius: () => rand([6, 8, 10]) + 'px',
+  },
+  monochrome: {
+    bgs: ['#fff','#000','#f5f5f5','#111'],
+    accents: ['#000','#fff','#333','#ddd'],
+    fonts: [
+      "'Space Mono', monospace",
+      "'JetBrains Mono', monospace",
+      "'IBM Plex Mono', monospace",
+    ],
+    googleFont: ['Space+Mono:wght@400;700','JetBrains+Mono:wght@400;600','IBM+Plex+Mono:wght@400;600'],
+    labelColors: null, // derived
+    radius: () => rand([0, 2, 4]) + 'px',
   }
 };
 
-function buildSlides(data, tmpl) {
-  const t = templates[tmpl];
+function generateTheme(styleName) {
+  const s = styleDefs[styleName];
+  const bg = rand(s.bgs);
+  const accent = rand(s.accents);
+  const isDark = bg === '#000' || bg === '#0a0a0a' || bg === '#111' || bg === '#1a0a2e';
+  const text = isDark ? '#fff' : '#1a1a1a';
+  const textSec = isDark ? 'rgba(255,255,255,0.45)' : (s.labelColors ? rand(s.labelColors) : 'rgba(0,0,0,0.4)');
+  const fi = Math.floor(Math.random() * s.fonts.length);
+  const font = s.fonts[fi];
+  const gf = s.googleFont[fi] || s.googleFont[0];
+  return { bg, accent, text, textSec, font, gf, radius: s.radius(), isDark };
+}
+
+function buildSlides(data, styleName) {
+  const t = generateTheme(styleName);
   const week = getWeekLabel();
-  const sections = [
-    { title: 'Summary', content: data.summary },
-    { title: 'Progress', content: data.progress },
-    { title: 'Newsletter', content: data.newsletter },
-    { title: 'Others', content: data.others },
-    { title: 'Top of Mind', content: data.topofmind },
-  ].filter(s => s.content);
+
+  const sections = [];
+  sections.push({ title: 'Summary', content: data.summary });
+  sections.push({ title: 'Progress', content: data.progress });
+  if (data.newsletter) sections.push({ title: 'Newsletter', content: data.newsletter });
+  if (data.others) sections.push({ title: 'Others', content: data.others });
+  if (data.topofmind) sections.push({ title: 'Top of Mind', content: data.topofmind });
 
   const slideHTML = sections.map(s => `
     <section class="slide">
       <div class="slide-inner">
-        <span class="slide-label">${s.title}</span>
-        <div class="slide-content">${textToHTML(s.content)}</div>
+        <span class="label">${s.title}</span>
+        <div class="content">${textToHTML(s.content)}</div>
       </div>
-    </section>
-  `).join('');
+    </section>`).join('');
+
+  const dotHTML = ['<div class="dot active"></div>'].concat(sections.map(() => '<div class="dot"></div>')).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -408,249 +319,128 @@ function buildSlides(data, tmpl) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Weekly Report — ${week}</title>
 <style>
-  ${tmpl === 'soft' ? "@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap');" : ''}
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html {
-    scroll-snap-type: y mandatory;
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-  }
-
-  body {
-    font-family: ${t.font};
-    background: ${t.bg};
-    color: ${t.text};
-  }
-
-  .slide {
-    min-height: 100vh;
-    scroll-snap-align: start;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10vh 10vw;
-  }
-
-  .slide-inner {
-    max-width: 640px;
-    width: 100%;
-  }
-
-  .slide-label {
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: ${t.textSecondary};
-    margin-bottom: 24px;
-  }
-
-  .slide-content p {
-    font-size: 22px;
-    line-height: 1.7;
-    margin-bottom: 16px;
-  }
-
-  .slide-content ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  .slide-content li {
-    font-size: 20px;
-    line-height: 1.7;
-    padding-left: 20px;
-    position: relative;
-    margin-bottom: 8px;
-  }
-
-  .slide-content li::before {
-    content: '—';
-    position: absolute;
-    left: 0;
-    color: ${t.textSecondary};
-  }
-
-  /* Title slide */
-  .title-slide {
-    min-height: 100vh;
-    scroll-snap-align: start;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10vh 10vw;
-  }
-
-  .title-slide h1 {
-    font-size: 48px;
-    font-weight: 600;
-    letter-spacing: -1px;
-  }
-
-  .title-slide .week {
-    font-size: 15px;
-    color: ${t.textSecondary};
-    margin-top: 12px;
-    font-weight: 400;
-  }
-
-  /* Nav hint */
-  .nav-hint {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    font-size: 12px;
-    color: ${t.textSecondary};
-    opacity: 0.6;
-  }
-
-  /* Progress dots */
-  .progress {
-    position: fixed;
-    right: 24px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .progress .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: ${t.textSecondary};
-    opacity: 0.3;
-    transition: opacity 0.3s;
-  }
-
-  .progress .dot.active {
-    opacity: 1;
-    background: ${t.accent};
-  }
-
-  @media (max-width: 768px) {
-    .slide { padding: 8vh 6vw; }
-    .slide-content p { font-size: 18px; }
-    .slide-content li { font-size: 17px; }
-    .title-slide h1 { font-size: 32px; }
-    .progress { display: none; }
-  }
+@import url('https://fonts.googleapis.com/css2?family=${t.gf}&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-snap-type:y mandatory;overflow-y:scroll;scroll-behavior:smooth}
+body{font-family:${t.font};background:${t.bg};color:${t.text}}
+.slide,.title-slide{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;padding:10vh 10vw}
+.slide-inner,.title-inner{max-width:620px;width:100%}
+.title-inner h1{font-size:clamp(32px,5vw,52px);font-weight:600;letter-spacing:-1px}
+.title-inner .week{font-size:14px;color:${t.textSec};margin-top:10px}
+.label{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:${t.textSec};margin-bottom:20px}
+.content p{font-size:clamp(18px,2.5vw,24px);line-height:1.7;margin-bottom:14px}
+.content ul{list-style:none;padding:0}
+.content li{font-size:clamp(17px,2.2vw,22px);line-height:1.7;padding-left:20px;position:relative;margin-bottom:8px}
+.content li::before{content:'—';position:absolute;left:0;color:${t.textSec}}
+.progress{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px}
+.dot{width:6px;height:6px;border-radius:50%;background:${t.textSec};opacity:0.3;transition:opacity 0.3s}
+.dot.active{opacity:1;background:${t.accent}}
+.hint{position:fixed;bottom:20px;right:24px;font-size:11px;color:${t.textSec};opacity:0.5}
+@media(max-width:768px){.slide,.title-slide{padding:8vh 7vw}.progress{display:none}}
 </style>
 </head>
 <body>
-
-<section class="title-slide">
-  <div>
-    <h1>Weekly Report</h1>
-    <div class="week">${week}</div>
-  </div>
-</section>
-
+<section class="title-slide"><div class="title-inner"><h1>Weekly Report</h1><div class="week">${week}</div></div></section>
 ${slideHTML}
-
-<div class="progress" id="progress">
-  <div class="dot active"></div>
-  ${sections.map(() => '<div class="dot"></div>').join('\n  ')}
-</div>
-
-<div class="nav-hint">↓ scroll · ← → keys</div>
-
+<div class="progress" id="progress">${dotHTML}</div>
+<div class="hint">↓ scroll · ← → keys</div>
 <script>
-  const slides = document.querySelectorAll('.slide, .title-slide');
-  const dots = document.querySelectorAll('.progress .dot');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const idx = [...slides].indexOf(entry.target);
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-      }
-    });
-  }, { threshold: 0.5 });
-  slides.forEach(s => observer.observe(s));
-
-  document.addEventListener('keydown', e => {
-    const current = [...slides].findIndex(s => {
-      const r = s.getBoundingClientRect();
-      return r.top >= -100 && r.top <= window.innerHeight / 2;
-    });
-    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-      e.preventDefault();
-      const next = Math.min(current + 1, slides.length - 1);
-      slides[next].scrollIntoView({ behavior: 'smooth' });
-    }
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      e.preventDefault();
-      const prev = Math.max(current - 1, 0);
-      slides[prev].scrollIntoView({ behavior: 'smooth' });
-    }
-  });
+const sl=document.querySelectorAll('.slide,.title-slide'),dots=document.querySelectorAll('.dot');
+new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=[...sl].indexOf(e.target);dots.forEach((d,j)=>d.classList.toggle('active',j===i))}})},{threshold:0.5}).observe||0;
+sl.forEach(s=>new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=[...sl].indexOf(e.target);dots.forEach((d,j)=>d.classList.toggle('active',j===i))}})},{threshold:0.5}).observe(s));
+document.addEventListener('keydown',e=>{const c=[...sl].findIndex(s=>{const r=s.getBoundingClientRect();return r.top>=-100&&r.top<=innerHeight/2});if(e.key==='ArrowDown'||e.key==='ArrowRight'){e.preventDefault();sl[Math.min(c+1,sl.length-1)].scrollIntoView({behavior:'smooth'})}if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();sl[Math.max(c-1,0)].scrollIntoView({behavior:'smooth'})}});
 <\/script>
 </body>
 </html>`;
 }
 
+function validate() {
+  const d = getData();
+  if (!d.summary || !d.progress) { showToast('Summary and Progress are required.'); return null; }
+  return d;
+}
+
 function generate() {
-  const data = getData();
-  if (!data.summary && !data.progress) {
-    alert('Fill in at least Summary or Progress.');
-    return;
-  }
-  generatedHTML = buildSlides(data, selectedTemplate);
+  const data = validate();
+  if (!data) return;
+  generatedHTML = buildSlides(data, selectedStyle);
+  const skipped = [];
+  if (!data.newsletter) skipped.push('Newsletter');
+  if (!data.others) skipped.push('Others');
+  if (!data.topofmind) skipped.push('Top of Mind');
   document.getElementById('output').classList.add('active');
-  document.getElementById('codeBlock').textContent = generatedHTML;
-  // Show skipped notice
-  const allSections = ['Summary','Progress','Newsletter','Others','Top of Mind'];
-  const ids = ['summary','progress','newsletter','others','topofmind'];
-  const skipped = ids.filter(id => !document.getElementById(id).value.trim());
-  if (skipped.length > 0) {
-    const names = skipped.map((id,i) => allSections[ids.indexOf(id)]);
-    const note = document.createElement('p');
-    note.style.cssText = 'color:#999;font-size:13px;margin-top:12px;';
-    note.textContent = 'Skipped: ' + names.join(', ');
-    const existing = document.querySelector('#output .skip-note');
-    if (existing) existing.remove();
-    note.className = 'skip-note';
-    document.getElementById('output').appendChild(note);
-  }
+  document.getElementById('outputMeta').textContent = `Style: ${selectedStyle}` + (skipped.length ? ` · Skipped: ${skipped.join(', ')}` : '');
+  showToast('Slides generated');
 }
 
 function preview() {
-  const data = getData();
-  if (!data.summary && !data.progress) {
-    alert('Fill in at least Summary or Progress.');
-    return;
-  }
-  generatedHTML = buildSlides(data, selectedTemplate);
-  const iframe = document.getElementById('previewIframe');
-  const overlay = document.getElementById('previewOverlay');
-  overlay.classList.add('active');
-  iframe.srcdoc = generatedHTML;
+  const data = validate();
+  if (!data) return;
+  generatedHTML = buildSlides(data, selectedStyle);
+  document.getElementById('previewOverlay').classList.add('active');
+  document.getElementById('previewIframe').srcdoc = generatedHTML;
 }
-
-function closePreview() {
-  document.getElementById('previewOverlay').classList.remove('active');
-}
+function closePreview() { document.getElementById('previewOverlay').classList.remove('active'); }
 
 function downloadHTML() {
   if (!generatedHTML) return;
-  const blob = new Blob([generatedHTML], { type: 'text/html' });
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
+  a.href = URL.createObjectURL(new Blob([generatedHTML], {type:'text/html'}));
   a.download = `weekly-report-${new Date().toISOString().slice(0,10)}.html`;
   a.click();
 }
-
-function toggleCode() {
-  document.getElementById('codeBlock').classList.toggle('active');
-}
-
 function copyHTML() {
   if (!generatedHTML) return;
   navigator.clipboard.writeText(generatedHTML);
+  showToast('Copied to clipboard');
+}
+
+/* --- AI Polish --- */
+async function polishAll() {
+  const model = document.getElementById('aiModel').value;
+  const key = document.getElementById('aiKey').value.trim();
+  if (!model) { showToast('Select a model first'); return; }
+  if (!key) { showToast('Enter your GitHub token'); return; }
+
+  const btn = document.getElementById('polishBtn');
+  btn.disabled = true; btn.textContent = 'Polishing…';
+
+  const fields = ['summary','progress','newsletter','others','topofmind'];
+  const labels = ['Summary','Progress Status','Newsletter','Others','Top of Mind'];
+
+  for (let i = 0; i < fields.length; i++) {
+    const el = document.getElementById(fields[i]);
+    const text = el.value.trim();
+    if (!text) continue;
+    try {
+      const polished = await callAI(model, key, labels[i], text);
+      if (polished) el.value = polished;
+    } catch(e) {
+      console.error(e);
+      showToast(`Error polishing ${labels[i]}`);
+    }
+  }
+  btn.disabled = false; btn.textContent = 'Polish';
+  showToast('Polish complete');
+}
+
+async function callAI(model, key, fieldName, text) {
+  const res = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: 'system', content: 'You are a writing assistant for a weekly status report sent to senior leadership. Polish the text for tone (professional but natural), clarity, and accuracy. Keep the same structure and meaning. Do not add new content. Return only the polished text, no explanation.' },
+        { role: 'user', content: `Field: ${fieldName}\n\n${text}` }
+      ],
+      temperature: 0.3,
+      max_tokens: 1000
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.choices?.[0]?.message?.content?.trim() || '';
 }
 </script>
 </body>
