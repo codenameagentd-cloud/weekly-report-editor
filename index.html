@@ -251,8 +251,11 @@ function fillTemplate(html, data) {
   const set = (attr, value) => {
     doc.querySelectorAll(`[data-content="${attr}"]`).forEach(el => {
       if (el.querySelector('[data-content]')) {
-        // Preserve child elements with data-content; replace only text nodes
-        [...el.childNodes].forEach(n => { if (n.nodeType === 3) n.remove(); });
+        // Preserve child data-content elements; remove everything else
+        [...el.childNodes].forEach(n => {
+          if (n.nodeType === 3) n.remove();
+          else if (n.nodeType === 1 && !n.hasAttribute('data-content')) n.remove();
+        });
         el.insertBefore(doc.createTextNode(value + ' '), el.firstChild);
       } else {
         el.textContent = value;
