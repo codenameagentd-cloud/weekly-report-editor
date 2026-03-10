@@ -401,7 +401,7 @@ function fillTemplate(html, data) {
       summaryStatEls.forEach(el => { el.textContent = pctMatch[1]; });
     } else {
       // No percentage in user text — hide the stat element
-      summaryStatEls.forEach(el => { el.style.display = 'none'; });
+      summaryStatEls.forEach(el => { el.remove(); });
     }
   }
 
@@ -412,9 +412,33 @@ function fillTemplate(html, data) {
     if (nPct) {
       newsStatEls.forEach(el => { el.textContent = nPct[1]; });
     } else {
-      newsStatEls.forEach(el => { el.style.display = 'none'; });
+      newsStatEls.forEach(el => { el.remove(); });
     }
   }
+
+
+  // Handle contextual labels — derive from user content or remove
+  doc.querySelectorAll('[data-content="summary-label"]').forEach(el => {
+    // Create a short label from first few words of summary
+    const words = data.summary.split(' ').slice(0, 4).join(' ');
+    el.textContent = words;
+  });
+  doc.querySelectorAll('[data-content="summary-headline"]').forEach(el => {
+    // Use first sentence of summary
+    const sentence = data.summary.split(/[.!]/)[0];
+    el.textContent = sentence;
+  });
+  doc.querySelectorAll('[data-content="summary-subtext"]').forEach(el => {
+    // Use second sentence or empty
+    const sentences = data.summary.split(/[.!]/).filter(s => s.trim());
+    el.textContent = sentences.length > 1 ? sentences[1].trim() : '';
+  });
+  doc.querySelectorAll('[data-content="auto-label"]').forEach(el => {
+    // Generic labels — just clear the demo text
+    if (el.textContent.includes('Design Engineering') || el.textContent.includes('Copilot') || el.textContent.includes('Sprint')) {
+      el.textContent = 'Status Update';
+    }
+  });
 
   // Clean ALL remaining demo text comprehensively
   // Remove known demo strings from any text node not inside data-content elements
@@ -463,7 +487,7 @@ function fillTemplate(html, data) {
   // Also hide elements that became empty after cleanup
   doc.querySelectorAll('strong, em, b, span').forEach(el => {
     if (!el.textContent.trim() && !el.querySelector('*')) {
-      el.style.display = 'none';
+      el.remove();
     }
   });
 
