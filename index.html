@@ -735,7 +735,7 @@ async function generate() {
       if (!data.others) skipped.push('Others');
       if (!data.topofmind) skipped.push('Top of Mind');
       document.getElementById('output').classList.add('active');
-      document.getElementById('outputMeta').textContent = 'Template: ' + name + ' (' + selectedCategory + ')' + (skipped.length ? ' · Skipped: ' + skipped.join(', ') : '';
+      document.getElementById('outputMeta').textContent = 'Template: ' + name + ' (' + selectedCategory + ')' + (skipped.length ? ' · Skipped: ' + skipped.join(', ') : '');
       showToast('Generated with "' + name + '" template');
     }
   } catch(e) {
