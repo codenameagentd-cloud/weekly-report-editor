@@ -693,11 +693,11 @@ body::after {
 <div class="ink-dot dot-6"></div>
 
 <!-- Slide 1: Title -->
-<div class="slide slide-title active" data-index="0" data-section="newsletter" data-section="topofmind">
+<div class="slide slide-title active" data-index="0">
   <div class="title-container">
     <div class="title-ornament">* * *</div>
     <div class="title-main">Weekly Status<span class="title-cursor"></span></div>
-    <div class="title-date">March 10, 2026</div>
+    <div class="title-date" data-content="date">March 10, 2026</div>
     <div class="title-rule"></div>
     <div class="title-subtitle">Status Report</div>
   </div>
@@ -709,7 +709,7 @@ body::after {
   <div class="card-wrapper">
     <div class="paper-card">
       <div class="summary-stat">85%</div>
-      <div class="summary-text">Copilot adoption reached <em>85% across all engineering teams</em>, exceeding our Q1 target of 75%.</div>
+      <div class="summary-text" data-content="summary">Copilot adoption reached <em>85% across all engineering teams</em>, exceeding our Q1 target of 75%.</div>
     </div>
   </div>
 </div>
@@ -721,22 +721,22 @@ body::after {
     <div class="paper-card">
       <div class="progress-item">
         <div>
-          <div class="progress-name">Design System v3</div>
-          <div class="progress-detail">Shipped to production</div>
+          <div class="progress-name" data-content="progress-1-title">Design System v3</div>
+          <div class="progress-detail" data-content="progress-1-desc">Shipped to production</div>
         </div>
         <div class="progress-badge badge-done">Done</div>
       </div>
       <div class="progress-item">
         <div>
-          <div class="progress-name">AI Assistant Integration</div>
-          <div class="progress-detail">Development at 70%</div>
+          <div class="progress-name" data-content="progress-2-title">AI Assistant Integration</div>
+          <div class="progress-detail" data-content="progress-2-desc">Development at 70%</div>
         </div>
         <div class="progress-badge badge-progress">In Progress</div>
       </div>
       <div class="progress-item">
         <div>
-          <div class="progress-name">Accessibility Audit</div>
-          <div class="progress-detail">Blocked by vendor response</div>
+          <div class="progress-name" data-content="progress-3-title">Accessibility Audit</div>
+          <div class="progress-detail" data-content="progress-3-desc">Blocked by vendor response</div>
         </div>
         <div class="progress-badge badge-blocked">Blocked</div>
       </div>
@@ -745,13 +745,13 @@ body::after {
 </div>
 
 <!-- Slide 4: Newsletter -->
-<div class="slide slide-newsletter" data-index="3">
+<div class="slide slide-newsletter" data-index="3" data-section="newsletter">
   <div class="section-label">Newsletter</div>
   <div class="card-wrapper">
     <div class="paper-card">
       <div class="newsletter-highlight">23%</div>
       <div class="newsletter-divider"></div>
-      <div class="newsletter-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</div>
+      <div class="newsletter-text" data-content="newsletter">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</div>
       <div class="newsletter-divider"></div>
       <div class="newsletter-caption">Q1 Design Retrospective</div>
     </div>
@@ -759,11 +759,11 @@ body::after {
 </div>
 
 <!-- Slide 5: Top of Mind -->
-<div class="slide slide-topofmind" data-index="4">
+<div class="slide slide-topofmind" data-index="4" data-section="topofmind">
   <div class="section-label">Top of Mind</div>
   <div class="card-wrapper">
     <div class="paper-card">
-      <div class="topofmind-text">Scaling the design review process without creating bottlenecks on senior designers.</div>
+      <div class="topofmind-text" data-content="topofmind">Scaling the design review process without creating bottlenecks on senior designers.</div>
       <div class="topofmind-author">This Week's Focus</div>
     </div>
   </div>

@@ -909,7 +909,7 @@ html, body {
 </div>
 
 <!-- Slide Counter -->
-<div class="slide-counter" data-section="newsletter" data-section="topofmind">
+<div class="slide-counter">
   <span class="current" id="counterCurrent">1</span>
   <span>/ 5</span>
 </div>
@@ -929,7 +929,7 @@ html, body {
         <span class="s1-word s1-word-1">Weekly</span>
         <span class="s1-word s1-word-2">Status</span>
         <div class="s1-line"></div>
-        <div class="s1-date">March 10, 2026</div>
+        <div class="s1-date" data-content="date">March 10, 2026</div>
       </div>
       <div class="s1-right">
         <div class="s1-block">
@@ -960,7 +960,7 @@ html, body {
       <div class="s2-right">
         <div class="s2-accent-bar"></div>
         <div class="s2-label">Summary</div>
-        <div class="s2-text">Copilot adoption reached <em>85%</em> across all engineering teams, exceeding our Q1 target of 75%.</div>
+        <div class="s2-text" data-content="summary">Copilot adoption reached <em>85%</em> across all engineering teams, exceeding our Q1 target of 75%.</div>
         <div class="s2-target">
           Q1 Target: <span>75%</span> &mdash; Exceeded by 10 points
         </div>
@@ -985,8 +985,8 @@ html, body {
         <div class="s3-card">
           <div class="s3-strip s3-strip-green"></div>
           <div class="s3-card-body">
-            <div class="s3-card-title">Design System v3</div>
-            <div class="s3-card-sub">Shipped to production</div>
+            <div class="s3-card-title" data-content="progress-1-title">Design System v3</div>
+            <div class="s3-card-sub" data-content="progress-1-desc">Shipped to production</div>
             <div class="s3-card-bar">
               <div class="s3-card-bar-fill" style="--bar-width:100%; background:#10B981;"></div>
             </div>
@@ -999,8 +999,8 @@ html, body {
         <div class="s3-card">
           <div class="s3-strip s3-strip-purple"></div>
           <div class="s3-card-body">
-            <div class="s3-card-title">AI Assistant Integration</div>
-            <div class="s3-card-sub">Development at 70%</div>
+            <div class="s3-card-title" data-content="progress-2-title">AI Assistant Integration</div>
+            <div class="s3-card-sub" data-content="progress-2-desc">Development at 70%</div>
             <div class="s3-card-bar">
               <div class="s3-card-bar-fill" style="--bar-width:70%; background:#7C3AED;"></div>
             </div>
@@ -1013,8 +1013,8 @@ html, body {
         <div class="s3-card">
           <div class="s3-strip s3-strip-red"></div>
           <div class="s3-card-body">
-            <div class="s3-card-title">Accessibility Audit</div>
-            <div class="s3-card-sub">Blocked by vendor response</div>
+            <div class="s3-card-title" data-content="progress-3-title">Accessibility Audit</div>
+            <div class="s3-card-sub" data-content="progress-3-desc">Blocked by vendor response</div>
           </div>
           <div class="s3-card-status">
             <div class="s3-badge s3-badge-blocked">Blocked</div>
@@ -1028,13 +1028,13 @@ html, body {
 <!-- ═══════════════════════════════════════ -->
 <!-- SLIDE 4: Newsletter — pull-quote       -->
 <!-- ═══════════════════════════════════════ -->
-<div class="slide" data-slide="4">
+<div class="slide" data-slide="4" data-section="newsletter">
   <div class="slide-inner">
     <div class="s4-layout">
       <div class="s4-quote-mark">&ldquo;</div>
       <div class="s4-content">
         <div class="s4-label">Newsletter</div>
-        <div class="s4-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate.</div>
+        <div class="s4-text" data-content="newsletter">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate.</div>
         <div class="s4-metric-box">
           <div class="s4-metric-num">+23%</div>
           <div class="s4-metric-desc">improvement in task<br>completion rate</div>
@@ -1049,7 +1049,7 @@ html, body {
 <!-- ═══════════════════════════════════════ -->
 <!-- SLIDE 5: Top of Mind — word reveal     -->
 <!-- ═══════════════════════════════════════ -->
-<div class="slide" data-slide="5">
+<div class="slide" data-slide="5" data-section="topofmind">
   <div class="slide-inner">
     <div class="s5-layout">
       <div class="s5-shapes">
@@ -1060,7 +1060,7 @@ html, body {
       <div class="s5-vert-line"></div>
       <div class="s5-content">
         <div class="s5-label">Top of Mind</div>
-        <div class="s5-text" id="mindText"></div>
+        <div class="s5-text" id="mindText" data-content="topofmind"></div>
       </div>
     </div>
   </div>

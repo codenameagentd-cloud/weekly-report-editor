@@ -676,11 +676,11 @@
 <!-- ════════════════════════════════════════
      SLIDE 1 — Title
      ════════════════════════════════════════ -->
-<div class="slide slide-1 active" data-slide="0" data-section="newsletter" data-section="topofmind">
+<div class="slide slide-1 active" data-slide="0">
   <div class="glass">
     <h1 class="title-main">Weekly Status</h1>
     <div class="title-divider"></div>
-    <div class="pill title-date">March 10, 2026</div>
+    <div class="pill title-date" data-content="date">March 10, 2026</div>
     <p class="title-team">Design &amp; Engineering — Weekly Sync</p>
   </div>
 </div>
@@ -691,7 +691,7 @@
 <div class="slide slide-2" data-slide="1">
   <div class="pill" style="margin-bottom: 24px;">Summary</div>
   <div class="glass">
-    <p class="summary-text">Copilot adoption reached <strong>85%</strong> across all engineering teams, exceeding our Q1 target of 75%.</p>
+    <p class="summary-text" data-content="summary">Copilot adoption reached <strong>85%</strong> across all engineering teams, exceeding our Q1 target of 75%.</p>
   </div>
   <div class="highlight-float" style="margin-top: 28px;">
     <div>
@@ -710,24 +710,24 @@
     <!-- Card 1 — Done -->
     <div class="glass progress-card">
       <div class="status-bar done"></div>
-      <div class="card-title">Design System v3</div>
-      <div class="card-desc">Shipped to production</div>
+      <div class="card-title" data-content="progress-1-title">Design System v3</div>
+      <div class="card-desc" data-content="progress-1-desc">Shipped to production</div>
       <div class="pill pill-sm card-tag done">Done</div>
     </div>
 
     <!-- Card 2 — In Progress -->
     <div class="glass progress-card">
       <div class="status-bar progress"></div>
-      <div class="card-title">AI Assistant Integration</div>
-      <div class="card-desc">Development at 70%</div>
+      <div class="card-title" data-content="progress-2-title">AI Assistant Integration</div>
+      <div class="card-desc" data-content="progress-2-desc">Development at 70%</div>
       <div class="pill pill-sm card-tag progress">In Progress</div>
     </div>
 
     <!-- Card 3 — Blocked -->
     <div class="glass progress-card">
       <div class="status-bar blocked"></div>
-      <div class="card-title">Accessibility Audit</div>
-      <div class="card-desc">Blocked by vendor response</div>
+      <div class="card-title" data-content="progress-3-title">Accessibility Audit</div>
+      <div class="card-desc" data-content="progress-3-desc">Blocked by vendor response</div>
       <div class="pill pill-sm card-tag blocked">Blocked</div>
     </div>
   </div>
@@ -736,10 +736,10 @@
 <!-- ════════════════════════════════════════
      SLIDE 4 — Newsletter
      ════════════════════════════════════════ -->
-<div class="slide slide-4" data-slide="3">
+<div class="slide slide-4" data-slide="3" data-section="newsletter">
   <div class="glass">
     <div class="pill">Newsletter</div>
-    <p class="newsletter-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <strong>23%</strong>.</p>
+    <p class="newsletter-text" data-content="newsletter">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <strong>23%</strong>.</p>
     <div class="metric-strip">
       <span class="metric-value">+23%</span>
       <span class="metric-label">Task Completion Rate</span>
@@ -750,7 +750,7 @@
 <!-- ════════════════════════════════════════
      SLIDE 5 — Top of Mind
      ════════════════════════════════════════ -->
-<div class="slide slide-5" data-slide="4">
+<div class="slide slide-5" data-slide="4" data-section="topofmind">
   <div class="glass">
     <div class="tom-icon">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -760,7 +760,7 @@
       </svg>
     </div>
     <div class="pill" style="margin-bottom: 28px;">Top of Mind</div>
-    <p class="tom-text">Scaling the design review process without creating bottlenecks on senior designers.</p>
+    <p class="tom-text" data-content="topofmind">Scaling the design review process without creating bottlenecks on senior designers.</p>
     <p class="tom-subtext">Open discussion item for next week's sync</p>
   </div>
 </div>

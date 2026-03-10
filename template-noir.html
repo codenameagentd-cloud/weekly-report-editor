@@ -277,8 +277,8 @@ html, body {
 <body>
 
 <!-- Slide 1: Title -->
-<div class="slide slide-title active" data-index="0" data-section="newsletter" data-section="topofmind">
-  <div class="date">March 10, 2026</div>
+<div class="slide slide-title active" data-index="0">
+  <div class="date" data-content="date">March 10, 2026</div>
   <h1>Weekly<br>Status</h1>
 </div>
 
@@ -287,7 +287,7 @@ html, body {
   <div class="label">Summary</div>
   <div class="content-block">
     <div class="hero-number">85%</div>
-    <div class="body-text">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</div>
+    <div class="body-text" data-content="summary">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</div>
   </div>
 </div>
 
@@ -297,39 +297,39 @@ html, body {
 
   <div class="progress-row row-done">
     <div class="row-content">
-      <div class="row-title">Design System v3 <span class="row-sub">— Shipped to production</span></div>
+      <div class="row-title" data-content="progress-1-title">Design System v3 <span class="row-sub" data-content="progress-1-desc">— Shipped to production</span></div>
       <div class="status">Done</div>
     </div>
   </div>
 
   <div class="progress-row row-progress">
     <div class="row-content">
-      <div class="row-title">AI Assistant Integration <span class="row-sub">— Development at 70%</span></div>
+      <div class="row-title" data-content="progress-2-title">AI Assistant Integration <span class="row-sub" data-content="progress-2-desc">— Development at 70%</span></div>
       <div class="status">In Progress</div>
     </div>
   </div>
 
   <div class="progress-row row-blocked">
     <div class="row-content">
-      <div class="row-title">Accessibility Audit <span class="row-sub">— Blocked by vendor response</span></div>
+      <div class="row-title" data-content="progress-3-title">Accessibility Audit <span class="row-sub" data-content="progress-3-desc">— Blocked by vendor response</span></div>
       <div class="status">Blocked</div>
     </div>
   </div>
 </div>
 
 <!-- Slide 4: Newsletter -->
-<div class="slide slide-newsletter" data-index="3">
+<div class="slide slide-newsletter" data-index="3" data-section="newsletter">
   <div class="label">Newsletter</div>
   <div class="content-block">
     <div class="hero-number">23%</div>
-    <div class="body-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</div>
+    <div class="body-text" data-content="newsletter">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</div>
   </div>
 </div>
 
 <!-- Slide 5: Top of Mind -->
-<div class="slide slide-topofmind" data-index="4">
+<div class="slide slide-topofmind" data-index="4" data-section="topofmind">
   <div class="label">Top of Mind</div>
-  <div class="body-text">Scaling the design review process without creating bottlenecks on senior designers.</div>
+  <div class="body-text" data-content="topofmind">Scaling the design review process without creating bottlenecks on senior designers.</div>
 </div>
 
 <!-- Page Counter -->

@@ -922,10 +922,10 @@ html, body {
   <!-- Slide 1 — Title -->
   <div class="slide slide--title active" data-slide="0">
     <div class="top-bar"></div>
-    <div class="slide-inner" data-section="newsletter" data-section="topofmind">
+    <div class="slide-inner">
       <div class="section-num">01</div>
       <h1>Weekly Status<br>Update</h1>
-      <p class="subtitle">Week of March 9, 2025<span class="divider"></span>Design Engineering</p>
+      <p class="subtitle" data-content="date">Week of March 9, 2025<span class="divider"></span>Design Engineering</p>
       <div class="team-badge">Active Sprint</div>
     </div>
   </div>
@@ -945,7 +945,7 @@ html, body {
         <div class="summary-text">
           <div class="summary-label">Copilot Adoption</div>
           <div class="summary-headline">Exceeding Q1 target by 10 points</div>
-          <p class="summary-desc">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</p>
+          <p class="summary-desc" data-content="summary">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</p>
         </div>
       </div>
     </div>
@@ -959,10 +959,10 @@ html, body {
       <div class="card-grid">
         <div class="glass-card">
           <div class="card-header">
-            <div class="card-title">Design System v3</div>
+            <div class="card-title" data-content="progress-1-title">Design System v3</div>
             <div class="status-dot status-dot--green"></div>
           </div>
-          <div class="card-desc">Shipped to production</div>
+          <div class="card-desc" data-content="progress-1-desc">Shipped to production</div>
           <div class="progress-bar-wrap">
             <div class="progress-bar-fill progress-bar-fill--green" data-width="100"></div>
           </div>
@@ -973,10 +973,10 @@ html, body {
         </div>
         <div class="glass-card">
           <div class="card-header">
-            <div class="card-title">AI Assistant Integration</div>
+            <div class="card-title" data-content="progress-2-title">AI Assistant Integration</div>
             <div class="status-dot status-dot--blue"></div>
           </div>
-          <div class="card-desc">Development at 70%</div>
+          <div class="card-desc" data-content="progress-2-desc">Development at 70%</div>
           <div class="progress-bar-wrap">
             <div class="progress-bar-fill progress-bar-fill--blue" data-width="70"></div>
           </div>
@@ -987,10 +987,10 @@ html, body {
         </div>
         <div class="glass-card">
           <div class="card-header">
-            <div class="card-title">Accessibility Audit</div>
+            <div class="card-title" data-content="progress-3-title">Accessibility Audit</div>
             <div class="status-dot status-dot--red"></div>
           </div>
-          <div class="card-desc">Blocked by vendor response</div>
+          <div class="card-desc" data-content="progress-3-desc">Blocked by vendor response</div>
           <div class="progress-bar-wrap">
             <div class="progress-bar-fill progress-bar-fill--red" data-width="15"></div>
           </div>
@@ -1004,7 +1004,7 @@ html, body {
   </div>
 
   <!-- Slide 4 — Newsletter -->
-  <div class="slide slide--newsletter" data-slide="3">
+  <div class="slide slide--newsletter" data-slide="3" data-section="newsletter">
     <div class="slide-inner">
       <div class="section-num">04</div>
       <div class="heading">Newsletter</div>
@@ -1025,13 +1025,13 @@ html, body {
         <div class="metric-bar-wrap">
           <div class="metric-bar-fill"></div>
         </div>
-        <p class="card-body">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</p>
+        <p class="card-body" data-content="newsletter">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</p>
       </div>
     </div>
   </div>
 
   <!-- Slide 5 — Top of Mind -->
-  <div class="slide slide--topofmind" data-slide="4">
+  <div class="slide slide--topofmind" data-slide="4" data-section="topofmind">
     <div class="slide-inner">
       <div class="section-num">05</div>
       <div class="heading">Top of Mind</div>
@@ -1039,7 +1039,7 @@ html, body {
         <div class="card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
         </div>
-        <p>Scaling the design review process without creating bottlenecks on senior designers.</p>
+        <p data-content="topofmind">Scaling the design review process without creating bottlenecks on senior designers.</p>
         <div class="card-footer">
           <div class="priority-dot"></div>
           High priority &mdash; Needs team discussion

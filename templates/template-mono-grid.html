@@ -683,7 +683,7 @@ body::after {
 <!-- ==========================================
      SLIDE 1: TITLE
      ========================================== -->
-<div class="slide slide-title active" data-index="0" data-section="newsletter" data-section="topofmind">
+<div class="slide slide-title active" data-index="0">
   <div class="anim-line title-command">
     <span class="prompt-char">$</span>
     <span class="cmd">weekly-status</span>
@@ -694,7 +694,7 @@ body::after {
   <div class="anim-line title-main">
     Weekly<br><span class="accent">Status</span>
   </div>
-  <div class="anim-line title-date">March 10, 2026</div>
+  <div class="anim-line title-date" data-content="date">March 10, 2026</div>
   <div class="anim-line title-ascii-art">┌──────────────────────────────────────────┐
 │  ██  ██ ██ ████ ██ ██ ██   ██ ██        │
 │  ██  ██ ██ ██   ██ ██ ██    ████        │
@@ -721,7 +721,7 @@ body::after {
       <span class="big-num">85</span>
       <span class="big-unit">%</span>
     </div>
-    <div class="anim-line summary-body">
+    <div class="anim-line summary-body" data-content="summary">
       Copilot adoption reached <span class="highlight">85%</span> across all engineering teams, exceeding our Q1 target of <span class="highlight">75%</span>.
     </div>
     <div class="anim-line summary-meta">
@@ -741,8 +741,8 @@ body::after {
   <div class="anim-line progress-item">
     <div class="progress-header">
       <div>
-        <span class="progress-name">Design System v3</span>
-        <span class="progress-desc">Shipped to production</span>
+        <span class="progress-name" data-content="progress-1-title">Design System v3</span>
+        <span class="progress-desc" data-content="progress-1-desc">Shipped to production</span>
       </div>
       <div class="progress-status status-done">Done</div>
     </div>
@@ -755,8 +755,8 @@ body::after {
   <div class="anim-line progress-item">
     <div class="progress-header">
       <div>
-        <span class="progress-name">AI Assistant Integration</span>
-        <span class="progress-desc">Development at 70%</span>
+        <span class="progress-name" data-content="progress-2-title">AI Assistant Integration</span>
+        <span class="progress-desc" data-content="progress-2-desc">Development at 70%</span>
       </div>
       <div class="progress-status status-progress">In Progress</div>
     </div>
@@ -769,8 +769,8 @@ body::after {
   <div class="anim-line progress-item">
     <div class="progress-header">
       <div>
-        <span class="progress-name">Accessibility Audit</span>
-        <span class="progress-desc">Blocked by vendor response</span>
+        <span class="progress-name" data-content="progress-3-title">Accessibility Audit</span>
+        <span class="progress-desc" data-content="progress-3-desc">Blocked by vendor response</span>
       </div>
       <div class="progress-status status-blocked">Blocked</div>
     </div>
@@ -784,9 +784,9 @@ body::after {
 <!-- ==========================================
      SLIDE 4: NEWSLETTER
      ========================================== -->
-<div class="slide slide-newsletter" data-index="3">
+<div class="slide slide-newsletter" data-index="3" data-section="newsletter">
   <div class="anim-line section-label">Newsletter</div>
-  <div class="anim-line newsletter-quote">
+  <div class="anim-line newsletter-quote" data-content="newsletter">
     Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <span class="stat">23%</span>.
   </div>
   <div class="anim-line newsletter-source">
@@ -802,12 +802,12 @@ body::after {
 <!-- ==========================================
      SLIDE 5: TOP OF MIND
      ========================================== -->
-<div class="slide slide-topofmind" data-index="4">
+<div class="slide slide-topofmind" data-index="4" data-section="topofmind">
   <div class="anim-line section-label">Top of Mind</div>
   <div class="anim-line topofmind-prompt">
     <span class="prompt-char">$</span> cat /dev/thoughts | head -1
   </div>
-  <div class="anim-line topofmind-text">
+  <div class="anim-line topofmind-text" data-content="topofmind">
     Scaling the design review process <em class="em">without creating bottlenecks</em> on senior designers.
   </div>
   <div class="anim-line topofmind-ascii">┌─────────────────────────────────────────────────┐

@@ -410,14 +410,14 @@ h3 {
 </head>
 <body>
 
-<div class="slide-container" id="slideContainer" data-section="newsletter" data-section="topofmind">
+<div class="slide-container" id="slideContainer">
 
   <!-- Slide 1: Title -->
   <div class="slide active" data-slide="0">
     <div class="slide-inner title-slide">
       <div class="top-bar">
         <div class="top-label">Weekly Status</div>
-        <div class="top-date">Week of March 9, 2025</div>
+        <div class="top-date" data-content="date">Week of March 9, 2025</div>
       </div>
       <h1 class="gradient-text">Weekly Status Update</h1>
       <div class="subtitle">Design Engineering</div>
@@ -429,7 +429,7 @@ h3 {
     <div class="slide-inner">
       <div class="eyebrow">Summary</div>
       <div class="card">
-        <p class="content-text">Copilot adoption reached <span class="highlight">85%</span> across all engineering teams, exceeding our Q1 target of 75%.</p>
+        <p class="content-text" data-content="summary">Copilot adoption reached <span class="highlight">85%</span> across all engineering teams, exceeding our Q1 target of 75%.</p>
       </div>
     </div>
   </div>
@@ -440,24 +440,24 @@ h3 {
       <div class="eyebrow">Progress</div>
       <div class="card-grid">
         <div class="status-card complete">
-          <h3>Design System v3</h3>
-          <p>Shipped to production</p>
+          <h3 data-content="progress-1-title">Design System v3</h3>
+          <p data-content="progress-1-desc">Shipped to production</p>
           <div class="status-indicator green">
             <span class="status-dot green"></span>
             Complete
           </div>
         </div>
         <div class="status-card in-progress">
-          <h3>AI Assistant Integration</h3>
-          <p>Development at 70%</p>
+          <h3 data-content="progress-2-title">AI Assistant Integration</h3>
+          <p data-content="progress-2-desc">Development at 70%</p>
           <div class="status-indicator orange">
             <span class="status-dot orange"></span>
             In Progress
           </div>
         </div>
         <div class="status-card blocked">
-          <h3>Accessibility Audit</h3>
-          <p>Blocked by vendor response</p>
+          <h3 data-content="progress-3-title">Accessibility Audit</h3>
+          <p data-content="progress-3-desc">Blocked by vendor response</p>
           <div class="status-indicator red">
             <span class="status-dot red"></span>
             Blocked
@@ -468,21 +468,21 @@ h3 {
   </div>
 
   <!-- Slide 4: Newsletter -->
-  <div class="slide" data-slide="3">
+  <div class="slide" data-slide="3" data-section="newsletter">
     <div class="slide-inner">
       <div class="eyebrow">Newsletter</div>
       <div class="card">
-        <p class="content-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <span class="highlight">23%</span>.</p>
+        <p class="content-text" data-content="newsletter">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <span class="highlight">23%</span>.</p>
       </div>
     </div>
   </div>
 
   <!-- Slide 5: Top of Mind -->
-  <div class="slide" data-slide="4">
+  <div class="slide" data-slide="4" data-section="topofmind">
     <div class="slide-inner">
       <div class="eyebrow">Top of Mind</div>
       <div class="card">
-        <p class="content-text">Scaling the design review process without creating bottlenecks on senior designers.</p>
+        <p class="content-text" data-content="topofmind">Scaling the design review process without creating bottlenecks on senior designers.</p>
       </div>
     </div>
   </div>

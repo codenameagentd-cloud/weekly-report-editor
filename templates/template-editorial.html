@@ -539,9 +539,9 @@ html, body {
 <div class="top-rule"></div>
 
 <!-- Slide 1: Summary -->
-<div class="slide active" data-index="0" data-section="newsletter" data-section="topofmind">
+<div class="slide active" data-index="0">
   <div class="slide-content">
-    <div class="summary-kicker">Weekly Status &mdash; March 10, 2026</div>
+    <div class="summary-kicker" data-content="date">Weekly Status &mdash; March 10, 2026</div>
     <h1 class="summary-headline">Copilot Adoption Exceeds Q1 Target at 85%</h1>
     <div class="divider">
       <div class="divider-line"></div>
@@ -549,7 +549,7 @@ html, body {
       <div class="divider-line"></div>
     </div>
     <div class="pull-quote">
-      <p class="pull-quote-text">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</p>
+      <p class="pull-quote-text" data-content="summary">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</p>
     </div>
     <div class="divider-simple"></div>
     <div class="summary-byline">
@@ -568,31 +568,31 @@ html, body {
     <div class="progress-list">
       <div class="progress-item">
         <div class="progress-header">
-          <span class="progress-title">Design System v3</span>
+          <span class="progress-title" data-content="progress-1-title">Design System v3</span>
           <span class="progress-status status-done">Complete</span>
         </div>
-        <p class="progress-desc">Shipped to production</p>
+        <p class="progress-desc" data-content="progress-1-desc">Shipped to production</p>
       </div>
       <div class="progress-item">
         <div class="progress-header">
-          <span class="progress-title">AI Assistant Integration</span>
+          <span class="progress-title" data-content="progress-2-title">AI Assistant Integration</span>
           <span class="progress-status status-progress">In Progress</span>
         </div>
-        <p class="progress-desc">Development at 70%</p>
+        <p class="progress-desc" data-content="progress-2-desc">Development at 70%</p>
       </div>
       <div class="progress-item">
         <div class="progress-header">
-          <span class="progress-title">Accessibility Audit</span>
+          <span class="progress-title" data-content="progress-3-title">Accessibility Audit</span>
           <span class="progress-status status-blocked">Blocked</span>
         </div>
-        <p class="progress-desc">Blocked by vendor response</p>
+        <p class="progress-desc" data-content="progress-3-desc">Blocked by vendor response</p>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Slide 3: Newsletter -->
-<div class="slide" data-index="2">
+<div class="slide" data-index="2" data-section="newsletter">
   <div class="slide-content">
     <div class="section-label">Newsletter</div>
     <div style="text-align: center; margin-bottom: 36px;">
@@ -605,13 +605,13 @@ html, body {
       <div class="divider-line"></div>
     </div>
     <div class="newsletter-body">
-      <p class="body-text drop-cap">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <strong>23%</strong>.</p>
+      <p class="body-text drop-cap" data-content="newsletter">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <strong>23%</strong>.</p>
     </div>
   </div>
 </div>
 
 <!-- Slide 4: Top of Mind -->
-<div class="slide" data-index="3">
+<div class="slide" data-index="3" data-section="topofmind">
   <div class="slide-content">
     <div class="section-label">Top of Mind</div>
     <div class="divider-simple"></div>
@@ -621,7 +621,7 @@ html, body {
       <div class="divider-ornament"></div>
       <div class="divider-line"></div>
     </div>
-    <p class="topofmind-body drop-cap">Scaling the design review process without creating bottlenecks on senior designers. As our team grows and project velocity increases, we need a framework that preserves quality while distributing decision-making more broadly.</p>
+    <p class="topofmind-body drop-cap" data-content="topofmind">Scaling the design review process without creating bottlenecks on senior designers. As our team grows and project velocity increases, we need a framework that preserves quality while distributing decision-making more broadly.</p>
   </div>
 </div>
 

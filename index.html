@@ -243,75 +243,123 @@ function parseProgressItems(text) {
 }
 
 function fillTemplate(html, data) {
-  let result = html;
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
 
-  // Replace dates (various formats found in templates)
+  // Helper: set text on all elements matching data-content attr
+  // If the element has child elements with data-content, only replace direct text nodes
+  const set = (attr, value) => {
+    doc.querySelectorAll(`[data-content="${attr}"]`).forEach(el => {
+      if (el.querySelector('[data-content]')) {
+        // Preserve child elements with data-content; replace only text nodes
+        [...el.childNodes].forEach(n => { if (n.nodeType === 3) n.remove(); });
+        el.insertBefore(doc.createTextNode(value + ' '), el.firstChild);
+      } else {
+        el.textContent = value;
+      }
+    });
+  };
+
+  // Date
   const dateStr = getCurrentDateFormatted();
   const now = new Date();
   const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
   const weekLabel = `Week of ${mon.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
-  result = result.replace(/March 10, 2026/g, dateStr);
-  result = result.replace(/10\.03\.2026/g, `${String(now.getDate()).padStart(2,'0')}.${String(now.getMonth()+1).padStart(2,'0')}.${now.getFullYear()}`);
-  result = result.replace(/03\.10\.2026/g, `${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}.${now.getFullYear()}`);
-  result = result.replace(/Week of March 9, 2025/g, weekLabel);
-  result = result.replace(/Week of March 10, 2025/g, weekLabel);
-  result = result.replace(/Week of March 9, 2026/g, weekLabel);
-  result = result.replace(/Week of March 10, 2026/g, weekLabel);
+  const dotDateDMY = `${String(now.getDate()).padStart(2,'0')}.${String(now.getMonth()+1).padStart(2,'0')}.${now.getFullYear()}`;
+  const dotDateMDY = `${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}.${now.getFullYear()}`;
 
-  // Replace title date in <title> tag
-  result = result.replace(/(Weekly (?:Status|Report)\s*(?:—|–|-)\s*).*?(<\/title>)/, `$1${dateStr}$2`);
+  // Set date via data-content (each template marks its date element)
+  doc.querySelectorAll('[data-content="date"]').forEach(el => {
+    const orig = el.textContent.trim();
+    if (/Week of/i.test(orig)) {
+      el.textContent = weekLabel;
+    } else if (/^\d{2}\.\d{2}\.\d{4}$/.test(orig)) {
+      // Detect DD.MM or MM.DD by checking month position
+      el.textContent = /^0?3\.10|^10\.0?3/.test(orig) ? dotDateDMY : dotDateMDY;
+    } else {
+      el.textContent = dateStr;
+    }
+  });
 
-  // Replace summary text
-  result = result.replace(
-    /Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%\./g,
-    escH(data.summary)
-  );
+  // Update <title> tag
+  const titleEl = doc.querySelector('title');
+  if (titleEl) {
+    titleEl.textContent = titleEl.textContent.replace(
+      /\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s*\d{4}|Week of .+?\d{4}|Brutalist|Cinematic|Classic/i,
+      dateStr
+    );
+  }
 
-  // Replace progress items
+  // Summary
+  set('summary', data.summary);
+
+  // Progress items
   const items = parseProgressItems(data.progress);
-  const p1 = items[0] || { title: '', desc: '' };
-  const p2 = items[1] || { title: '', desc: '' };
-  const p3 = items[2] || { title: '', desc: '' };
+  for (let i = 0; i < 3; i++) {
+    const item = items[i] || { title: '', desc: '' };
+    set(`progress-${i+1}-title`, item.title);
+    set(`progress-${i+1}-desc`, item.desc);
+  }
 
-  // Replace progress item titles and descriptions
-  result = result.replace(/Design System v3/g, escH(p1.title || 'Item 1'));
-  result = result.replace(/Shipped to production/g, escH(p1.desc || ''));
-  result = result.replace(/AI Assistant Integration/g, escH(p2.title || 'Item 2'));
-  result = result.replace(/AI Assistant/g, escH(p2.title || 'Item 2'));
-  result = result.replace(/Development at 70%/g, escH(p2.desc || ''));
-  result = result.replace(/Accessibility Audit/g, escH(p3.title || 'Item 3'));
-  result = result.replace(/Blocked by vendor response/g, escH(p3.desc || ''));
+  // Hide unused progress cards when fewer than 3 items
+  for (let i = items.length; i < 3; i++) {
+    doc.querySelectorAll(`[data-content="progress-${i+1}-title"]`).forEach(el => {
+      const card = el.closest('[data-progress-item], .card, .status-card, .progress-item, .progress-row, .progress-card, .neon-card, .timeline-item, .item, .bento-card, .project-row');
+      if (card) card.style.display = 'none';
+    });
+  }
 
-  // Replace newsletter text
+  // Optional sections — set content or remove slide
   if (data.newsletter) {
-    result = result.replace(
-      /Published Q1 design retrospective\. Key finding: reducing visual noise improved task completion rate by 23%\./g,
-      escH(data.newsletter)
-    );
+    set('newsletter', data.newsletter);
+  } else {
+    const slide = doc.querySelector('[data-section="newsletter"]');
+    if (slide) slide.remove();
   }
 
-  // Replace top of mind text
   if (data.topofmind) {
-    result = result.replace(
-      /Scaling the design review process without creating bottlenecks on senior designers\./g,
-      escH(data.topofmind)
-    );
+    set('topofmind', data.topofmind);
+  } else {
+    const slide = doc.querySelector('[data-section="topofmind"]');
+    if (slide) slide.remove();
   }
 
-  // Remove newsletter slide if empty
-  if (!data.newsletter) {
-    result = removeSlide(result, 'newsletter');
+  // Renumber data-slide attributes
+  doc.querySelectorAll('[data-slide]').forEach((s, i) => s.setAttribute('data-slide', i));
+  // Also renumber data-index attributes
+  doc.querySelectorAll('[data-index]').forEach((s, i) => s.setAttribute('data-index', i));
+
+  // Update page counter totals
+  const slideSelector = '.slide, .content-slide';
+  const totalSlides = doc.querySelectorAll(slideSelector).length;
+
+  // Update "/ N" counters
+  doc.querySelectorAll('.page-counter, .slide-counter, .pg, #counter, .slide-num').forEach(el => {
+    el.innerHTML = el.innerHTML.replace(/\/\s*\d+/, `/ ${totalSlides}`);
+  });
+
+  // Update nav dots / page dots (remove excess)
+  doc.querySelectorAll('.nav-dots .nav-dot, .page-indicator .page-dot, .page-dots .page-dot').forEach((d, i) => {
+    if (i >= totalSlides) d.remove();
+  });
+
+  // Update sidebar nav items (split template)
+  const sidebarNav = doc.getElementById('sidebar-nav');
+  if (sidebarNav) {
+    const navItems = sidebarNav.querySelectorAll('li');
+    navItems.forEach((li, i) => {
+      const label = li.textContent.trim().toLowerCase();
+      if ((label.includes('newsletter') && !data.newsletter) ||
+          (label.includes('top of mind') && !data.topofmind)) {
+        li.remove();
+      }
+    });
+    // Re-number data-slide on remaining items
+    sidebarNav.querySelectorAll('li').forEach((li, i) => li.setAttribute('data-slide', i));
   }
 
-  // Remove top of mind slide if empty
-  if (!data.topofmind) {
-    result = removeSlide(result, 'topofmind');
-  }
-
-  // Update page counter totals after slide removal
-  result = updatePageCounters(result);
-
-  return result;
+  // Serialize back
+  return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
 }
 
 function findSlideBlocks(html) {

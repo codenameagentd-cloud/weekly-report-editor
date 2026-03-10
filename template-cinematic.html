@@ -615,9 +615,9 @@ html, body {
 <div class="vignette"></div>
 
 <!-- ——— Slide 1: Title ——— -->
-<div class="slide slide-title active" data-index="0" data-section="newsletter" data-section="topofmind">
+<div class="slide slide-title active" data-index="0">
   <div class="title-main">Weekly<br>Status</div>
-  <div class="title-sub">March 10, 2026</div>
+  <div class="title-sub" data-content="date">March 10, 2026</div>
   <div class="title-line"></div>
 </div>
 
@@ -625,7 +625,7 @@ html, body {
 <div class="slide slide-summary" data-index="1">
   <div class="section-label">Summary</div>
   <div class="hero-stat">85%</div>
-  <div class="body-text">Copilot adoption reached <strong>85%</strong> across all engineering teams, exceeding our Q1 target of 75%.</div>
+  <div class="body-text" data-content="summary">Copilot adoption reached <strong>85%</strong> across all engineering teams, exceeding our Q1 target of 75%.</div>
 </div>
 
 <!-- ——— Slide 3: Progress ——— -->
@@ -634,22 +634,22 @@ html, body {
   <div class="timeline">
     <div class="timeline-item done">
       <div class="timeline-content">
-        <div class="timeline-title">Design System v3</div>
-        <div class="timeline-desc">Shipped to production</div>
+        <div class="timeline-title" data-content="progress-1-title">Design System v3</div>
+        <div class="timeline-desc" data-content="progress-1-desc">Shipped to production</div>
         <div class="timeline-status">Done</div>
       </div>
     </div>
     <div class="timeline-item in-progress">
       <div class="timeline-content">
-        <div class="timeline-title">AI Assistant Integration</div>
-        <div class="timeline-desc">Development at 70%</div>
+        <div class="timeline-title" data-content="progress-2-title">AI Assistant Integration</div>
+        <div class="timeline-desc" data-content="progress-2-desc">Development at 70%</div>
         <div class="timeline-status">In Progress</div>
       </div>
     </div>
     <div class="timeline-item blocked">
       <div class="timeline-content">
-        <div class="timeline-title">Accessibility Audit</div>
-        <div class="timeline-desc">Blocked by vendor response</div>
+        <div class="timeline-title" data-content="progress-3-title">Accessibility Audit</div>
+        <div class="timeline-desc" data-content="progress-3-desc">Blocked by vendor response</div>
         <div class="timeline-status">Blocked</div>
       </div>
     </div>
@@ -657,18 +657,18 @@ html, body {
 </div>
 
 <!-- ——— Slide 4: Newsletter ——— -->
-<div class="slide slide-newsletter" data-index="3">
+<div class="slide slide-newsletter" data-index="3" data-section="newsletter">
   <div class="section-label">Newsletter</div>
   <div class="quote-block">
     <div class="quote-mark">&ldquo;</div>
-    <div class="body-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <strong>23%</strong>.</div>
+    <div class="body-text" data-content="newsletter">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <strong>23%</strong>.</div>
   </div>
 </div>
 
 <!-- ——— Slide 5: Top of Mind ——— -->
-<div class="slide slide-topofmind" data-index="4">
+<div class="slide slide-topofmind" data-index="4" data-section="topofmind">
   <div class="section-label">Top of Mind</div>
-  <div class="thought">Scaling the design review process without creating bottlenecks on senior designers.</div>
+  <div class="thought" data-content="topofmind">Scaling the design review process without creating bottlenecks on senior designers.</div>
   <div class="thought-accent"></div>
 </div>
 

@@ -592,7 +592,7 @@ html, body {
 <body>
 
 <!-- ════════════ SLIDE 1: TITLE ════════════ -->
-<div class="slide-title" id="slide-title" data-section="newsletter" data-section="topofmind">
+<div class="slide-title" id="slide-title">
   <div class="title-left">
     <h1>Weekly Status<br>Update</h1>
     <p>Design Engineering</p>
@@ -606,7 +606,7 @@ html, body {
     <div class="geo-dot geo-dot-1"></div>
     <div class="geo-dot geo-dot-2"></div>
     <div class="geo-dot geo-dot-3"></div>
-    <div class="title-date">
+    <div class="title-date" data-content="date">
       Week of March 9, 2025
       <span>Monday &mdash; Friday</span>
     </div>
@@ -625,7 +625,7 @@ html, body {
     <li data-slide="2"><a>Newsletter</a></li>
     <li data-slide="3"><a>Top of Mind</a></li>
   </ul>
-  <div class="sidebar-footer">Week of March 9, 2025</div>
+  <div class="sidebar-footer" data-content="date">Week of March 9, 2025</div>
 </nav>
 
 <!-- ════════════ CONTENT AREA ════════════ -->
@@ -635,7 +635,7 @@ html, body {
   <div class="content-slide active" data-index="0">
     <div class="content-label">Summary</div>
     <div class="content-heading">Key Highlight</div>
-    <div class="content-body">
+    <div class="content-body" data-content="summary">
       Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.
     </div>
   </div>
@@ -651,8 +651,8 @@ html, body {
           <div class="timeline-line"></div>
         </div>
         <div class="timeline-content">
-          <div class="timeline-title">Design System v3</div>
-          <div class="timeline-status shipped">Shipped to production</div>
+          <div class="timeline-title" data-content="progress-1-title">Design System v3</div>
+          <div class="timeline-status shipped" data-content="progress-1-desc">Shipped to production</div>
         </div>
       </div>
       <div class="timeline-item">
@@ -661,8 +661,8 @@ html, body {
           <div class="timeline-line"></div>
         </div>
         <div class="timeline-content">
-          <div class="timeline-title">AI Assistant Integration</div>
-          <div class="timeline-status progress">Development at 70%</div>
+          <div class="timeline-title" data-content="progress-2-title">AI Assistant Integration</div>
+          <div class="timeline-status progress" data-content="progress-2-desc">Development at 70%</div>
         </div>
       </div>
       <div class="timeline-item">
@@ -670,27 +670,27 @@ html, body {
           <div class="timeline-dot amber"></div>
         </div>
         <div class="timeline-content">
-          <div class="timeline-title">Accessibility Audit</div>
-          <div class="timeline-status blocked">Blocked by vendor response</div>
+          <div class="timeline-title" data-content="progress-3-title">Accessibility Audit</div>
+          <div class="timeline-status blocked" data-content="progress-3-desc">Blocked by vendor response</div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Slide 4: Newsletter -->
-  <div class="content-slide" data-index="2">
+  <div class="content-slide" data-index="2" data-section="newsletter">
     <div class="content-label">Newsletter</div>
     <div class="content-heading">Q1 Design Retrospective</div>
-    <div class="content-body">
+    <div class="content-body" data-content="newsletter">
       Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.
     </div>
   </div>
 
   <!-- Slide 5: Top of Mind -->
-  <div class="content-slide" data-index="3">
+  <div class="content-slide" data-index="3" data-section="topofmind">
     <div class="content-label">Top of Mind</div>
     <div class="content-heading">Looking Ahead</div>
-    <div class="content-body">
+    <div class="content-body" data-content="topofmind">
       Scaling the design review process without creating bottlenecks on senior designers.
     </div>
   </div>

@@ -499,14 +499,14 @@
 <div id="counter">01/05</div>
 
 <!-- SLIDE 1: TITLE -->
-<div class="slide slide-1 active" data-index="1" data-section="newsletter" data-section="topofmind">
+<div class="slide slide-1 active" data-index="1">
   <div class="vertical-rule"></div>
   <div class="horizontal-rule"></div>
   <div class="title-block">
     <div class="title-weekly">WEEKLY</div>
     <div class="title-status"><span class="yellow-highlight">STATUS</span></div>
   </div>
-  <div class="date-box">03.10.2026</div>
+  <div class="date-box" data-content="date">03.10.2026</div>
   <div class="corner-mark">Weekly Report / Brutalist</div>
 </div>
 
@@ -517,7 +517,7 @@
   </div>
   <div class="summary-content">
     <div class="big-stat"><span class="yellow-highlight">85%</span></div>
-    <div class="summary-text">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</div>
+    <div class="summary-text" data-content="summary">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</div>
   </div>
   <div class="deco-box"></div>
   <div class="deco-line"></div>
@@ -531,8 +531,8 @@
   <div class="progress-list">
     <div class="progress-item">
       <div class="progress-left">
-        <div class="progress-name">Design System v3</div>
-        <div class="progress-desc">Shipped to production</div>
+        <div class="progress-name" data-content="progress-1-title">Design System v3</div>
+        <div class="progress-desc" data-content="progress-1-desc">Shipped to production</div>
       </div>
       <div class="progress-right">
         <span class="tag tag-done">[DONE]</span>
@@ -540,8 +540,8 @@
     </div>
     <div class="progress-item">
       <div class="progress-left">
-        <div class="progress-name">AI Assistant Integration</div>
-        <div class="progress-desc">Development at 70%</div>
+        <div class="progress-name" data-content="progress-2-title">AI Assistant Integration</div>
+        <div class="progress-desc" data-content="progress-2-desc">Development at 70%</div>
       </div>
       <div class="progress-right">
         <span class="tag tag-wip">[WIP]</span>
@@ -549,8 +549,8 @@
     </div>
     <div class="progress-item">
       <div class="progress-left">
-        <div class="progress-name">Accessibility Audit</div>
-        <div class="progress-desc">Blocked by vendor response</div>
+        <div class="progress-name" data-content="progress-3-title">Accessibility Audit</div>
+        <div class="progress-desc" data-content="progress-3-desc">Blocked by vendor response</div>
       </div>
       <div class="progress-right">
         <span class="tag tag-blocked">[BLOCKED]</span>
@@ -560,22 +560,22 @@
 </div>
 
 <!-- SLIDE 4: NEWSLETTER -->
-<div class="slide slide-4" data-index="4">
+<div class="slide slide-4" data-index="4" data-section="newsletter">
   <div class="news-label">
     <span class="label">Newsletter</span>
   </div>
   <div class="news-content">
     <div class="big-stat"><span class="yellow-highlight">23%</span></div>
-    <div class="news-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</div>
+    <div class="news-text" data-content="newsletter">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</div>
   </div>
   <div class="thick-rule"></div>
   <div class="deco-rect"></div>
 </div>
 
 <!-- SLIDE 5: TOP OF MIND -->
-<div class="slide slide-5" data-index="5">
+<div class="slide slide-5" data-index="5" data-section="topofmind">
   <div class="mind-title">TOP OF<br>MIND</div>
-  <div class="mind-text">Scaling the design review process without creating bottlenecks on senior designers.</div>
+  <div class="mind-text" data-content="topofmind">Scaling the design review process without creating bottlenecks on senior designers.</div>
   <div class="deco-stripe"></div>
   <div class="deco-stripe" style="max-width: 300px;"></div>
   <div class="deco-box-bottom"></div>

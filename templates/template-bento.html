@@ -646,7 +646,7 @@ html, body {
 </head>
 <body>
 
-<div class="slide-num" data-section="newsletter" data-section="topofmind"><span id="slideNum">01</span> / 05</div>
+<div class="slide-num"><span id="slideNum">01</span> / 05</div>
 
 <div class="page-indicator">
   <div class="dot active" onclick="goTo(0)"></div>
@@ -670,7 +670,7 @@ html, body {
           <h1>Weekly<br>Status</h1>
         </div>
 
-        <div class="card card--white s1-date">
+        <div class="card card--white s1-date" data-content="date">
           <div class="day">10</div>
           <div class="month">Mar 2026</div>
         </div>
@@ -710,7 +710,7 @@ html, body {
         <div class="card card--white s2-desc">
           <div class="label" style="color: var(--text-secondary);">This Week</div>
           <h3 style="margin-bottom: 8px;">Strong execution across all workstreams</h3>
-          <p class="small" style="color: var(--text-secondary);">Shipped key features on schedule. One blocker identified in the review pipeline — plan in place for resolution.</p>
+          <p class="small" data-content="summary" style="color: var(--text-secondary);">Shipped key features on schedule. One blocker identified in the review pipeline — plan in place for resolution.</p>
         </div>
 
         <div class="card card--purple card--pattern-grid s2-pattern"></div>
@@ -738,8 +738,8 @@ html, body {
 
         <div class="card card--green card--pattern-dots s3-done">
           <div class="badge"><span class="status-dot status-dot--green"></span> Done</div>
-          <h2 style="margin-bottom: 8px;">Component library v2</h2>
-          <p class="small" style="color: rgba(255,255,255,0.8);">Shipped the full token system, 14 components migrated to the new API. Documentation complete.</p>
+          <h2 style="margin-bottom: 8px;" data-content="progress-1-title">Component library v2</h2>
+          <p class="small" data-content="progress-1-desc" style="color: rgba(255,255,255,0.8);">Shipped the full token system, 14 components migrated to the new API. Documentation complete.</p>
         </div>
 
         <div class="card card--blue card--pattern-grid s3-progress">
@@ -747,14 +747,14 @@ html, body {
           <div class="progress-ring">
             <div class="progress-ring-inner">70%</div>
           </div>
-          <h3>Design system docs site</h3>
-          <p class="small" style="margin-top: 6px; color: rgba(255,255,255,0.75);">Interactive examples and usage guidelines. Expected completion next Tuesday.</p>
+          <h3 data-content="progress-2-title">Design system docs site</h3>
+          <p class="small" data-content="progress-2-desc" style="margin-top: 6px; color: rgba(255,255,255,0.75);">Interactive examples and usage guidelines. Expected completion next Tuesday.</p>
         </div>
 
         <div class="card card--orange card--pattern-diagonal s3-blocked">
           <div class="badge"><span class="status-dot status-dot--orange"></span> Blocked</div>
-          <h2 style="margin-bottom: 8px;">Accessibility audit</h2>
-          <p class="small" style="color: rgba(255,255,255,0.8);">Waiting on third-party vendor credentials. Escalated to procurement on Friday.</p>
+          <h2 style="margin-bottom: 8px;" data-content="progress-3-title">Accessibility audit</h2>
+          <p class="small" data-content="progress-3-desc" style="color: rgba(255,255,255,0.8);">Waiting on third-party vendor credentials. Escalated to procurement on Friday.</p>
         </div>
 
         <div class="card card--white s3-meta">
@@ -771,7 +771,7 @@ html, body {
   <!-- ════════════════════════════════════════
        SLIDE 4 — NEWSLETTER
        ════════════════════════════════════════ -->
-  <div class="slide" data-slide="3">
+  <div class="slide" data-slide="3" data-section="newsletter">
     <div class="slide-inner">
       <div class="bento s4-grid">
 
@@ -781,7 +781,7 @@ html, body {
 
         <div class="card card--white s4-quote" style="position: relative;">
           <div class="quote-mark">&ldquo;</div>
-          <p style="font-size: 20px; line-height: 1.6; font-weight: 500; position: relative; z-index: 1; padding-top: 12px;">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</p>
+          <p data-content="newsletter" style="font-size: 20px; line-height: 1.6; font-weight: 500; position: relative; z-index: 1; padding-top: 12px;">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</p>
           <p class="small" style="margin-top: 16px; color: var(--text-secondary);">Q1 2026 Design Retrospective &mdash; Internal Newsletter</p>
         </div>
 
@@ -811,7 +811,7 @@ html, body {
   <!-- ════════════════════════════════════════
        SLIDE 5 — TOP OF MIND
        ════════════════════════════════════════ -->
-  <div class="slide" data-slide="4">
+  <div class="slide" data-slide="4" data-section="topofmind">
     <div class="slide-inner">
       <div class="bento s5-grid">
 
@@ -836,7 +836,7 @@ html, body {
 
         <div class="card card--dark card--pattern-dots s5-statement">
           <div class="badge" style="margin-bottom: 20px;">Thinking About</div>
-          <h2 style="font-size: clamp(24px, 3.5vw, 40px); line-height: 1.3; font-weight: 700; max-width: 800px;">Scaling the design review process without creating bottlenecks on senior designers.</h2>
+          <h2 data-content="topofmind" style="font-size: clamp(24px, 3.5vw, 40px); line-height: 1.3; font-weight: 700; max-width: 800px;">Scaling the design review process without creating bottlenecks on senior designers.</h2>
           <p class="small" style="margin-top: 20px; color: rgba(255,255,255,0.5); max-width: 600px;">Exploring peer review tiers, async critique protocols, and automated pattern-matching to distribute review load.</p>
         </div>
 

@@ -591,14 +591,14 @@
 <body>
 
 <!-- Slide 1: Title -->
-<div class="slide slide-title active" data-slide="0" data-section="newsletter" data-section="topofmind">
+<div class="slide slide-title active" data-slide="0">
   <h1>
     <span class="bold">Weekly</span><br>
     <span class="light">Status</span><br>
     <span class="bold">Update</span>
   </h1>
   <div class="title-rule accent-line centered"></div>
-  <div class="date">Week of March 9, 2025</div>
+  <div class="date" data-content="date">Week of March 9, 2025</div>
 </div>
 
 <!-- Slide 2: Summary -->
@@ -606,7 +606,7 @@
   <div class="summary-block">
     <div class="slide-label">Summary</div>
     <div class="accent-line light centered" style="align-self:center;"></div>
-    <p>Copilot adoption reached <strong>85%</strong> across all engineering teams, exceeding our Q1 target of 75%.</p>
+    <p data-content="summary">Copilot adoption reached <strong>85%</strong> across all engineering teams, exceeding our Q1 target of 75%.</p>
   </div>
 </div>
 
@@ -626,8 +626,8 @@
       <span class="pill-dot"></span>
       Done
     </div>
-    <h3>Design System v3</h3>
-    <div class="detail">Shipped to production. All component tokens migrated and validated across 12 product surfaces.</div>
+    <h3 data-content="progress-1-title">Design System v3</h3>
+    <div class="detail" data-content="progress-1-desc">Shipped to production. All component tokens migrated and validated across 12 product surfaces.</div>
   </div>
   <div class="progress-index">1 / 3</div>
 </div>
@@ -639,8 +639,8 @@
       <span class="pill-dot"></span>
       In Progress
     </div>
-    <h3>AI Assistant Integration</h3>
-    <div class="detail">Development at 70%. Context engine and prompt chaining complete; working on response streaming.</div>
+    <h3 data-content="progress-2-title">AI Assistant Integration</h3>
+    <div class="detail" data-content="progress-2-desc">Development at 70%. Context engine and prompt chaining complete; working on response streaming.</div>
   </div>
   <div class="progress-index">2 / 3</div>
 </div>
@@ -652,14 +652,14 @@
       <span class="pill-dot"></span>
       Blocked
     </div>
-    <h3>Accessibility Audit</h3>
-    <div class="detail">Blocked by vendor response. VPAT documentation requested two weeks ago; follow-up sent Friday.</div>
+    <h3 data-content="progress-3-title">Accessibility Audit</h3>
+    <div class="detail" data-content="progress-3-desc">Blocked by vendor response. VPAT documentation requested two weeks ago; follow-up sent Friday.</div>
   </div>
   <div class="progress-index">3 / 3</div>
 </div>
 
 <!-- Slide 7: Newsletter -->
-<div class="slide slide-body" data-slide="6">
+<div class="slide slide-body" data-slide="6" data-section="newsletter">
   <div class="body-block">
     <div class="slide-label">Newsletter</div>
     <div class="decorative-lines">
@@ -667,12 +667,12 @@
       <span class="line-short"></span>
       <span class="line-long"></span>
     </div>
-    <p>Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <strong>23%</strong>.</p>
+    <p data-content="newsletter">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <strong>23%</strong>.</p>
   </div>
 </div>
 
 <!-- Slide 8: Top of Mind -->
-<div class="slide slide-body slide-topofmind" data-slide="7">
+<div class="slide slide-body slide-topofmind" data-slide="7" data-section="topofmind">
   <div class="body-block">
     <div class="slide-label">Top of Mind</div>
     <div class="decorative-lines">
@@ -680,7 +680,7 @@
       <span class="line-short"></span>
       <span class="line-long"></span>
     </div>
-    <p>Scaling the design review process without creating bottlenecks on senior designers.</p>
+    <p data-content="topofmind">Scaling the design review process without creating bottlenecks on senior designers.</p>
   </div>
 </div>
 
