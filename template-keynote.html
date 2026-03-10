@@ -40,13 +40,52 @@
     justify-content: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 40px;
   }
 
   .slide.active {
     opacity: 1;
     pointer-events: auto;
+  }
+
+  @keyframes keynoteFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .slide.active h1,
+  .slide.active h2,
+  .slide.active h3 {
+    animation: keynoteFadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.1s;
+  }
+
+  .slide.active .date,
+  .slide.active .detail,
+  .slide.active p {
+    animation: keynoteFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.25s;
+  }
+
+  .slide.active .status-dot {
+    animation: keynoteFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.05s;
+  }
+
+  .slide-title.active h1 .bold:first-child {
+    animation: keynoteFadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.05s;
+  }
+
+  .slide-title.active h1 .light {
+    animation: keynoteFadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.15s;
+  }
+
+  .slide-title.active h1 .bold:last-child {
+    animation: keynoteFadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.25s;
   }
 
   /* Title slide */
@@ -285,13 +324,29 @@
 
   var dots = document.querySelectorAll('.nav-dot');
 
+  var transitioning = false;
+
   function goTo(index) {
-    if (index < 0 || index >= total || index === current) return;
-    slides[current].classList.remove('active');
+    if (index < 0 || index >= total || index === current || transitioning) return;
+    transitioning = true;
+
+    var oldSlide = slides[current];
+    oldSlide.classList.remove('active');
     dots[current].classList.remove('active');
+
+    // Reset animations on leaving slide
+    var els = oldSlide.querySelectorAll('h1, h2, h3, .date, .detail, p, .status-dot, .light, .bold');
+    for (var j = 0; j < els.length; j++) {
+      els[j].style.animation = 'none';
+      els[j].offsetHeight;
+      els[j].style.animation = '';
+    }
+
     current = index;
     slides[current].classList.add('active');
     dots[current].classList.add('active');
+
+    setTimeout(function() { transitioning = false; }, 620);
   }
 
   // Keyboard navigation

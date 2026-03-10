@@ -31,16 +31,106 @@
     width: 100vw;
     height: 100vh;
     background: #F5F5F0;
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
     display: flex;
     align-items: center;
   }
 
   .slide.active {
-    opacity: 1;
+    clip-path: inset(0 0 0 0);
     pointer-events: auto;
+  }
+
+  /* ── Swiss Animations ── */
+  @keyframes swissScaleIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+
+  @keyframes swissFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes swissSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Geometric element animations */
+  .slide.active .red-block,
+  .slide.active .red-bar,
+  .slide.active .red-block-large {
+    animation: swissScaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.15s;
+    transform-origin: center;
+  }
+
+  .slide.active .black-vert,
+  .slide.active .black-block,
+  .slide.active .black-square {
+    animation: swissFadeIn 0.3s ease both;
+    animation-delay: 0.1s;
+  }
+
+  .slide.active .page-number {
+    animation: swissSlideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.2s;
+  }
+
+  /* Content animations */
+  .slide.active .content .label {
+    animation: swissSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.1s;
+  }
+
+  .slide.active .content .rule {
+    animation: swissScaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.15s;
+    transform-origin: left;
+  }
+
+  .slide.active .content .stat {
+    animation: swissSlideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.2s;
+  }
+
+  .slide.active .content .body-text {
+    animation: swissSlideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.25s;
+  }
+
+  /* Title slide */
+  .slide.active .title-block {
+    animation: swissSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.1s;
+  }
+
+  .slide.active .date-rule {
+    animation: swissScaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.2s;
+    transform-origin: left;
+  }
+
+  .slide.active .date {
+    animation: swissSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.25s;
+  }
+
+  /* Progress rows stagger */
+  .slide-3.active .content > :nth-child(3) {
+    animation: swissSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.15s;
+  }
+  .slide-3.active .content > :nth-child(5) {
+    animation: swissSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.22s;
+  }
+  .slide-3.active .content > :nth-child(7) {
+    animation: swissSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.29s;
   }
 
   /* Page numbers */
@@ -456,12 +546,27 @@
     var slides = document.querySelectorAll('.slide');
     var current = 0;
     var total = slides.length;
+    var transitioning = false;
 
     function go(index) {
-      if (index < 0 || index >= total || index === current) return;
-      slides[current].classList.remove('active');
+      if (index < 0 || index >= total || index === current || transitioning) return;
+      transitioning = true;
+
+      var oldSlide = slides[current];
+      oldSlide.classList.remove('active');
+
+      // Reset animations
+      var els = oldSlide.querySelectorAll('.red-block, .red-bar, .red-block-large, .black-vert, .black-block, .black-square, .page-number, .label, .rule, .stat, .body-text, .title-block, .date-rule, .date, .progress-row, .rule-thin');
+      for (var j = 0; j < els.length; j++) {
+        els[j].style.animation = 'none';
+        els[j].offsetHeight;
+        els[j].style.animation = '';
+      }
+
       current = index;
       slides[current].classList.add('active');
+
+      setTimeout(function() { transitioning = false; }, 520);
     }
 
     document.addEventListener('keydown', function (e) {

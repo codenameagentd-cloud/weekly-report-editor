@@ -410,6 +410,56 @@ html, body {
 .timeline-status.progress { color: #6366f1; }
 .timeline-status.blocked { color: #d97706; }
 
+@keyframes splitSlideRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes splitPopIn {
+  from { opacity: 0; transform: scale(0); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes splitFadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.content-slide.active .content-label {
+  animation: splitFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.content-slide.active .content-heading {
+  animation: splitSlideRight 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.08s;
+}
+
+.content-slide.active .content-body {
+  animation: splitSlideRight 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.16s;
+}
+
+.content-slide.active .timeline {
+  animation: splitSlideRight 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.1s;
+}
+
+/* Timeline dots pop in sequentially */
+.content-slide.active .timeline-item:nth-child(1) .timeline-dot {
+  animation: splitPopIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.2s;
+}
+
+.content-slide.active .timeline-item:nth-child(2) .timeline-dot {
+  animation: splitPopIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.35s;
+}
+
+.content-slide.active .timeline-item:nth-child(3) .timeline-dot {
+  animation: splitPopIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.5s;
+}
+
 /* ── Page indicator dots ── */
 
 .page-dots {
@@ -677,6 +727,19 @@ html, body {
 
   function goTo(index) {
     if (index < 0 || index >= TOTAL_SLIDES) return;
+
+    // Reset animations on the old content slide before switching
+    if (current > 0) {
+      var oldContentIndex = current - 1;
+      var oldSlide = contentSlides[oldContentIndex];
+      var els = oldSlide.querySelectorAll('.content-label, .content-heading, .content-body, .timeline, .timeline-dot');
+      for (var j = 0; j < els.length; j++) {
+        els[j].style.animation = 'none';
+        els[j].offsetHeight;
+        els[j].style.animation = '';
+      }
+    }
+
     current = index;
 
     // Title slide visibility

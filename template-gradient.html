@@ -67,6 +67,17 @@
     filter: blur(80px);
     opacity: 0.3;
     pointer-events: none;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+
+  .slide .orb:nth-child(2) {
+    animation-delay: -2.5s;
+    animation-duration: 10s;
+  }
+
+  .slide .orb:nth-child(3) {
+    animation-delay: -5s;
+    animation-duration: 12s;
   }
 
   /* ── Glass card ── */
@@ -277,6 +288,75 @@
     line-height: 1.45;
     letter-spacing: -0.3px;
   }
+
+  /* ── Keyframes ── */
+
+  @keyframes gradientFloatUp {
+    from { opacity: 0; transform: translateY(40px); filter: blur(4px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0px); }
+  }
+
+  @keyframes gradientFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(10px, -15px); }
+    50% { transform: translate(-5px, -25px); }
+    75% { transform: translate(-15px, -10px); }
+  }
+
+  /* ── Slide entry animations ── */
+
+  .slide.active .glass {
+    animation: gradientFloatUp 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.1s;
+  }
+
+  .slide.active .title-main {
+    animation: gradientFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.05s;
+  }
+
+  .slide.active .pill {
+    animation: gradientFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.15s;
+  }
+
+  .slide.active .title-sub {
+    animation: gradientFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.25s;
+  }
+
+  .slide.active .summary-text,
+  .slide.active .newsletter-text,
+  .slide.active .tom-text {
+    animation: gradientFadeUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.2s;
+  }
+
+  .slide.active .highlight-badge {
+    animation: gradientFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.35s;
+  }
+
+  /* Progress cards stagger */
+  .slide.active .progress-card:nth-child(1) {
+    animation: gradientFloatUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.1s;
+  }
+
+  .slide.active .progress-card:nth-child(2) {
+    animation: gradientFloatUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.2s;
+  }
+
+  .slide.active .progress-card:nth-child(3) {
+    animation: gradientFloatUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.3s;
+  }
 </style>
 </head>
 <body>
@@ -394,14 +474,29 @@
   var total = 5;
   var slides = document.querySelectorAll('.slide');
   var dots = document.querySelectorAll('.dot');
+  var transitioning = false;
 
   function go(index) {
-    if (index < 0 || index >= total || index === current) return;
-    slides[current].classList.remove('active');
+    if (index < 0 || index >= total || index === current || transitioning) return;
+    transitioning = true;
+
+    var oldSlide = slides[current];
+    oldSlide.classList.remove('active');
     dots[current].classList.remove('active');
+
+    // Reset animations on content elements (not orbs)
+    var els = oldSlide.querySelectorAll('.glass, .title-main, .pill, .title-sub, .summary-text, .newsletter-text, .tom-text, .highlight-badge, .progress-card');
+    for (var j = 0; j < els.length; j++) {
+      els[j].style.animation = 'none';
+      els[j].offsetHeight;
+      els[j].style.animation = '';
+    }
+
     current = index;
     slides[current].classList.add('active');
     dots[current].classList.add('active');
+
+    setTimeout(function() { transitioning = false; }, 620);
   }
 
   document.addEventListener('keydown', function (e) {

@@ -47,15 +47,15 @@ body {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: scale(0.98);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
   overflow-y: auto;
 }
 
 .slide.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: scale(1);
   pointer-events: auto;
 }
 
@@ -309,6 +309,68 @@ h3 {
   transition: width 0.4s ease;
 }
 
+/* Slide content animations */
+@keyframes classicSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes classicLineGrow {
+  from { width: 0; }
+  to { width: 40px; }
+}
+
+/* Eyebrow line animation */
+.eyebrow::before {
+  width: 0;
+}
+
+.slide.active .eyebrow::before {
+  animation: classicLineGrow 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.05s;
+}
+
+.slide.active .eyebrow {
+  animation: classicSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Cards stagger */
+.slide.active .status-card:nth-child(1) {
+  animation: classicSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.1s;
+}
+
+.slide.active .status-card:nth-child(2) {
+  animation: classicSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.2s;
+}
+
+.slide.active .status-card:nth-child(3) {
+  animation: classicSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.3s;
+}
+
+/* Content text */
+.slide.active .card .content-text {
+  animation: classicSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.15s;
+}
+
+/* Title slide */
+.slide.active .top-bar {
+  animation: classicSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.slide.active .gradient-text {
+  animation: classicSlideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.1s;
+}
+
+.slide.active .title-slide .subtitle {
+  animation: classicSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.2s;
+}
+
 /* Responsive */
 @media (max-width: 960px) {
   .card-grid {
@@ -463,6 +525,14 @@ h3 {
     isTransitioning = true;
 
     slides[currentSlide].classList.remove('active');
+
+    // Reset animations
+    var animEls = slides[currentSlide].querySelectorAll('.eyebrow, .status-card, .card, .content-text, .top-bar, .gradient-text, .subtitle');
+    for (var j = 0; j < animEls.length; j++) {
+      animEls[j].style.animation = 'none';
+      animEls[j].offsetHeight;
+      animEls[j].style.animation = '';
+    }
 
     const dots = navDotsContainer.querySelectorAll('.nav-dot');
     dots[currentSlide].classList.remove('active');

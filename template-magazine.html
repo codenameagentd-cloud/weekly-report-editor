@@ -430,6 +430,77 @@
     line-height: 1.6;
   }
 
+  /* ── Slide Content Animations ── */
+  @keyframes magazineFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Content entrance animations */
+  .slide.active .label,
+  .slide.active .section-label,
+  .slide.active .card-status,
+  .slide.active .stat-number,
+  .slide.active .stat-desc,
+  .slide.active .closing-note,
+  .slide.active .subtitle,
+  .slide.active .rule-bottom,
+  .slide.active .rule-accent {
+    animation: magazineFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  .slide.active h1,
+  .slide.active h2,
+  .slide.active .pull-quote,
+  .slide.active .summary-right,
+  .slide.active .newsletter-left h2,
+  .slide.active .newsletter-left p {
+    animation: magazineFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  /* Stagger delays */
+  .slide.active > *:nth-child(1),
+  .slide.active .label,
+  .slide.active .section-label { animation-delay: 0s; }
+
+  .slide.active > *:nth-child(2),
+  .slide.active h1,
+  .slide.active h2,
+  .slide.active .progress-header { animation-delay: 0.1s; }
+
+  .slide.active > *:nth-child(3),
+  .slide.active .subtitle,
+  .slide.active .pull-quote { animation-delay: 0.2s; }
+
+  .slide.active > *:nth-child(4),
+  .slide.active .rule-bottom,
+  .slide.active .summary-right { animation-delay: 0.3s; }
+
+  /* Card stagger */
+  .slide.active .card:nth-child(1) { animation-delay: 0.2s; }
+  .slide.active .card:nth-child(2) { animation-delay: 0.3s; }
+  .slide.active .card:nth-child(3) { animation-delay: 0.4s; }
+
+  /* Hide animated elements when slide is not active */
+  .slide:not(.active) .label,
+  .slide:not(.active) .section-label,
+  .slide:not(.active) .card-status,
+  .slide:not(.active) .stat-number,
+  .slide:not(.active) .stat-desc,
+  .slide:not(.active) .closing-note,
+  .slide:not(.active) .subtitle,
+  .slide:not(.active) .rule-bottom,
+  .slide:not(.active) .rule-accent,
+  .slide:not(.active) h1,
+  .slide:not(.active) h2,
+  .slide:not(.active) .pull-quote,
+  .slide:not(.active) .summary-right,
+  .slide:not(.active) .newsletter-left h2,
+  .slide:not(.active) .newsletter-left p,
+  .slide:not(.active) .card {
+    opacity: 0;
+  }
+
   /* ── Responsive ── */
   @media (max-width: 768px) {
     .slide {
@@ -600,8 +671,10 @@
     if (index === current || index < 0 || index >= total || transitioning) return;
     transitioning = true;
 
-    slides[current].classList.remove('active');
+    var leavingSlide = slides[current];
+    leavingSlide.classList.remove('active');
     dots[current].classList.remove('active');
+    resetAnimations(leavingSlide);
 
     current = index;
 
@@ -610,7 +683,16 @@
 
     setTimeout(function () {
       transitioning = false;
-    }, 520);
+    }, 600);
+  }
+
+  function resetAnimations(slide) {
+    var els = slide.querySelectorAll('.label, .section-label, h1, h2, .subtitle, .rule-bottom, .rule-accent, .pull-quote, .summary-right, .card, .card-status, .stat-number, .stat-desc, .newsletter-left h2, .newsletter-left p, .closing-note, .metric-value, .metric-label');
+    for (var j = 0; j < els.length; j++) {
+      els[j].style.animation = 'none';
+      els[j].offsetHeight;
+      els[j].style.animation = '';
+    }
   }
 
   document.addEventListener('keydown', function (e) {

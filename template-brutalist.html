@@ -30,7 +30,7 @@
     height: 100vh;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: none;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -415,6 +415,82 @@
     border: 3px solid #000000;
     opacity: 0.15;
   }
+
+  /* ── Keyframes ── */
+
+  @keyframes brutalistSlamDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    20% { opacity: 1; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes brutalistBlink {
+    0% { opacity: 0; }
+    25% { opacity: 1; }
+    50% { opacity: 0; }
+    75% { opacity: 1; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes brutalistSlam {
+    from { transform: translateY(-60px); }
+    to { transform: translateY(0); }
+  }
+
+  /* ── Slide entry animations ── */
+
+  .slide.active .title-block {
+    animation: brutalistSlam 0.3s cubic-bezier(0.2, 0, 0.8, 0.2) both;
+  }
+
+  .slide.active .date-box {
+    animation: brutalistSlam 0.3s cubic-bezier(0.2, 0, 0.8, 0.2) both;
+    animation-delay: 0.08s;
+  }
+
+  .slide.active .summary-label,
+  .slide.active .progress-label,
+  .slide.active .news-label {
+    animation: brutalistSlam 0.25s cubic-bezier(0.2, 0, 0.8, 0.2) both;
+  }
+
+  .slide.active .summary-content,
+  .slide.active .progress-list,
+  .slide.active .news-content {
+    animation: brutalistSlam 0.3s cubic-bezier(0.2, 0, 0.8, 0.2) both;
+    animation-delay: 0.06s;
+  }
+
+  .slide.active .mind-title {
+    animation: brutalistSlam 0.3s cubic-bezier(0.2, 0, 0.8, 0.2) both;
+  }
+
+  .slide.active .mind-text {
+    animation: brutalistSlam 0.3s cubic-bezier(0.2, 0, 0.8, 0.2) both;
+    animation-delay: 0.06s;
+  }
+
+  /* Progress items stagger */
+  .slide.active .progress-item:nth-child(1) {
+    animation: brutalistSlam 0.25s cubic-bezier(0.2, 0, 0.8, 0.2) both;
+    animation-delay: 0.05s;
+  }
+
+  .slide.active .progress-item:nth-child(2) {
+    animation: brutalistSlam 0.25s cubic-bezier(0.2, 0, 0.8, 0.2) both;
+    animation-delay: 0.12s;
+  }
+
+  .slide.active .progress-item:nth-child(3) {
+    animation: brutalistSlam 0.25s cubic-bezier(0.2, 0, 0.8, 0.2) both;
+    animation-delay: 0.19s;
+  }
+
+  /* Tags blink */
+  .slide.active .tag {
+    animation: brutalistBlink 0.4s step-end both;
+    animation-delay: 0.25s;
+  }
 </style>
 </head>
 <body>
@@ -512,17 +588,32 @@
     var slides = document.querySelectorAll('.slide');
     var total = slides.length;
     var counter = document.getElementById('counter');
+    var transitioning = false;
 
     function pad(n) {
       return n < 10 ? '0' + n : '' + n;
     }
 
     function goTo(index) {
-      if (index < 0 || index >= total) return;
-      slides[current].classList.remove('active');
+      if (index < 0 || index >= total || index === current || transitioning) return;
+      transitioning = true;
+
+      var oldSlide = slides[current];
+      oldSlide.classList.remove('active');
+
+      // Reset animations
+      var els = oldSlide.querySelectorAll('.title-block, .date-box, .summary-label, .summary-content, .progress-label, .progress-list, .progress-item, .news-label, .news-content, .mind-title, .mind-text, .tag, .deco-stripe');
+      for (var j = 0; j < els.length; j++) {
+        els[j].style.animation = 'none';
+        els[j].offsetHeight;
+        els[j].style.animation = '';
+      }
+
       current = index;
       slides[current].classList.add('active');
       counter.textContent = pad(current + 1) + '/' + pad(total);
+
+      setTimeout(function() { transitioning = false; }, 400);
     }
 
     document.addEventListener('keydown', function(e) {
