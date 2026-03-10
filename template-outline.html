@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status — Outline</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Inter:wght@300;400;600&display=swap');
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #FFFFFF;
+    color: #1A1A1A;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Slide base ── */
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #FFFFFF;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* ── Grid overlay (decorative) ── */
+  .grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .grid-line-v {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 1px;
+    background: rgba(26, 26, 26, 0.04);
+  }
+
+  .grid-line-h {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: rgba(26, 26, 26, 0.04);
+  }
+
+  /* ── Animations ── */
+  @keyframes outlineDraw {
+    from { clip-path: inset(0 100% 0 0); }
+    to { clip-path: inset(0 0 0 0); }
+  }
+
+  @keyframes outlineFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes outlineCardFill {
+    0% { background: transparent; }
+    100% { background: var(--card-fill); }
+  }
+
+  @keyframes outlineStroke {
+    from { stroke-dashoffset: 100; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes outlineExpand {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  /* ── Content common ── */
+  .slide-inner {
+    position: relative;
+    z-index: 1;
+    width: 80vw;
+    max-width: 1200px;
+  }
+
+  .section-label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 20px;
+    opacity: 0;
+  }
+
+  .slide.active .section-label {
+    animation: outlineFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1.5px;
+    background: #1A1A1A;
+    margin-bottom: 40px;
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  .slide.active .divider {
+    animation: outlineExpand 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.15s both;
+  }
+
+  /* ── Decorative outline shapes ── */
+  .outline-rect {
+    position: absolute;
+    border: 1.5px solid rgba(26, 26, 26, 0.08);
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .slide.active .outline-rect {
+    animation: outlineFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  .outline-circle {
+    position: absolute;
+    border: 1.5px solid rgba(26, 26, 26, 0.06);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .slide.active .outline-circle {
+    animation: outlineFadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  /* ── Page indicator ── */
+  .page-indicator {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid #1A1A1A;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+
+  .dot.active {
+    background: #1A1A1A;
+    transform: scale(1.2);
+  }
+
+  .dot:hover {
+    background: rgba(26, 26, 26, 0.3);
+  }
+
+  /* ── Slide number ── */
+  .slide-number {
+    position: absolute;
+    top: 40px;
+    right: 48px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #BFBFBF;
+    letter-spacing: 2px;
+    opacity: 0;
+  }
+
+  .slide.active .slide-number {
+    animation: outlineFadeUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.05s both;
+  }
+
+  /* =========================================
+     SLIDE 1 — Summary
+     ========================================= */
+  .slide-1 .headline {
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(36px, 4.5vw, 72px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    color: #1A1A1A;
+    max-width: 800px;
+    opacity: 0;
+  }
+
+  .slide.active .headline {
+    animation: outlineFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+  }
+
+  .slide-1 .stat-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #1A1A1A;
+    border-radius: 8px;
+    padding: 8px 24px;
+    margin-top: 36px;
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(48px, 6vw, 96px);
+    font-weight: 800;
+    letter-spacing: -3px;
+    color: #1A1A1A;
+    opacity: 0;
+    --card-fill: rgba(26, 26, 26, 0.04);
+    background: transparent;
+  }
+
+  .slide.active .stat-outline {
+    animation: outlineFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both,
+               outlineCardFill 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.7s both;
+  }
+
+  .slide-1 .subtext {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(16px, 1.6vw, 22px);
+    font-weight: 300;
+    line-height: 1.6;
+    color: #666;
+    max-width: 600px;
+    margin-top: 24px;
+    opacity: 0;
+  }
+
+  .slide.active .subtext {
+    animation: outlineFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.35s both;
+  }
+
+  /* Decorative outlines for slide 1 */
+  .slide-1 .outline-rect-1 {
+    top: 8vh;
+    right: 6vw;
+    width: 200px;
+    height: 140px;
+    animation-delay: 0.4s !important;
+  }
+
+  .slide-1 .outline-rect-2 {
+    bottom: 14vh;
+    right: 14vw;
+    width: 120px;
+    height: 120px;
+    animation-delay: 0.5s !important;
+  }
+
+  .slide-1 .outline-circle-1 {
+    top: 16vh;
+    right: 20vw;
+    width: 80px;
+    height: 80px;
+    animation-delay: 0.55s !important;
+  }
+
+  /* =========================================
+     SLIDE 2 — Progress
+     ========================================= */
+  .progress-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 8px;
+  }
+
+  .progress-card {
+    border: 1.5px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 32px 36px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 20px;
+    opacity: 0;
+    background: transparent;
+    transition: border-color 0.3s ease;
+  }
+
+  .progress-card:hover {
+    border-color: #1A1A1A;
+  }
+
+  .slide.active .progress-card:nth-child(1) {
+    --card-fill: rgba(34, 197, 94, 0.04);
+    animation: outlineFadeUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both,
+               outlineCardFill 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+  }
+
+  .slide.active .progress-card:nth-child(2) {
+    --card-fill: rgba(59, 130, 246, 0.04);
+    animation: outlineFadeUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both,
+               outlineCardFill 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.7s both;
+  }
+
+  .slide.active .progress-card:nth-child(3) {
+    --card-fill: rgba(239, 68, 68, 0.04);
+    animation: outlineFadeUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both,
+               outlineCardFill 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.8s both;
+  }
+
+  .progress-card .project-name {
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(20px, 2vw, 28px);
+    font-weight: 600;
+    color: #1A1A1A;
+    letter-spacing: -0.5px;
+  }
+
+  .progress-card .project-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(14px, 1.2vw, 17px);
+    font-weight: 300;
+    color: #888;
+    margin-top: 6px;
+  }
+
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .status-badge.done {
+    border: 1.5px solid #22C55E;
+    color: #22C55E;
+  }
+
+  .status-badge.in-progress {
+    border: 1.5px solid #3B82F6;
+    color: #3B82F6;
+  }
+
+  .status-badge.blocked {
+    border: 1.5px solid #EF4444;
+    color: #EF4444;
+  }
+
+  .status-icon {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+  }
+
+  .status-badge.done .status-icon {
+    background: #22C55E;
+  }
+
+  /* Decorative outlines for slide 2 */
+  .slide-2 .outline-rect-1 {
+    top: 10vh;
+    right: 4vw;
+    width: 160px;
+    height: 100px;
+    animation-delay: 0.5s !important;
+  }
+
+  .slide-2 .outline-circle-1 {
+    bottom: 16vh;
+    left: 6vw;
+    width: 60px;
+    height: 60px;
+    animation-delay: 0.6s !important;
+  }
+
+  /* =========================================
+     SLIDE 3 — Newsletter
+     ========================================= */
+  .slide-3 .newsletter-card {
+    border: 1.5px solid #E0E0E0;
+    border-radius: 16px;
+    padding: 48px 56px;
+    max-width: 760px;
+    opacity: 0;
+    background: transparent;
+    --card-fill: rgba(26, 26, 26, 0.02);
+  }
+
+  .slide.active .newsletter-card {
+    animation: outlineFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both,
+               outlineCardFill 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.65s both;
+  }
+
+  .slide-3 .newsletter-card:hover {
+    border-color: #1A1A1A;
+  }
+
+  .slide-3 .quote-mark {
+    font-family: 'Manrope', sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1;
+    color: #E0E0E0;
+    margin-bottom: 8px;
+  }
+
+  .slide-3 .body-text {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(18px, 1.8vw, 26px);
+    font-weight: 300;
+    line-height: 1.65;
+    color: #444;
+  }
+
+  .slide-3 .stat-highlight {
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid #1A1A1A;
+    border-radius: 6px;
+    padding: 4px 16px;
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(40px, 4vw, 64px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    color: #1A1A1A;
+    margin-top: 32px;
+    opacity: 0;
+    background: transparent;
+    --card-fill: rgba(26, 26, 26, 0.04);
+  }
+
+  .slide.active .stat-highlight {
+    animation: outlineFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both,
+               outlineCardFill 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.8s both;
+  }
+
+  .slide-3 .stat-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #999;
+    margin-top: 8px;
+    margin-left: 4px;
+    opacity: 0;
+  }
+
+  .slide.active .stat-label {
+    animation: outlineFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both;
+  }
+
+  /* Decorative outlines for slide 3 */
+  .slide-3 .outline-rect-1 {
+    bottom: 12vh;
+    right: 8vw;
+    width: 180px;
+    height: 80px;
+    animation-delay: 0.5s !important;
+  }
+
+  .slide-3 .outline-circle-1 {
+    top: 12vh;
+    left: 8vw;
+    width: 100px;
+    height: 100px;
+    animation-delay: 0.45s !important;
+  }
+
+  .slide-3 .outline-rect-2 {
+    top: 18vh;
+    right: 12vw;
+    width: 90px;
+    height: 90px;
+    animation-delay: 0.55s !important;
+  }
+
+  /* =========================================
+     SLIDE 4 — Top of Mind
+     ========================================= */
+  .slide-4 .mind-text {
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(32px, 4vw, 60px);
+    font-weight: 300;
+    line-height: 1.3;
+    letter-spacing: -1px;
+    color: #1A1A1A;
+    max-width: 740px;
+    opacity: 0;
+  }
+
+  .slide.active .mind-text {
+    animation: outlineFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+  }
+
+  .slide-4 .mind-text em {
+    font-style: normal;
+    font-weight: 800;
+    border-bottom: 2px solid #1A1A1A;
+    padding-bottom: 2px;
+  }
+
+  .slide-4 .mind-card {
+    border: 1.5px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin-top: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    background: transparent;
+    --card-fill: rgba(26, 26, 26, 0.03);
+  }
+
+  .slide.active .mind-card {
+    animation: outlineFadeUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.35s both,
+               outlineCardFill 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.75s both;
+  }
+
+  .slide-4 .mind-card:hover {
+    border-color: #1A1A1A;
+  }
+
+  .mind-card .arrow-icon {
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid #CCC;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mind-card .arrow-icon svg {
+    width: 14px;
+    height: 14px;
+    stroke: #999;
+    fill: none;
+    stroke-width: 2;
+  }
+
+  .mind-card .card-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: #888;
+  }
+
+  /* Decorative outlines for slide 4 */
+  .slide-4 .outline-rect-1 {
+    top: 10vh;
+    right: 8vw;
+    width: 240px;
+    height: 160px;
+    animation-delay: 0.3s !important;
+  }
+
+  .slide-4 .outline-rect-2 {
+    top: 14vh;
+    right: 10vw;
+    width: 200px;
+    height: 120px;
+    border-color: rgba(26, 26, 26, 0.04);
+    animation-delay: 0.35s !important;
+  }
+
+  .slide-4 .outline-circle-1 {
+    bottom: 14vh;
+    right: 16vw;
+    width: 140px;
+    height: 140px;
+    animation-delay: 0.4s !important;
+  }
+
+  .slide-4 .outline-circle-2 {
+    bottom: 18vh;
+    left: 6vw;
+    width: 50px;
+    height: 50px;
+    animation-delay: 0.5s !important;
+  }
+
+  /* ── Cross-hair decorative element ── */
+  .crosshair {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .crosshair::before,
+  .crosshair::after {
+    content: '';
+    position: absolute;
+    background: rgba(26, 26, 26, 0.1);
+  }
+
+  .crosshair::before {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    transform: translateY(-50%);
+  }
+
+  .crosshair::after {
+    left: 50%;
+    top: 0;
+    height: 100%;
+    width: 1px;
+    transform: translateX(-50%);
+  }
+
+  .slide.active .crosshair {
+    animation: outlineFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+  }
+</style>
+</head>
+<body>
+
+<!-- Grid overlay (repeated on each slide) -->
+
+<!-- SLIDE 1 — Summary -->
+<div class="slide slide-1 active" data-index="0">
+  <div class="grid-overlay">
+    <div class="grid-line-v" style="left: 10vw;"></div>
+    <div class="grid-line-v" style="left: 90vw;"></div>
+    <div class="grid-line-h" style="top: 10vh;"></div>
+    <div class="grid-line-h" style="top: 90vh;"></div>
+  </div>
+  <div class="outline-rect outline-rect-1"></div>
+  <div class="outline-rect outline-rect-2"></div>
+  <div class="outline-circle outline-circle-1"></div>
+  <div class="crosshair" style="top: 24vh; left: 8vw;"></div>
+  <div class="crosshair" style="bottom: 20vh; right: 30vw;"></div>
+  <div class="slide-inner">
+    <div class="section-label">Summary</div>
+    <div class="divider"></div>
+    <div class="stat-outline">85%</div>
+    <div class="headline">Copilot adoption reached 85% across all engineering teams.</div>
+    <div class="subtext">Exceeding our Q1 target of 75%.</div>
+  </div>
+  <div class="slide-number">01 / 04</div>
+</div>
+
+<!-- SLIDE 2 — Progress -->
+<div class="slide slide-2" data-index="1">
+  <div class="grid-overlay">
+    <div class="grid-line-v" style="left: 10vw;"></div>
+    <div class="grid-line-v" style="left: 90vw;"></div>
+    <div class="grid-line-h" style="top: 10vh;"></div>
+    <div class="grid-line-h" style="top: 90vh;"></div>
+  </div>
+  <div class="outline-rect outline-rect-1"></div>
+  <div class="outline-circle outline-circle-1"></div>
+  <div class="crosshair" style="top: 18vh; right: 18vw;"></div>
+  <div class="slide-inner">
+    <div class="section-label">Progress</div>
+    <div class="divider"></div>
+    <div class="progress-grid">
+      <div class="progress-card">
+        <div>
+          <div class="project-name">Design System v3</div>
+          <div class="project-desc">Shipped to production</div>
+        </div>
+        <div class="status-badge done">
+          <div class="status-icon"></div>
+          Done
+        </div>
+      </div>
+      <div class="progress-card">
+        <div>
+          <div class="project-name">AI Assistant Integration</div>
+          <div class="project-desc">Development at 70%</div>
+        </div>
+        <div class="status-badge in-progress">
+          <div class="status-icon"></div>
+          In Progress
+        </div>
+      </div>
+      <div class="progress-card">
+        <div>
+          <div class="project-name">Accessibility Audit</div>
+          <div class="project-desc">Blocked by vendor response</div>
+        </div>
+        <div class="status-badge blocked">
+          <div class="status-icon"></div>
+          Blocked
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">02 / 04</div>
+</div>
+
+<!-- SLIDE 3 — Newsletter -->
+<div class="slide slide-3" data-index="2">
+  <div class="grid-overlay">
+    <div class="grid-line-v" style="left: 10vw;"></div>
+    <div class="grid-line-v" style="left: 90vw;"></div>
+    <div class="grid-line-h" style="top: 10vh;"></div>
+    <div class="grid-line-h" style="top: 90vh;"></div>
+  </div>
+  <div class="outline-rect outline-rect-1"></div>
+  <div class="outline-rect outline-rect-2"></div>
+  <div class="outline-circle outline-circle-1"></div>
+  <div class="crosshair" style="top: 28vh; right: 10vw;"></div>
+  <div class="crosshair" style="bottom: 22vh; left: 14vw;"></div>
+  <div class="slide-inner">
+    <div class="section-label">Newsletter</div>
+    <div class="divider"></div>
+    <div class="newsletter-card">
+      <div class="quote-mark">&ldquo;</div>
+      <p class="body-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</p>
+    </div>
+    <div class="stat-highlight">+23%</div>
+    <div class="stat-label">Task completion improvement</div>
+  </div>
+  <div class="slide-number">03 / 04</div>
+</div>
+
+<!-- SLIDE 4 — Top of Mind -->
+<div class="slide slide-4" data-index="3">
+  <div class="grid-overlay">
+    <div class="grid-line-v" style="left: 10vw;"></div>
+    <div class="grid-line-v" style="left: 90vw;"></div>
+    <div class="grid-line-h" style="top: 10vh;"></div>
+    <div class="grid-line-h" style="top: 90vh;"></div>
+  </div>
+  <div class="outline-rect outline-rect-1"></div>
+  <div class="outline-rect outline-rect-2"></div>
+  <div class="outline-circle outline-circle-1"></div>
+  <div class="outline-circle outline-circle-2"></div>
+  <div class="crosshair" style="top: 14vh; left: 12vw;"></div>
+  <div class="crosshair" style="bottom: 30vh; right: 8vw;"></div>
+  <div class="slide-inner">
+    <div class="section-label">Top of Mind</div>
+    <div class="divider"></div>
+    <p class="mind-text">Scaling the <em>design review process</em> without creating bottlenecks on senior designers.</p>
+    <div class="mind-card">
+      <div class="arrow-icon">
+        <svg viewBox="0 0 24 24"><polyline points="7 17 17 7"></polyline><polyline points="7 7 17 7 17 17"></polyline></svg>
+      </div>
+      <span class="card-label">Requires cross-team alignment</span>
+    </div>
+  </div>
+  <div class="slide-number">04 / 04</div>
+</div>
+
+<!-- Page indicator dots -->
+<div class="page-indicator">
+  <div class="dot active" data-slide="0"></div>
+  <div class="dot" data-slide="1"></div>
+  <div class="dot" data-slide="2"></div>
+  <div class="dot" data-slide="3"></div>
+</div>
+
+<script>
+  (function () {
+    var slides = document.querySelectorAll('.slide');
+    var dots = document.querySelectorAll('.dot');
+    var current = 0;
+    var total = slides.length;
+    var transitioning = false;
+
+    function resetAnimations(slide) {
+      var els = slide.querySelectorAll('.section-label, .divider, .headline, .stat-outline, .subtext, .progress-card, .newsletter-card, .stat-highlight, .stat-label, .mind-text, .mind-card, .slide-number, .outline-rect, .outline-circle, .crosshair');
+      for (var j = 0; j < els.length; j++) {
+        els[j].style.animation = 'none';
+        els[j].offsetHeight;
+        els[j].style.animation = '';
+      }
+    }
+
+    function go(index) {
+      if (index < 0 || index >= total || index === current || transitioning) return;
+      transitioning = true;
+
+      slides[current].classList.remove('active');
+      resetAnimations(slides[current]);
+
+      dots[current].classList.remove('active');
+
+      current = index;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+
+      setTimeout(function () { transitioning = false; }, 650);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function (e) {
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+          e.preventDefault();
+          go(current + 1);
+          break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+          e.preventDefault();
+          go(current - 1);
+          break;
+      }
+    });
+
+    // Dot click navigation
+    for (var i = 0; i < dots.length; i++) {
+      dots[i].addEventListener('click', function () {
+        var target = parseInt(this.getAttribute('data-slide'));
+        go(target);
+      });
+    }
+  })();
+</script>
+</body>
+</html>

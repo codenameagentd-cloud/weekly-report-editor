@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status — March 10, 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --paper: #FDF6E3;
+  --paper-dark: #F5EDDA;
+  --ink: #3E2723;
+  --ink-light: #5D4037;
+  --ink-faint: #8D6E63;
+  --red: #C62828;
+  --red-light: #E57373;
+  --sepia: #A1887F;
+  --sepia-light: #D7CCC8;
+  --cream: #EFEBE9;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Crimson Text', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Paper grain texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 35%, rgba(62,39,35,0.03) 1px, transparent 1px),
+    radial-gradient(circle at 75% 44%, rgba(62,39,35,0.025) 1px, transparent 1px),
+    radial-gradient(circle at 41% 68%, rgba(62,39,35,0.02) 1px, transparent 1px),
+    radial-gradient(circle at 88% 15%, rgba(62,39,35,0.03) 1px, transparent 1px),
+    radial-gradient(circle at 55% 80%, rgba(62,39,35,0.025) 1px, transparent 1px);
+  background-size: 4px 4px, 6px 6px, 5px 5px, 7px 7px, 3px 3px;
+}
+
+/* Fine grain noise layer */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image:
+    radial-gradient(ellipse at 10% 90%, rgba(161,136,127,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 10%, rgba(161,136,127,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(198,40,40,0.02) 0%, transparent 70%);
+}
+
+/* ——— Slides ——— */
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 80px;
+  z-index: 1;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ——— Page Counter ——— */
+
+.page-counter {
+  position: fixed;
+  bottom: 32px;
+  right: 48px;
+  font-family: 'Courier Prime', 'Courier New', monospace;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--sepia);
+  z-index: 100;
+}
+
+/* ——— Decorative Ink Splatters ——— */
+
+.ink-splatter {
+  position: fixed;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.splatter-1 {
+  width: 180px;
+  height: 180px;
+  top: -40px;
+  right: -30px;
+  background: radial-gradient(ellipse at 40% 40%, rgba(198,40,40,0.06) 0%, rgba(198,40,40,0.02) 40%, transparent 70%);
+  border-radius: 43% 57% 51% 49% / 42% 55% 45% 58%;
+}
+
+.splatter-2 {
+  width: 120px;
+  height: 120px;
+  bottom: 60px;
+  left: 40px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(62,39,35,0.05) 0%, rgba(62,39,35,0.02) 40%, transparent 70%);
+  border-radius: 55% 45% 48% 52% / 40% 58% 42% 60%;
+}
+
+.splatter-3 {
+  width: 80px;
+  height: 80px;
+  top: 50%;
+  right: 60px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(161,136,127,0.07) 0%, transparent 60%);
+  border-radius: 40% 60% 55% 45% / 50% 42% 58% 50%;
+}
+
+.splatter-4 {
+  width: 200px;
+  height: 200px;
+  bottom: -60px;
+  right: 30%;
+  background: radial-gradient(ellipse at 60% 40%, rgba(198,40,40,0.03) 0%, rgba(62,39,35,0.02) 30%, transparent 60%);
+  border-radius: 48% 52% 44% 56% / 55% 43% 57% 45%;
+}
+
+.splatter-5 {
+  width: 60px;
+  height: 60px;
+  top: 15%;
+  left: 12%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(62,39,35,0.06) 0%, transparent 65%);
+  border-radius: 52% 48% 46% 54% / 47% 53% 47% 53%;
+}
+
+/* Small ink dots */
+.ink-dot {
+  position: fixed;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--ink);
+}
+
+.dot-1 { width: 3px; height: 3px; top: 22%; left: 8%; opacity: 0.08; }
+.dot-2 { width: 2px; height: 2px; top: 78%; right: 15%; opacity: 0.1; }
+.dot-3 { width: 4px; height: 4px; bottom: 18%; left: 25%; opacity: 0.06; }
+.dot-4 { width: 2px; height: 2px; top: 45%; right: 8%; opacity: 0.09; }
+.dot-5 { width: 3px; height: 3px; top: 12%; right: 30%; opacity: 0.07; }
+.dot-6 { width: 2px; height: 3px; bottom: 35%; left: 6%; opacity: 0.08; }
+
+/* ——— Torn Paper Card ——— */
+
+.paper-card {
+  background: linear-gradient(135deg, #FFFDF7 0%, #FDF6E3 40%, #F8F0DB 100%);
+  padding: 48px 56px;
+  max-width: 720px;
+  width: 100%;
+  position: relative;
+  clip-path: polygon(
+    0% 2%, 3% 0%, 7% 1.5%, 12% 0.3%, 18% 1.8%, 24% 0%, 30% 1.2%, 36% 0.5%, 42% 1.6%, 48% 0.2%, 54% 1.4%, 60% 0%, 66% 1.8%, 72% 0.6%, 78% 1.5%, 84% 0%, 90% 1.2%, 95% 0.4%, 100% 1.8%,
+    100% 98%, 97% 100%, 92% 98.5%, 87% 100%, 82% 98.2%, 76% 100%, 70% 98.8%, 64% 99.5%, 58% 98.4%, 52% 100%, 46% 98.6%, 40% 100%, 34% 98.2%, 28% 99.5%, 22% 98%, 16% 100%, 10% 98.8%, 5% 99.5%, 0% 98%
+  );
+  box-shadow: none;
+  transform: rotate(-0.3deg);
+}
+
+/* Shadow under card — separate element because clip-path clips box-shadow */
+.card-wrapper {
+  position: relative;
+  max-width: 720px;
+  width: 100%;
+}
+
+.card-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: -4px;
+  bottom: -4px;
+  background: rgba(62,39,35,0.08);
+  border-radius: 2px;
+  filter: blur(12px);
+  z-index: -1;
+  transform: rotate(-0.3deg);
+}
+
+/* Paper curl effect */
+.paper-card::before {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  right: 12px;
+  width: 40%;
+  height: 20px;
+  background: linear-gradient(to right, transparent, rgba(62,39,35,0.04));
+  transform: rotate(1.5deg);
+  z-index: 1;
+}
+
+/* ——— Section Label ——— */
+
+.section-label {
+  font-family: 'Courier Prime', 'Courier New', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  color: var(--sepia);
+  margin-bottom: 32px;
+  position: relative;
+  display: inline-block;
+}
+
+.section-label::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 24px;
+  height: 1.5px;
+  background: var(--red);
+  opacity: 0.6;
+}
+
+/* ——— Slide 1: Title ——— */
+
+.slide-title {
+  justify-content: center;
+  align-items: center;
+}
+
+.title-container {
+  text-align: center;
+}
+
+.title-ornament {
+  font-family: 'Courier Prime', monospace;
+  font-size: 14px;
+  letter-spacing: 12px;
+  color: var(--sepia);
+  margin-bottom: 28px;
+  opacity: 0.5;
+}
+
+.title-main {
+  font-family: 'Courier Prime', 'Courier New', monospace;
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  position: relative;
+  display: inline-block;
+}
+
+.title-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 64px;
+  background: var(--red);
+  margin-left: 6px;
+  vertical-align: baseline;
+  position: relative;
+  top: 8px;
+  animation: cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.title-date {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 22px;
+  font-style: italic;
+  color: var(--ink-faint);
+  letter-spacing: 1px;
+  margin-top: 8px;
+}
+
+.title-rule {
+  width: 60px;
+  height: 1px;
+  background: var(--sepia-light);
+  margin: 24px auto 20px;
+}
+
+.title-subtitle {
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  color: var(--sepia);
+  opacity: 0.6;
+}
+
+/* ——— Slide 2: Summary ——— */
+
+.summary-stat {
+  font-family: 'Courier Prime', monospace;
+  font-size: 96px;
+  font-weight: 700;
+  color: var(--red);
+  line-height: 1;
+  margin-bottom: 20px;
+  letter-spacing: -3px;
+}
+
+.summary-text {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 22px;
+  line-height: 1.65;
+  color: var(--ink-light);
+  max-width: 540px;
+}
+
+.summary-text em {
+  color: var(--ink);
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* ——— Slide 3: Progress ——— */
+
+.slide-progress .paper-card {
+  padding: 40px 48px;
+}
+
+.progress-item {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--sepia-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.progress-item:last-child {
+  border-bottom: none;
+  padding-bottom: 8px;
+}
+
+.progress-item:first-child {
+  padding-top: 8px;
+}
+
+.progress-name {
+  font-family: 'Courier Prime', monospace;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.progress-detail {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink-faint);
+}
+
+.progress-badge {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 5px 14px;
+  border-radius: 1px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.badge-done {
+  background: rgba(46,125,50,0.08);
+  color: #2E7D32;
+  border: 1px solid rgba(46,125,50,0.2);
+}
+
+.badge-progress {
+  background: rgba(198,40,40,0.06);
+  color: var(--red);
+  border: 1px solid rgba(198,40,40,0.15);
+}
+
+.badge-blocked {
+  background: rgba(62,39,35,0.06);
+  color: var(--ink-faint);
+  border: 1px solid rgba(62,39,35,0.12);
+}
+
+/* ——— Slide 4: Newsletter ——— */
+
+.newsletter-highlight {
+  font-family: 'Courier Prime', monospace;
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--red);
+  line-height: 1;
+  margin-bottom: 16px;
+  letter-spacing: -2px;
+}
+
+.newsletter-text {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 21px;
+  line-height: 1.7;
+  color: var(--ink-light);
+}
+
+.newsletter-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--sepia-light);
+  margin: 20px 0;
+}
+
+.newsletter-caption {
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--sepia);
+  opacity: 0.7;
+}
+
+/* ——— Slide 5: Top of Mind ——— */
+
+.topofmind-text {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 32px;
+  line-height: 1.55;
+  color: var(--ink);
+  font-style: italic;
+  max-width: 560px;
+  position: relative;
+}
+
+.topofmind-text::before {
+  content: '\201C';
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 120px;
+  color: var(--red);
+  opacity: 0.15;
+  position: absolute;
+  top: -55px;
+  left: -30px;
+  line-height: 1;
+}
+
+.topofmind-author {
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--sepia);
+  margin-top: 28px;
+}
+
+.topofmind-author::before {
+  content: '— ';
+}
+
+/* ——— Entry Animations ——— */
+
+@keyframes paperFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) rotate(-0.3deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(-0.3deg);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes typeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide.active .card-wrapper {
+  animation: paperFadeUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation-delay: 0.1s;
+}
+
+.slide.active .title-ornament {
+  animation: fadeIn 0.5s ease both;
+  animation-delay: 0s;
+}
+
+.slide.active .title-main {
+  animation: typeIn 0.5s ease both;
+  animation-delay: 0.15s;
+}
+
+.slide.active .title-date {
+  animation: fadeIn 0.5s ease both;
+  animation-delay: 0.3s;
+}
+
+.slide.active .title-rule {
+  animation: fadeIn 0.5s ease both;
+  animation-delay: 0.4s;
+}
+
+.slide.active .title-subtitle {
+  animation: fadeIn 0.5s ease both;
+  animation-delay: 0.5s;
+}
+
+.slide.active .section-label {
+  animation: fadeIn 0.4s ease both;
+  animation-delay: 0s;
+}
+
+.slide.active .summary-stat,
+.slide.active .newsletter-highlight {
+  animation: typeIn 0.5s ease both;
+  animation-delay: 0.2s;
+}
+
+.slide.active .summary-text,
+.slide.active .newsletter-text {
+  animation: fadeIn 0.5s ease both;
+  animation-delay: 0.35s;
+}
+
+.slide.active .progress-item:nth-child(1) {
+  animation: fadeIn 0.4s ease both;
+  animation-delay: 0.15s;
+}
+
+.slide.active .progress-item:nth-child(2) {
+  animation: fadeIn 0.4s ease both;
+  animation-delay: 0.25s;
+}
+
+.slide.active .progress-item:nth-child(3) {
+  animation: fadeIn 0.4s ease both;
+  animation-delay: 0.35s;
+}
+
+.slide.active .topofmind-text {
+  animation: fadeIn 0.6s ease both;
+  animation-delay: 0.2s;
+}
+
+.slide.active .topofmind-author {
+  animation: fadeIn 0.5s ease both;
+  animation-delay: 0.45s;
+}
+
+/* ——— Horizontal rule decorations ——— */
+
+.page-rule-top {
+  position: fixed;
+  top: 28px;
+  left: 48px;
+  right: 48px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--sepia-light), transparent);
+  z-index: 50;
+  opacity: 0.5;
+}
+
+.page-rule-bottom {
+  position: fixed;
+  bottom: 28px;
+  left: 48px;
+  right: 48px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--sepia-light), transparent);
+  z-index: 50;
+  opacity: 0.5;
+}
+
+/* Page corner watermark */
+.watermark {
+  position: fixed;
+  top: 32px;
+  left: 48px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--sepia);
+  opacity: 0.35;
+  z-index: 100;
+}
+
+/* ——— Navigation hint ——— */
+
+.nav-hint {
+  position: fixed;
+  bottom: 32px;
+  left: 48px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--sepia);
+  opacity: 0;
+  z-index: 100;
+  transition: opacity 0.8s ease;
+}
+
+.nav-hint.visible {
+  opacity: 0.4;
+}
+
+/* ——— Page Indicator Dots ——— */
+
+.page-dots {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+
+.page-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sepia-light);
+  transition: all 0.35s ease;
+}
+
+.page-dot.active {
+  background: var(--red);
+  transform: scale(1.25);
+}
+</style>
+</head>
+<body>
+
+<!-- Decorative elements -->
+<div class="page-rule-top"></div>
+<div class="page-rule-bottom"></div>
+<div class="watermark">Weekly Report</div>
+
+<div class="ink-splatter splatter-1"></div>
+<div class="ink-splatter splatter-2"></div>
+<div class="ink-splatter splatter-3"></div>
+<div class="ink-splatter splatter-4"></div>
+<div class="ink-splatter splatter-5"></div>
+<div class="ink-dot dot-1"></div>
+<div class="ink-dot dot-2"></div>
+<div class="ink-dot dot-3"></div>
+<div class="ink-dot dot-4"></div>
+<div class="ink-dot dot-5"></div>
+<div class="ink-dot dot-6"></div>
+
+<!-- Slide 1: Title -->
+<div class="slide slide-title active" data-index="0">
+  <div class="title-container">
+    <div class="title-ornament">* * *</div>
+    <div class="title-main">Weekly Status<span class="title-cursor"></span></div>
+    <div class="title-date">March 10, 2026</div>
+    <div class="title-rule"></div>
+    <div class="title-subtitle">Status Report</div>
+  </div>
+</div>
+
+<!-- Slide 2: Summary -->
+<div class="slide slide-summary" data-index="1">
+  <div class="section-label">Summary</div>
+  <div class="card-wrapper">
+    <div class="paper-card">
+      <div class="summary-stat">85%</div>
+      <div class="summary-text">Copilot adoption reached <em>85% across all engineering teams</em>, exceeding our Q1 target of 75%.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 3: Progress -->
+<div class="slide slide-progress" data-index="2">
+  <div class="section-label">Progress</div>
+  <div class="card-wrapper">
+    <div class="paper-card">
+      <div class="progress-item">
+        <div>
+          <div class="progress-name">Design System v3</div>
+          <div class="progress-detail">Shipped to production</div>
+        </div>
+        <div class="progress-badge badge-done">Done</div>
+      </div>
+      <div class="progress-item">
+        <div>
+          <div class="progress-name">AI Assistant Integration</div>
+          <div class="progress-detail">Development at 70%</div>
+        </div>
+        <div class="progress-badge badge-progress">In Progress</div>
+      </div>
+      <div class="progress-item">
+        <div>
+          <div class="progress-name">Accessibility Audit</div>
+          <div class="progress-detail">Blocked by vendor response</div>
+        </div>
+        <div class="progress-badge badge-blocked">Blocked</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: Newsletter -->
+<div class="slide slide-newsletter" data-index="3">
+  <div class="section-label">Newsletter</div>
+  <div class="card-wrapper">
+    <div class="paper-card">
+      <div class="newsletter-highlight">23%</div>
+      <div class="newsletter-divider"></div>
+      <div class="newsletter-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</div>
+      <div class="newsletter-divider"></div>
+      <div class="newsletter-caption">Q1 Design Retrospective</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 5: Top of Mind -->
+<div class="slide slide-topofmind" data-index="4">
+  <div class="section-label">Top of Mind</div>
+  <div class="card-wrapper">
+    <div class="paper-card">
+      <div class="topofmind-text">Scaling the design review process without creating bottlenecks on senior designers.</div>
+      <div class="topofmind-author">This Week's Focus</div>
+    </div>
+  </div>
+</div>
+
+<!-- Page Indicator Dots -->
+<div class="page-dots">
+  <div class="page-dot active" data-dot="0"></div>
+  <div class="page-dot" data-dot="1"></div>
+  <div class="page-dot" data-dot="2"></div>
+  <div class="page-dot" data-dot="3"></div>
+  <div class="page-dot" data-dot="4"></div>
+</div>
+
+<!-- Page Counter -->
+<div class="page-counter"><span id="current">1</span> / 5</div>
+
+<!-- Nav Hint -->
+<div class="nav-hint visible">&#8592; &#8594; Navigate</div>
+
+<script>
+(function() {
+  var slides = document.querySelectorAll('.slide');
+  var counter = document.getElementById('current');
+  var dots = document.querySelectorAll('.page-dot');
+  var navHint = document.querySelector('.nav-hint');
+  var total = slides.length;
+  var current = 0;
+  var transitioning = false;
+
+  // Hide nav hint after first navigation
+  var hintShown = true;
+
+  function resetAnimations(slide) {
+    var els = slide.querySelectorAll('.card-wrapper, .section-label, .title-ornament, .title-main, .title-date, .title-rule, .title-subtitle, .summary-stat, .summary-text, .newsletter-highlight, .newsletter-text, .progress-item, .topofmind-text, .topofmind-author');
+    for (var j = 0; j < els.length; j++) {
+      els[j].style.animation = 'none';
+      els[j].offsetHeight;
+      els[j].style.animation = '';
+    }
+  }
+
+  function go(index) {
+    if (index < 0 || index >= total || index === current || transitioning) return;
+    transitioning = true;
+
+    if (hintShown) {
+      navHint.classList.remove('visible');
+      hintShown = false;
+    }
+
+    var oldSlide = slides[current];
+    oldSlide.classList.remove('active');
+    resetAnimations(oldSlide);
+
+    // Update dots
+    dots[current].classList.remove('active');
+    dots[index].classList.add('active');
+
+    current = index;
+    slides[current].classList.add('active');
+    counter.textContent = current + 1;
+
+    setTimeout(function() { transitioning = false; }, 500);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      go(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      go(current - 1);
+    }
+  });
+
+  // Click on dots to navigate
+  dots.forEach(function(dot, i) {
+    dot.addEventListener('click', function() {
+      go(i);
+    });
+  });
+
+  // Hide nav hint after 4 seconds anyway
+  setTimeout(function() {
+    if (hintShown) {
+      navHint.classList.remove('visible');
+      hintShown = false;
+    }
+  }, 4000);
+})();
+</script>
+</body>
+</html>

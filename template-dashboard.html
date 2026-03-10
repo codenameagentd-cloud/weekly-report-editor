@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Weekly Status Update — Design Engineering</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -14,16 +14,30 @@
 }
 
 :root {
-  --bg: #f4f6f9;
-  --accent: #0052cc;
-  --text: #1a1a2e;
-  --text-secondary: #5a5f7a;
-  --card-bg: #ffffff;
-  --green: #16a34a;
-  --blue: #0052cc;
-  --yellow: #eab308;
-  --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --radius: 12px;
+  --bg: #0a0f1a;
+  --bg-surface: #111827;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --bg-card-hover: rgba(255, 255, 255, 0.08);
+  --accent-start: #3b82f6;
+  --accent-end: #818cf8;
+  --accent-gradient: linear-gradient(135deg, #3b82f6, #818cf8);
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --green: #22c55e;
+  --green-dim: rgba(34, 197, 94, 0.15);
+  --blue: #3b82f6;
+  --blue-dim: rgba(59, 130, 246, 0.15);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245, 158, 11, 0.15);
+  --red: #ef4444;
+  --red-dim: rgba(239, 68, 68, 0.15);
+  --border: rgba(255, 255, 255, 0.06);
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --radius: 16px;
+  --radius-sm: 10px;
 }
 
 html, body {
@@ -77,220 +91,616 @@ html, body {
 
 /* Section number */
 .section-num {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--accent);
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-num::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--text-muted);
 }
 
 /* ——————————————————————————
    Slide 1 — Title
    —————————————————————————— */
 .slide--title {
-  background: var(--bg);
+  background: linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  position: relative;
+  overflow: hidden;
 }
 
-.slide--title .banner {
+/* Subtle grid pattern */
+.slide--title::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 6px;
-  background: var(--accent);
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* Gradient glow orb */
+.slide--title::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.slide--title .top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--accent-gradient);
 }
 
 .slide--title .slide-inner {
   justify-content: center;
+  position: relative;
+  z-index: 1;
 }
 
 .slide--title h1 {
-  font-size: 48px;
+  font-size: 52px;
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.08;
   color: var(--text);
-  margin-bottom: 16px;
-  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .slide--title .subtitle {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 400;
   color: var(--text-secondary);
   line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.slide--title .subtitle span {
-  display: inline-block;
+.slide--title .subtitle .divider {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--text-secondary);
-  vertical-align: middle;
-  margin: 0 10px;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.slide--title .team-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 24px;
+  padding: 6px 14px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent-start);
+}
+
+.slide--title .team-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
 }
 
 /* ——————————————————————————
-   Slide 2 — Summary / Big Number
+   Slide 2 — Summary / Ring
    —————————————————————————— */
+.slide--summary {
+  background: linear-gradient(160deg, #0a0f1a, #111827);
+}
+
 .slide--summary .slide-inner {
   justify-content: center;
   align-items: flex-start;
 }
 
-.big-number {
-  font-size: 128px;
-  font-weight: 800;
-  color: var(--accent);
-  line-height: 1;
-  letter-spacing: -0.04em;
-  margin-bottom: 24px;
+.summary-layout {
+  display: flex;
+  align-items: center;
+  gap: 60px;
 }
 
-.big-number-caption {
-  font-size: 19px;
+/* Circular progress ring */
+.progress-ring-wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  flex-shrink: 0;
+}
+
+.progress-ring-wrap svg {
+  width: 200px;
+  height: 200px;
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 8;
+}
+
+.progress-ring-fill {
+  fill: none;
+  stroke: url(#ringGradient);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 533;
+  stroke-dashoffset: 533;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide.active .progress-ring-fill {
+  stroke-dashoffset: 80;
+}
+
+.ring-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ring-value span {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.summary-text {
+  flex: 1;
+}
+
+.summary-text .summary-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent-start);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.summary-text .summary-headline {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+
+.summary-text .summary-desc {
+  font-size: 16px;
   font-weight: 400;
   color: var(--text-secondary);
-  line-height: 1.65;
-  max-width: 560px;
+  line-height: 1.7;
+  max-width: 420px;
 }
 
 /* ——————————————————————————
    Slide 3 — Progress Cards
    —————————————————————————— */
+.slide--progress {
+  background: linear-gradient(160deg, #0a0f1a, #111827);
+}
+
 .slide--progress .heading {
   font-size: 32px;
   font-weight: 800;
   color: var(--text);
   margin-bottom: 32px;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .card-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 16px;
 }
 
-.card-grid .status-card:last-child:nth-child(odd) {
+.card-grid .glass-card:last-child:nth-child(odd) {
   grid-column: 1 / -1;
 }
 
-.status-card {
-  background: var(--card-bg);
+/* Glassmorphism card */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
   padding: 24px 28px;
-  border-left: 4px solid transparent;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 14px;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.status-card--green  { border-left-color: var(--green); }
-.status-card--blue   { border-left-color: var(--blue); }
-.status-card--yellow { border-left-color: var(--yellow); }
+.glass-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+}
 
-.status-card .card-title {
+.glass-card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.glass-card .card-title {
   font-size: 16px;
   font-weight: 600;
   color: var(--text);
 }
 
-.status-card .card-desc {
+.glass-card .card-desc {
   font-size: 14px;
   font-weight: 400;
   color: var(--text-secondary);
   line-height: 1.5;
 }
 
+/* Status indicator dot */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot--green {
+  background: var(--green);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+.status-dot--blue {
+  background: var(--blue);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+.status-dot--red {
+  background: var(--red);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+  animation: statusPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Progress bar */
+.progress-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  width: 0;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+}
+
+.progress-bar-fill--green {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.progress-bar-fill--blue {
+  background: linear-gradient(90deg, #3b82f6, #818cf8);
+}
+
+.progress-bar-fill--red {
+  background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+.slide.active .progress-bar-fill[data-width="100"] {
+  width: 100%;
+}
+
+.slide.active .progress-bar-fill[data-width="70"] {
+  width: 70%;
+}
+
+.slide.active .progress-bar-fill[data-width="15"] {
+  width: 15%;
+}
+
+/* Badge */
 .badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.06em;
-  padding: 3px 10px;
+  padding: 4px 10px;
   border-radius: 6px;
   width: fit-content;
-  margin-top: 4px;
 }
 
-.badge--green  { background: #dcfce7; color: #15803d; }
-.badge--blue   { background: #dbeafe; color: #1d4ed8; }
-.badge--yellow { background: #fef9c3; color: #a16207; }
+.badge--green {
+  background: var(--green-dim);
+  color: var(--green);
+}
+
+.badge--blue {
+  background: var(--blue-dim);
+  color: #60a5fa;
+}
+
+.badge--red {
+  background: var(--red-dim);
+  color: #f87171;
+}
+
+.progress-percent {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
 
 /* ——————————————————————————
    Slide 4 — Newsletter
    —————————————————————————— */
+.slide--newsletter {
+  background: linear-gradient(160deg, #0a0f1a, #111827);
+}
+
 .slide--newsletter .heading {
   font-size: 32px;
   font-weight: 800;
   color: var(--text);
   margin-bottom: 32px;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .newsletter-card {
-  background: var(--card-bg);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 36px 36px 32px;
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
 }
 
-.newsletter-card p {
-  font-size: 17px;
+/* Spark line decoration */
+.newsletter-card .spark-line {
+  position: absolute;
+  top: 24px;
+  right: 36px;
+  width: 120px;
+  height: 40px;
+  opacity: 0.4;
+}
+
+.newsletter-card .spark-line polyline {
+  fill: none;
+  stroke: url(#sparkGradient);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.metric-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.metric-big {
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.metric-big span {
+  font-size: 40px;
+}
+
+.metric-context {
+  padding-bottom: 10px;
+}
+
+.metric-context .metric-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.metric-context .metric-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green);
+  margin-top: 4px;
+}
+
+.metric-context .metric-trend svg {
+  width: 12px;
+  height: 12px;
+}
+
+.newsletter-card .card-body {
+  font-size: 16px;
   font-weight: 400;
   color: var(--text-secondary);
   line-height: 1.7;
-  margin-bottom: 28px;
 }
 
-.metric-highlight {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 12px;
+/* Percentage bar under metric */
+.metric-bar-wrap {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  margin: 20px 0 24px;
+  overflow: hidden;
 }
 
-.metric-highlight .metric-value {
-  font-size: 56px;
-  font-weight: 800;
-  color: var(--accent);
-  line-height: 1;
-  letter-spacing: -0.03em;
+.metric-bar-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 2px;
+  background: var(--accent-gradient);
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
 }
 
-.metric-highlight .metric-label {
-  font-size: 15px;
-  font-weight: 400;
-  color: var(--text-secondary);
-  line-height: 1.4;
+.slide.active .metric-bar-fill {
+  width: 23%;
 }
 
 /* ——————————————————————————
    Slide 5 — Top of Mind
    —————————————————————————— */
+.slide--topofmind {
+  background: linear-gradient(160deg, #0a0f1a, #111827);
+}
+
 .slide--topofmind .heading {
   font-size: 32px;
   font-weight: 800;
   color: var(--text);
   margin-bottom: 32px;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .topofmind-card {
-  background: var(--card-bg);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 36px 36px 32px;
-  border-top: 4px solid var(--accent);
+  padding: 40px 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient top border */
+.topofmind-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--accent-gradient);
+}
+
+/* Subtle corner glow */
+.topofmind-card::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: -40px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.topofmind-card .card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.topofmind-card .card-icon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--accent-start);
 }
 
 .topofmind-card p {
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 400;
   color: var(--text);
   line-height: 1.7;
+  position: relative;
+  z-index: 1;
+}
+
+.topofmind-card .card-footer {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.topofmind-card .priority-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
 }
 
 /* ——————————————————————————
@@ -308,41 +718,47 @@ html, body {
 }
 
 .page-dots .dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #c8cdd8;
+  background: rgba(255, 255, 255, 0.15);
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .page-dots .dot:hover {
-  background: #9ba3b4;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .page-dots .dot.active {
-  background: var(--accent);
-  transform: scale(1.25);
+  background: var(--accent-start);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  transform: scale(1.35);
 }
 
 /* ——————————————————————————
    Slide Content Animations
    —————————————————————————— */
 @keyframes dashboardScaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 @keyframes dashboardSlideLeft {
-  from { opacity: 0; transform: translateX(-30px); }
+  from { opacity: 0; transform: translateX(-20px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes dashboardFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dashboardFadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .slide.active .section-num {
@@ -351,52 +767,47 @@ html, body {
 
 .slide.active .heading,
 .slide.active h1 {
-  animation: dashboardFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: dashboardFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
   animation-delay: 0.08s;
 }
 
-.slide.active .subtitle {
+.slide.active .subtitle,
+.slide.active .team-badge {
   animation: dashboardFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: 0.16s;
+  animation-delay: 0.18s;
 }
 
-.slide.active .status-card:nth-child(1),
-.slide.active .card-grid .status-card:nth-child(1) {
+.slide.active .summary-layout {
+  animation: dashboardFadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.1s;
+}
+
+.slide.active .glass-card:nth-child(1) {
   animation: dashboardScaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
   animation-delay: 0.12s;
 }
 
-.slide.active .status-card:nth-child(2) {
+.slide.active .glass-card:nth-child(2) {
   animation: dashboardScaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: 0.2s;
+  animation-delay: 0.22s;
 }
 
-.slide.active .status-card:nth-child(3) {
+.slide.active .glass-card:nth-child(3) {
   animation: dashboardScaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: 0.28s;
+  animation-delay: 0.32s;
 }
 
 .slide.active .newsletter-card {
-  animation: dashboardScaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: dashboardScaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
   animation-delay: 0.12s;
 }
 
 .slide.active .topofmind-card {
-  animation: dashboardScaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: dashboardScaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
   animation-delay: 0.12s;
 }
 
-.slide.active .big-number {
-  animation: dashboardScaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: 0.08s;
-}
-
-.slide.active .big-number-caption {
-  animation: dashboardFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: 0.2s;
-}
-
-.slide.active .banner {
+.slide.active .top-bar {
   animation: none;
 }
 
@@ -405,12 +816,25 @@ html, body {
 .slide:not(.active) .heading,
 .slide:not(.active) h1,
 .slide:not(.active) .subtitle,
-.slide:not(.active) .status-card,
+.slide:not(.active) .team-badge,
+.slide:not(.active) .summary-layout,
+.slide:not(.active) .glass-card,
 .slide:not(.active) .newsletter-card,
-.slide:not(.active) .topofmind-card,
-.slide:not(.active) .big-number,
-.slide:not(.active) .big-number-caption {
+.slide:not(.active) .topofmind-card {
   opacity: 0;
+}
+
+/* Reset progress bars when not active */
+.slide:not(.active) .progress-bar-fill {
+  width: 0 !important;
+}
+
+.slide:not(.active) .progress-ring-fill {
+  stroke-dashoffset: 533 !important;
+}
+
+.slide:not(.active) .metric-bar-fill {
+  width: 0 !important;
 }
 
 /* ——————————————————————————
@@ -422,11 +846,31 @@ html, body {
   }
 
   .slide--title h1 {
-    font-size: 32px;
+    font-size: 34px;
   }
 
-  .big-number {
-    font-size: 80px;
+  .summary-layout {
+    flex-direction: column;
+    gap: 32px;
+    align-items: flex-start;
+  }
+
+  .progress-ring-wrap {
+    width: 150px;
+    height: 150px;
+  }
+
+  .progress-ring-wrap svg {
+    width: 150px;
+    height: 150px;
+  }
+
+  .ring-value {
+    font-size: 38px;
+  }
+
+  .ring-value span {
+    font-size: 22px;
   }
 
   .card-grid {
@@ -437,28 +881,52 @@ html, body {
     right: 16px;
   }
 
-  .metric-highlight {
-    flex-direction: column;
-    gap: 6px;
+  .metric-big {
+    font-size: 52px;
   }
 
-  .metric-highlight .metric-value {
-    font-size: 40px;
+  .metric-big span {
+    font-size: 30px;
+  }
+
+  .metric-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .newsletter-card .spark-line {
+    display: none;
   }
 }
 </style>
 </head>
 <body>
 
+<!-- SVG defs for gradients -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <linearGradient id="sparkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+  </defs>
+</svg>
+
 <div class="deck" id="deck">
 
   <!-- Slide 1 — Title -->
   <div class="slide slide--title active" data-slide="0">
-    <div class="banner"></div>
+    <div class="top-bar"></div>
     <div class="slide-inner">
       <div class="section-num">01</div>
-      <h1>Weekly Status Update</h1>
-      <p class="subtitle">Week of March 9, 2025<span></span>Design Engineering</p>
+      <h1>Weekly Status<br>Update</h1>
+      <p class="subtitle">Week of March 9, 2025<span class="divider"></span>Design Engineering</p>
+      <div class="team-badge">Active Sprint</div>
     </div>
   </div>
 
@@ -466,8 +934,20 @@ html, body {
   <div class="slide slide--summary" data-slide="1">
     <div class="slide-inner">
       <div class="section-num">02 &mdash; Summary</div>
-      <div class="big-number">85%</div>
-      <p class="big-number-caption">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</p>
+      <div class="summary-layout">
+        <div class="progress-ring-wrap">
+          <svg viewBox="0 0 200 200">
+            <circle class="progress-ring-bg" cx="100" cy="100" r="85"/>
+            <circle class="progress-ring-fill" cx="100" cy="100" r="85"/>
+          </svg>
+          <div class="ring-value">85<span>%</span></div>
+        </div>
+        <div class="summary-text">
+          <div class="summary-label">Copilot Adoption</div>
+          <div class="summary-headline">Exceeding Q1 target by 10 points</div>
+          <p class="summary-desc">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -477,20 +957,47 @@ html, body {
       <div class="section-num">03</div>
       <div class="heading">Progress</div>
       <div class="card-grid">
-        <div class="status-card status-card--green">
-          <div class="card-title">Design System v3</div>
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title">Design System v3</div>
+            <div class="status-dot status-dot--green"></div>
+          </div>
           <div class="card-desc">Shipped to production</div>
-          <div class="badge badge--green">COMPLETE</div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill progress-bar-fill--green" data-width="100"></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="badge badge--green">COMPLETE</div>
+            <div class="progress-percent">100%</div>
+          </div>
         </div>
-        <div class="status-card status-card--blue">
-          <div class="card-title">AI Assistant Integration</div>
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title">AI Assistant Integration</div>
+            <div class="status-dot status-dot--blue"></div>
+          </div>
           <div class="card-desc">Development at 70%</div>
-          <div class="badge badge--blue">IN PROGRESS</div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill progress-bar-fill--blue" data-width="70"></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="badge badge--blue">IN PROGRESS</div>
+            <div class="progress-percent">70%</div>
+          </div>
         </div>
-        <div class="status-card status-card--yellow">
-          <div class="card-title">Accessibility Audit</div>
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title">Accessibility Audit</div>
+            <div class="status-dot status-dot--red"></div>
+          </div>
           <div class="card-desc">Blocked by vendor response</div>
-          <div class="badge badge--yellow">BLOCKED</div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill progress-bar-fill--red" data-width="15"></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="badge badge--red">BLOCKED</div>
+            <div class="progress-percent">15%</div>
+          </div>
         </div>
       </div>
     </div>
@@ -502,11 +1009,23 @@ html, body {
       <div class="section-num">04</div>
       <div class="heading">Newsletter</div>
       <div class="newsletter-card">
-        <p>Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</p>
-        <div class="metric-highlight">
-          <span class="metric-value">23%</span>
-          <span class="metric-label">improvement in task<br>completion rate</span>
+        <svg class="spark-line" viewBox="0 0 120 40">
+          <polyline points="0,35 15,30 30,32 45,20 55,22 65,10 80,15 95,5 110,8 120,3"/>
+        </svg>
+        <div class="metric-row">
+          <div class="metric-big">23<span>%</span></div>
+          <div class="metric-context">
+            <div class="metric-label">Improvement in task<br>completion rate</div>
+            <div class="metric-trend">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3M3 5l3-3 3 3"/></svg>
+              vs. last quarter
+            </div>
+          </div>
         </div>
+        <div class="metric-bar-wrap">
+          <div class="metric-bar-fill"></div>
+        </div>
+        <p class="card-body">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</p>
       </div>
     </div>
   </div>
@@ -517,7 +1036,14 @@ html, body {
       <div class="section-num">05</div>
       <div class="heading">Top of Mind</div>
       <div class="topofmind-card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        </div>
         <p>Scaling the design review process without creating bottlenecks on senior designers.</p>
+        <div class="card-footer">
+          <div class="priority-dot"></div>
+          High priority &mdash; Needs team discussion
+        </div>
       </div>
     </div>
   </div>
@@ -563,11 +1089,11 @@ html, body {
 
     setTimeout(function () {
       transitioning = false;
-    }, 550);
+    }, 600);
   }
 
   function resetAnimations(slide) {
-    var els = slide.querySelectorAll('.section-num, .heading, h1, .subtitle, .status-card, .newsletter-card, .topofmind-card, .big-number, .big-number-caption');
+    var els = slide.querySelectorAll('.section-num, .heading, h1, .subtitle, .team-badge, .summary-layout, .glass-card, .newsletter-card, .topofmind-card');
     for (var j = 0; j < els.length; j++) {
       els[j].style.animation = 'none';
       els[j].offsetHeight;

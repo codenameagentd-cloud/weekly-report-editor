@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Weekly Status — March 10, 2026</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
 
 *, *::before, *::after {
   margin: 0;
@@ -18,8 +18,8 @@ html, body {
   height: 100%;
   overflow: hidden;
   font-family: 'DM Sans', sans-serif;
-  background: #FAFAFA;
-  color: #111111;
+  background: #0A0A0A;
+  color: #F5F5F5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -31,14 +31,14 @@ html, body {
   left: 0;
   width: 100%;
   height: 3px;
-  background: #E5E7EB;
+  background: rgba(255,255,255,0.06);
   z-index: 1000;
 }
 
 .progress-fill {
   height: 100%;
   width: 20%;
-  background: #5B21B6;
+  background: linear-gradient(90deg, #5B21B6, #7C3AED);
   transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -53,15 +53,14 @@ html, body {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transform: translateX(0);
   pointer-events: none;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .slide.active {
   opacity: 1;
   pointer-events: auto;
-  animation: kineticEnterRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: kineticEnterRight 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 .slide.exiting {
@@ -71,34 +70,34 @@ html, body {
 
 .slide-inner {
   width: 100%;
-  max-width: 960px;
-  padding: 0 48px;
+  height: 100%;
+  position: relative;
 }
 
-/* ── Animations ── */
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(30px); }
+/* ── Keyframes ── */
+@keyframes kineticEnterRight {
+  from { opacity: 0; transform: translateX(80px) rotate(-1.5deg); }
+  to   { opacity: 1; transform: translateX(0) rotate(0deg); }
+}
+
+@keyframes kineticExitLeft {
+  from { opacity: 1; transform: translateX(0) rotate(0deg); }
+  to   { opacity: 0; transform: translateX(-80px) rotate(1.5deg); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes fadeSlideLeft {
-  from { opacity: 0; transform: translateX(-40px); }
+@keyframes fadeLeft {
+  from { opacity: 0; transform: translateX(-50px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
-@keyframes dropIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes expandWidth {
-  from { width: 0; }
-  to   { width: 100%; }
-}
-
-@keyframes expandHighlight {
-  from { width: 0; }
-  to   { width: auto; }
+@keyframes fadeRight {
+  from { opacity: 0; transform: translateX(50px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes scaleX {
@@ -106,325 +105,757 @@ html, body {
   to   { transform: scaleX(1); }
 }
 
+@keyframes expandWidth {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
-@keyframes kineticEnterRight {
-  from { opacity: 0; transform: translateX(60px) rotate(-2deg); }
-  to { opacity: 1; transform: translateX(0) rotate(0deg); }
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@keyframes kineticExitLeft {
-  from { opacity: 1; transform: translateX(0) rotate(0deg); }
-  to { opacity: 0; transform: translateX(-60px) rotate(2deg); }
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes kineticTitleWord {
-  from { opacity: 0; transform: translateY(30px) rotate(-2deg); }
-  to { opacity: 1; transform: translateY(0) rotate(0deg); }
+@keyframes wordReveal {
+  from { opacity: 0; transform: translateY(18px) rotate(-2deg); }
+  to   { opacity: 1; transform: translateY(0) rotate(0deg); }
 }
 
-@keyframes kineticWordPop {
-  from { opacity: 0; transform: translateY(15px) rotate(-3deg); }
-  to { opacity: 1; transform: translateY(0) rotate(0deg); }
+@keyframes shapeFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-12px) rotate(3deg); }
 }
 
-/* All animatable elements start invisible */
-.animate-in,
-.animate-left,
-.animate-drop,
-.animate-word {
-  opacity: 0;
+@keyframes shapePulse {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50%      { opacity: 0.25; transform: scale(1.05); }
 }
 
-/* Active triggers */
-.slide.active .animate-in {
-  animation: fadeSlideUp 0.6s ease forwards;
+@keyframes quoteIn {
+  from { opacity: 0; transform: scale(0.7) rotate(-5deg); }
+  to   { opacity: 0.12; transform: scale(1) rotate(0deg); }
 }
 
-.slide.active .animate-in:nth-child(2) {
-  animation-delay: 0.1s;
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateX(-30px) rotate(-1deg); }
+  to   { opacity: 1; transform: translateX(0) rotate(0deg); }
 }
 
-.slide.active .animate-in:nth-child(3) {
-  animation-delay: 0.2s;
+@keyframes stripGrow {
+  from { height: 0; }
+  to   { height: 100%; }
 }
 
-.slide.active .animate-in:nth-child(4) {
-  animation-delay: 0.3s;
+@keyframes barGrow {
+  from { width: 0; }
+  to   { width: var(--bar-width, 70%); }
 }
 
-.slide.active .animate-in:nth-child(5) {
-  animation-delay: 0.4s;
+/* ═══════════════════════════════════════════════ */
+/* SLIDE 1 : Title — asymmetric split             */
+/* ═══════════════════════════════════════════════ */
+.s1-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  align-items: center;
 }
 
-.slide.active .animate-left {
-  animation: fadeSlideLeft 0.6s ease forwards;
+.s1-left {
+  padding: 0 0 0 clamp(48px, 8vw, 120px);
+  position: relative;
+  z-index: 2;
 }
 
-.slide.active .animate-drop {
-  animation: dropIn 0.5s ease forwards;
-}
-
-/* ── Slide 1: Title ── */
-.title-word {
+.s1-word {
   display: block;
-  font-size: 96px;
+  font-size: clamp(64px, 9vw, 130px);
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -3px;
+  line-height: 0.95;
+  letter-spacing: -4px;
+  color: #F5F5F5;
   opacity: 0;
 }
 
-.slide.active .title-word-1 {
-  animation: kineticTitleWord 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0s;
+.slide.active .s1-word-1 {
+  animation: fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0s forwards;
 }
 
-.slide.active .title-word-2 {
-  animation: kineticTitleWord 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.15s;
+.slide.active .s1-word-2 {
+  animation: fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s forwards;
+  color: #7C3AED;
 }
 
-.title-underline {
+.s1-line {
+  width: 80px;
   height: 3px;
   background: #5B21B6;
-  margin-top: 24px;
+  margin-top: 36px;
   transform: scaleX(0);
   transform-origin: left;
 }
 
-.slide.active .title-underline {
-  animation: scaleX 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.4s;
+.slide.active .s1-line {
+  animation: scaleX 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
 }
 
-.title-date {
-  font-size: 20px;
+.s1-date {
+  font-size: 16px;
   font-weight: 400;
-  color: #6B7280;
-  margin-top: 32px;
-  letter-spacing: 0.5px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 20px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
   opacity: 0;
 }
 
-.slide.active .title-date {
-  animation: fadeSlideUp 0.6s ease forwards;
-  animation-delay: 0.6s;
+.slide.active .s1-date {
+  animation: fadeUp 0.5s ease 0.5s forwards;
 }
 
-/* ── Slide 2: Summary ── */
-.section-label {
-  font-size: 13px;
+.s1-right {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.s1-block {
+  position: absolute;
+  right: 0;
+  top: 15%;
+  width: 75%;
+  height: 70%;
+  background: linear-gradient(135deg, #5B21B6, #3B0D99);
+  border-radius: 0 0 0 40px;
+  opacity: 0;
+}
+
+.slide.active .s1-block {
+  animation: fadeRight 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+
+.s1-block-inner {
+  position: absolute;
+  right: 40px;
+  bottom: 50px;
+  width: 50%;
+  height: 35%;
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 0 0 0 24px;
+  opacity: 0;
+}
+
+.slide.active .s1-block-inner {
+  animation: fadeIn 0.6s ease 0.55s forwards;
+}
+
+.s1-dot-grid {
+  position: absolute;
+  left: -40px;
+  bottom: 12%;
+  display: grid;
+  grid-template-columns: repeat(4, 8px);
+  gap: 12px;
+  opacity: 0;
+}
+
+.s1-dot-grid span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(124, 58, 237, 0.5);
+}
+
+.slide.active .s1-dot-grid {
+  animation: fadeIn 0.6s ease 0.65s forwards;
+}
+
+/* ═══════════════════════════════════════════════ */
+/* SLIDE 2 : Summary — split with big metric      */
+/* ═══════════════════════════════════════════════ */
+.s2-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  align-items: center;
+}
+
+.s2-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.s2-metric-bg {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(91, 33, 182, 0.2) 0%, transparent 70%);
+  opacity: 0;
+}
+
+.slide.active .s2-metric-bg {
+  animation: fadeIn 0.8s ease 0.1s forwards;
+  animation-fill-mode: forwards;
+}
+
+.s2-metric {
+  font-size: clamp(100px, 14vw, 180px);
+  font-weight: 700;
+  letter-spacing: -6px;
+  line-height: 1;
+  background: linear-gradient(180deg, #F5F5F5 30%, #7C3AED 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+}
+
+.slide.active .s2-metric {
+  animation: countUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+}
+
+.s2-metric-sub {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: #7C3AED;
+  margin-top: 8px;
+  opacity: 0;
+}
+
+.slide.active .s2-metric-sub {
+  animation: fadeUp 0.5s ease 0.4s forwards;
+}
+
+.s2-right {
+  padding: 0 clamp(48px, 6vw, 100px) 0 clamp(24px, 4vw, 60px);
+  position: relative;
+}
+
+.s2-accent-bar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 0;
+  background: linear-gradient(180deg, #7C3AED, #5B21B6);
+  border-radius: 2px;
+}
+
+.slide.active .s2-accent-bar {
+  animation: stripGrow 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+  height: 120px;
+}
+
+.s2-label {
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2.5px;
-  color: #5B21B6;
+  letter-spacing: 3px;
+  color: #7C3AED;
+  margin-bottom: 24px;
+  opacity: 0;
+}
+
+.slide.active .s2-label {
+  animation: dropIn 0.5s ease 0.15s forwards;
+}
+
+.s2-text {
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.85);
+  opacity: 0;
+}
+
+.slide.active .s2-text {
+  animation: fadeLeft 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
+}
+
+.s2-text em {
+  font-style: normal;
+  color: #F5F5F5;
+  font-weight: 700;
+}
+
+.s2-target {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 28px;
+  padding: 10px 20px;
+  background: rgba(91, 33, 182, 0.15);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-radius: 8px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  opacity: 0;
+}
+
+.s2-target span {
+  color: #7C3AED;
+  font-weight: 700;
+}
+
+.slide.active .s2-target {
+  animation: fadeUp 0.5s ease 0.55s forwards;
+}
+
+/* ═══════════════════════════════════════════════ */
+/* SLIDE 3 : Progress — staggered cards            */
+/* ═══════════════════════════════════════════════ */
+.s3-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  height: 100vh;
+  align-items: center;
+}
+
+.s3-left {
+  padding-left: clamp(40px, 6vw, 80px);
+}
+
+.s3-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #7C3AED;
+  opacity: 0;
+}
+
+.slide.active .s3-label {
+  animation: dropIn 0.5s ease 0.05s forwards;
+}
+
+.s3-heading {
+  font-size: clamp(36px, 4.5vw, 56px);
+  font-weight: 700;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  margin-top: 16px;
+  opacity: 0;
+}
+
+.slide.active .s3-heading {
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+
+.s3-count {
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 16px;
+  opacity: 0;
+}
+
+.slide.active .s3-count {
+  animation: fadeIn 0.5s ease 0.4s forwards;
+}
+
+.s3-right {
+  padding: 0 clamp(40px, 5vw, 80px) 0 clamp(20px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.s3-card {
+  display: grid;
+  grid-template-columns: 5px 1fr auto;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  opacity: 0;
+  transition: background 0.25s ease;
+}
+
+.s3-card:hover {
+  background: rgba(255,255,255,0.07);
+}
+
+.slide.active .s3-card:nth-child(1) {
+  animation: cardSlideIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+}
+
+.slide.active .s3-card:nth-child(2) {
+  animation: cardSlideIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+}
+
+.slide.active .s3-card:nth-child(3) {
+  animation: cardSlideIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
+}
+
+.s3-strip {
+  width: 5px;
+  background: currentColor;
+  border-radius: 0;
+  align-self: stretch;
+}
+
+.s3-strip-green  { color: #10B981; }
+.s3-strip-purple { color: #7C3AED; }
+.s3-strip-red    { color: #EF4444; }
+
+.s3-card-body {
+  padding: 28px 24px;
+}
+
+.s3-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #F5F5F5;
+  margin-bottom: 6px;
+}
+
+.s3-card-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.45);
+}
+
+.s3-card-bar {
+  margin-top: 14px;
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.s3-card-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  width: 0;
+}
+
+.slide.active .s3-card:nth-child(1) .s3-card-bar-fill {
+  animation: barGrow 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards;
+}
+
+.slide.active .s3-card:nth-child(2) .s3-card-bar-fill {
+  animation: barGrow 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards;
+}
+
+.s3-card-status {
+  align-self: center;
+  padding: 0 28px;
+}
+
+.s3-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.s3-badge-done {
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.s3-badge-progress {
+  color: #7C3AED;
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.s3-badge-blocked {
+  color: #EF4444;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.slide.active .s3-card:nth-child(1) .s3-badge {
+  animation: dropIn 0.4s ease 0.5s forwards;
+}
+
+.slide.active .s3-card:nth-child(2) .s3-badge {
+  animation: dropIn 0.4s ease 0.65s forwards;
+}
+
+.slide.active .s3-card:nth-child(3) .s3-badge {
+  animation: dropIn 0.4s ease 0.8s forwards;
+}
+
+/* Card 1 done — tinted green */
+.s3-card:nth-child(1) {
+  background: rgba(16, 185, 129, 0.04);
+  border-color: rgba(16, 185, 129, 0.1);
+}
+
+/* Card 3 blocked — tinted red */
+.s3-card:nth-child(3) {
+  background: rgba(239, 68, 68, 0.04);
+  border-color: rgba(239, 68, 68, 0.08);
+}
+
+/* ═══════════════════════════════════════════════ */
+/* SLIDE 4 : Newsletter — pull-quote               */
+/* ═══════════════════════════════════════════════ */
+.s4-layout {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0 clamp(48px, 8vw, 140px);
+}
+
+.s4-quote-mark {
+  position: absolute;
+  top: 12%;
+  left: 8%;
+  font-size: clamp(200px, 28vw, 380px);
+  font-weight: 700;
+  line-height: 1;
+  color: #7C3AED;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.slide.active .s4-quote-mark {
+  animation: quoteIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0s forwards;
+}
+
+.s4-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+
+.s4-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #7C3AED;
   margin-bottom: 32px;
   opacity: 0;
 }
 
-.slide.active .section-label {
-  animation: dropIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.slide.active .s4-label {
+  animation: dropIn 0.5s ease 0.1s forwards;
 }
 
-.summary-text {
-  font-size: 38px;
+.s4-text {
+  font-size: clamp(26px, 3.5vw, 40px);
   font-weight: 400;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.8);
+  opacity: 0;
+}
+
+.slide.active .s4-text {
+  animation: fadeLeft 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+}
+
+.s4-metric-box {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 40px;
+  padding: 20px 32px;
+  background: rgba(124, 58, 237, 0.1);
+  border-left: 4px solid #7C3AED;
+  border-radius: 0 12px 12px 0;
+  opacity: 0;
+}
+
+.slide.active .s4-metric-box {
+  animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+}
+
+.s4-metric-num {
+  font-size: 48px;
+  font-weight: 700;
+  color: #7C3AED;
+  letter-spacing: -2px;
+}
+
+.s4-metric-desc {
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
   line-height: 1.4;
-  letter-spacing: -0.5px;
-  color: #111111;
-  opacity: 0;
 }
 
-.slide.active .summary-text {
-  animation: fadeSlideLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.15s;
-}
-
-.highlight-metric {
-  display: inline;
-  position: relative;
-  color: #FAFAFA;
-  z-index: 1;
-  padding: 0 8px;
-  margin: 0 2px;
-}
-
-.highlight-metric::before {
-  content: '';
+/* Decorative line */
+.s4-deco-line {
   position: absolute;
-  left: 0;
-  top: 2px;
-  bottom: 2px;
-  width: 0;
-  background: #5B21B6;
-  border-radius: 4px;
-  z-index: -1;
-}
-
-.slide.active .highlight-metric::before {
-  animation: expandWidth 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.6s;
-}
-
-/* ── Slide 3: Progress ── */
-.progress-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.progress-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid #E5E7EB;
-  border-radius: 12px;
-  padding: 32px;
-  background: #FFFFFF;
+  bottom: 20%;
+  right: 6%;
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.3), transparent);
   opacity: 0;
 }
 
-.slide.active .progress-card:nth-child(1) {
-  animation: fadeSlideLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.1s;
+.slide.active .s4-deco-line {
+  animation: fadeIn 0.6s ease 0.7s forwards;
 }
 
-.slide.active .progress-card:nth-child(2) {
-  animation: fadeSlideLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.25s;
-}
-
-.slide.active .progress-card:nth-child(3) {
-  animation: fadeSlideLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.4s;
-}
-
-.card-left {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.status-dot {
+.s4-deco-dot {
+  position: absolute;
+  bottom: calc(20% - 4px);
+  right: calc(6% + 120px);
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  flex-shrink: 0;
+  background: #7C3AED;
+  opacity: 0;
 }
 
-.dot-green  { background: #10B981; }
-.dot-purple { background: #5B21B6; }
-.dot-red    { background: #EF4444; }
-
-.card-title {
-  font-size: 18px;
-  font-weight: 500;
-  color: #111111;
+.slide.active .s4-deco-dot {
+  animation: fadeIn 0.5s ease 0.75s forwards;
 }
 
-.card-subtitle {
-  font-size: 14px;
-  color: #6B7280;
-  margin-top: 2px;
+/* ═══════════════════════════════════════════════ */
+/* SLIDE 5 : Top of Mind — bold statement          */
+/* ═══════════════════════════════════════════════ */
+.s5-layout {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.status-label {
+.s5-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.s5-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.s5-shape-1 {
+  width: 300px;
+  height: 300px;
+  top: -60px;
+  right: -40px;
+  background: radial-gradient(circle, rgba(91, 33, 182, 0.2) 0%, transparent 70%);
+}
+
+.s5-shape-2 {
+  width: 180px;
+  height: 180px;
+  bottom: 10%;
+  left: 5%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+}
+
+.s5-shape-3 {
+  width: 80px;
+  height: 80px;
+  top: 30%;
+  right: 20%;
+  border-radius: 0;
+  border: 2px solid rgba(124, 58, 237, 0.15);
+  transform: rotate(45deg);
+}
+
+.slide.active .s5-shape-1 {
+  animation: shapePulse 4s ease-in-out infinite, fadeIn 0.8s ease 0.1s forwards;
+}
+
+.slide.active .s5-shape-2 {
+  animation: shapeFloat 5s ease-in-out infinite, fadeIn 0.8s ease 0.2s forwards;
+}
+
+.slide.active .s5-shape-3 {
+  animation: shapeFloat 6s ease-in-out 0.5s infinite, fadeIn 0.8s ease 0.3s forwards;
+}
+
+.s5-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 clamp(48px, 10vw, 160px);
+  max-width: 900px;
+}
+
+.s5-label {
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 1.5px;
   text-transform: uppercase;
-  padding: 6px 14px;
-  border-radius: 6px;
+  letter-spacing: 3px;
+  color: #7C3AED;
+  margin-bottom: 32px;
   opacity: 0;
-  flex-shrink: 0;
 }
 
-.label-done {
-  color: #10B981;
-  background: #ECFDF5;
+.slide.active .s5-label {
+  animation: dropIn 0.5s ease 0.05s forwards;
 }
 
-.label-progress {
-  color: #5B21B6;
-  background: #EDE9FE;
-}
-
-.label-blocked {
-  color: #EF4444;
-  background: #FEF2F2;
-}
-
-.slide.active .progress-card:nth-child(1) .status-label {
-  animation: dropIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.45s;
-}
-
-.slide.active .progress-card:nth-child(2) .status-label {
-  animation: dropIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.6s;
-}
-
-.slide.active .progress-card:nth-child(3) .status-label {
-  animation: dropIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.75s;
-}
-
-/* ── Slide 4: Newsletter ── */
-.newsletter-text {
-  font-size: 36px;
+.s5-text {
+  font-size: clamp(30px, 4vw, 48px);
   font-weight: 400;
-  line-height: 1.45;
-  letter-spacing: -0.3px;
-  color: #111111;
+  line-height: 1.5;
+  letter-spacing: -0.5px;
+  color: rgba(255,255,255,0.85);
+}
+
+.s5-text .word {
+  display: inline-block;
+  margin-right: 0.3em;
   opacity: 0;
 }
 
-.slide.active .newsletter-text {
-  animation: fadeSlideLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.15s;
+.s5-text .word-bold {
+  font-weight: 700;
+  color: #F5F5F5;
 }
 
-.inline-underline {
-  display: inline;
-  position: relative;
+.s5-text .word-accent {
+  color: #7C3AED;
+  font-weight: 700;
 }
 
-.inline-underline::after {
-  content: '';
+.slide.active .s5-text .word {
+  animation: wordReveal 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Vertical accent on left */
+.s5-vert-line {
   position: absolute;
-  left: 0;
-  bottom: 2px;
-  height: 3px;
-  width: 0;
-  background: #5B21B6;
+  left: clamp(28px, 7vw, 120px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: linear-gradient(180deg, transparent, #7C3AED, transparent);
   border-radius: 2px;
 }
 
-.slide.active .inline-underline::after {
-  animation: expandWidth 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.65s;
-}
-
-/* ── Slide 5: Top of Mind ── */
-.mind-text {
-  font-size: 38px;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: -0.3px;
-}
-
-.mind-text .word {
-  display: inline-block;
-  opacity: 0;
-  margin-right: 0.3em;
-}
-
-.slide.active .mind-text .word {
-  animation: kineticWordPop 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.slide.active .s5-vert-line {
+  animation: stripGrow 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+  height: 160px;
 }
 
 /* ── Navigation Hint ── */
@@ -433,23 +864,23 @@ html, body {
   bottom: 32px;
   right: 40px;
   font-size: 12px;
-  color: #9CA3AF;
+  color: rgba(255,255,255,0.25);
   letter-spacing: 0.5px;
   z-index: 999;
   opacity: 0;
-  animation: fadeIn 1s ease forwards;
-  animation-delay: 1.5s;
+  animation: fadeIn 1s ease 1.5s forwards;
 }
 
 .nav-hint kbd {
   display: inline-block;
   padding: 2px 8px;
-  background: #F3F4F6;
-  border: 1px solid #E5E7EB;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 4px;
   font-family: 'DM Sans', sans-serif;
   font-size: 11px;
   margin: 0 2px;
+  color: rgba(255,255,255,0.35);
 }
 
 /* ── Slide Counter ── */
@@ -459,13 +890,13 @@ html, body {
   left: 40px;
   font-size: 13px;
   font-weight: 500;
-  color: #9CA3AF;
+  color: rgba(255,255,255,0.25);
   z-index: 999;
   letter-spacing: 0.5px;
 }
 
 .slide-counter .current {
-  color: #111111;
+  color: #F5F5F5;
   font-weight: 700;
 }
 </style>
@@ -489,109 +920,195 @@ html, body {
 </div>
 
 <!-- ═══════════════════════════════════════ -->
-<!-- SLIDE 1: Title                         -->
+<!-- SLIDE 1: Title — asymmetric split      -->
 <!-- ═══════════════════════════════════════ -->
 <div class="slide active" data-slide="1">
-  <div class="slide-inner" style="text-align:center;">
-    <div>
-      <span class="title-word title-word-1">Weekly</span>
-      <span class="title-word title-word-2">Status</span>
+  <div class="slide-inner">
+    <div class="s1-layout">
+      <div class="s1-left">
+        <span class="s1-word s1-word-1">Weekly</span>
+        <span class="s1-word s1-word-2">Status</span>
+        <div class="s1-line"></div>
+        <div class="s1-date">March 10, 2026</div>
+      </div>
+      <div class="s1-right">
+        <div class="s1-block">
+          <div class="s1-block-inner"></div>
+        </div>
+        <div class="s1-dot-grid">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
     </div>
-    <div class="title-underline" style="max-width:280px;margin-left:auto;margin-right:auto;margin-top:24px;"></div>
-    <div class="title-date">March 10, 2026</div>
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════ -->
-<!-- SLIDE 2: Summary                       -->
+<!-- SLIDE 2: Summary — split with metric   -->
 <!-- ═══════════════════════════════════════ -->
 <div class="slide" data-slide="2">
   <div class="slide-inner">
-    <div class="section-label">Summary</div>
-    <div class="summary-text">Copilot adoption reached <span class="highlight-metric">85%</span> across all engineering teams, exceeding our Q1 target of 75%.</div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════ -->
-<!-- SLIDE 3: Progress                      -->
-<!-- ═══════════════════════════════════════ -->
-<div class="slide" data-slide="3">
-  <div class="slide-inner">
-    <div class="section-label">Progress</div>
-    <div class="progress-cards">
-      <div class="progress-card">
-        <div class="card-left">
-          <div class="status-dot dot-green"></div>
-          <div>
-            <div class="card-title">Design System v3</div>
-            <div class="card-subtitle">Shipped to production</div>
-          </div>
-        </div>
-        <div class="status-label label-done">Done</div>
+    <div class="s2-layout">
+      <div class="s2-left">
+        <div class="s2-metric-bg"></div>
+        <div class="s2-metric">85%</div>
+        <div class="s2-metric-sub">Adoption Rate</div>
       </div>
-      <div class="progress-card">
-        <div class="card-left">
-          <div class="status-dot dot-purple"></div>
-          <div>
-            <div class="card-title">AI Assistant Integration</div>
-            <div class="card-subtitle">Development at 70%</div>
-          </div>
+      <div class="s2-right">
+        <div class="s2-accent-bar"></div>
+        <div class="s2-label">Summary</div>
+        <div class="s2-text">Copilot adoption reached <em>85%</em> across all engineering teams, exceeding our Q1 target of 75%.</div>
+        <div class="s2-target">
+          Q1 Target: <span>75%</span> &mdash; Exceeded by 10 points
         </div>
-        <div class="status-label label-progress">In Progress</div>
-      </div>
-      <div class="progress-card">
-        <div class="card-left">
-          <div class="status-dot dot-red"></div>
-          <div>
-            <div class="card-title">Accessibility Audit</div>
-            <div class="card-subtitle">Blocked by vendor response</div>
-          </div>
-        </div>
-        <div class="status-label label-blocked">Blocked</div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════ -->
-<!-- SLIDE 4: Newsletter                    -->
+<!-- SLIDE 3: Progress — staggered cards    -->
 <!-- ═══════════════════════════════════════ -->
-<div class="slide" data-slide="4">
+<div class="slide" data-slide="3">
   <div class="slide-inner">
-    <div class="section-label">Newsletter</div>
-    <div class="newsletter-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <span class="inline-underline">23%</span>.</div>
+    <div class="s3-layout">
+      <div class="s3-left">
+        <div class="s3-label">Progress</div>
+        <div class="s3-heading">This<br>Week</div>
+        <div class="s3-count">3 items tracked</div>
+      </div>
+      <div class="s3-right">
+        <!-- Card 1: Done -->
+        <div class="s3-card">
+          <div class="s3-strip s3-strip-green"></div>
+          <div class="s3-card-body">
+            <div class="s3-card-title">Design System v3</div>
+            <div class="s3-card-sub">Shipped to production</div>
+            <div class="s3-card-bar">
+              <div class="s3-card-bar-fill" style="--bar-width:100%; background:#10B981;"></div>
+            </div>
+          </div>
+          <div class="s3-card-status">
+            <div class="s3-badge s3-badge-done">Done</div>
+          </div>
+        </div>
+        <!-- Card 2: In Progress -->
+        <div class="s3-card">
+          <div class="s3-strip s3-strip-purple"></div>
+          <div class="s3-card-body">
+            <div class="s3-card-title">AI Assistant Integration</div>
+            <div class="s3-card-sub">Development at 70%</div>
+            <div class="s3-card-bar">
+              <div class="s3-card-bar-fill" style="--bar-width:70%; background:#7C3AED;"></div>
+            </div>
+          </div>
+          <div class="s3-card-status">
+            <div class="s3-badge s3-badge-progress">In Progress</div>
+          </div>
+        </div>
+        <!-- Card 3: Blocked -->
+        <div class="s3-card">
+          <div class="s3-strip s3-strip-red"></div>
+          <div class="s3-card-body">
+            <div class="s3-card-title">Accessibility Audit</div>
+            <div class="s3-card-sub">Blocked by vendor response</div>
+          </div>
+          <div class="s3-card-status">
+            <div class="s3-badge s3-badge-blocked">Blocked</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════ -->
-<!-- SLIDE 5: Top of Mind                   -->
+<!-- SLIDE 4: Newsletter — pull-quote       -->
+<!-- ═══════════════════════════════════════ -->
+<div class="slide" data-slide="4">
+  <div class="slide-inner">
+    <div class="s4-layout">
+      <div class="s4-quote-mark">&ldquo;</div>
+      <div class="s4-content">
+        <div class="s4-label">Newsletter</div>
+        <div class="s4-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate.</div>
+        <div class="s4-metric-box">
+          <div class="s4-metric-num">+23%</div>
+          <div class="s4-metric-desc">improvement in task<br>completion rate</div>
+        </div>
+      </div>
+      <div class="s4-deco-line"></div>
+      <div class="s4-deco-dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 5: Top of Mind — word reveal     -->
 <!-- ═══════════════════════════════════════ -->
 <div class="slide" data-slide="5">
   <div class="slide-inner">
-    <div class="section-label">Top of Mind</div>
-    <div class="mind-text" id="mindText"></div>
+    <div class="s5-layout">
+      <div class="s5-shapes">
+        <div class="s5-shape s5-shape-1"></div>
+        <div class="s5-shape s5-shape-2"></div>
+        <div class="s5-shape s5-shape-3"></div>
+      </div>
+      <div class="s5-vert-line"></div>
+      <div class="s5-content">
+        <div class="s5-label">Top of Mind</div>
+        <div class="s5-text" id="mindText"></div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
 (function() {
   // ── Word-stagger for Slide 5 ──
-  const mindSentence = "Scaling the design review process without creating bottlenecks on senior designers.";
-  const mindEl = document.getElementById('mindText');
+  var mindSentence = "Scaling the design review process without creating bottlenecks on senior designers.";
+  var boldWords = { "Scaling": true, "design": true, "review": true, "bottlenecks": true };
+  var accentWords = { "bottlenecks": true };
+  var mindEl = document.getElementById('mindText');
+
   mindSentence.split(' ').forEach(function(word, i) {
-    const span = document.createElement('span');
+    var span = document.createElement('span');
     span.className = 'word';
+    if (accentWords[word]) {
+      span.className += ' word-accent';
+    } else if (boldWords[word]) {
+      span.className += ' word-bold';
+    }
     span.textContent = word;
-    span.style.animationDelay = (0.1 + i * 0.03) + 's';
+    span.style.animationDelay = (0.12 + i * 0.04) + 's';
     mindEl.appendChild(span);
   });
 
   // ── Slide engine ──
-  const slides = document.querySelectorAll('.slide');
-  const progressFill = document.getElementById('progressFill');
-  const counterCurrent = document.getElementById('counterCurrent');
-  let current = 0;
-  let transitioning = false;
+  var slides = document.querySelectorAll('.slide');
+  var progressFill = document.getElementById('progressFill');
+  var counterCurrent = document.getElementById('counterCurrent');
+  var current = 0;
+  var transitioning = false;
+
+  function resetSlideAnimations(slide) {
+    var selectors = [
+      '.s1-word', '.s1-line', '.s1-date', '.s1-block', '.s1-block-inner', '.s1-dot-grid',
+      '.s2-metric-bg', '.s2-metric', '.s2-metric-sub', '.s2-accent-bar', '.s2-label', '.s2-text', '.s2-target',
+      '.s3-label', '.s3-heading', '.s3-count', '.s3-card', '.s3-badge', '.s3-card-bar-fill',
+      '.s4-quote-mark', '.s4-label', '.s4-text', '.s4-metric-box', '.s4-deco-line', '.s4-deco-dot',
+      '.s5-shape', '.s5-vert-line', '.s5-label', '.word'
+    ];
+    var els = slide.querySelectorAll(selectors.join(','));
+    els.forEach(function(el) {
+      el.style.animation = 'none';
+      el.offsetHeight; // force reflow
+      el.style.animation = '';
+    });
+  }
 
   function goTo(index) {
     if (index < 0 || index >= slides.length || index === current || transitioning) return;
@@ -600,8 +1117,6 @@ html, body {
     var oldSlide = slides[current];
     oldSlide.classList.remove('active');
     oldSlide.classList.add('exiting');
-
-    // Reset animations on the leaving slide
     resetSlideAnimations(oldSlide);
 
     current = index;
@@ -615,17 +1130,6 @@ html, body {
         oldSlide.classList.remove('exiting');
         transitioning = false;
       }, 500);
-    });
-  }
-
-  function resetSlideAnimations(slide) {
-    // Reset all elements that have animation classes
-    var animatedEls = slide.querySelectorAll('.title-word, .title-underline, .title-date, .section-label, .summary-text, .highlight-metric, .progress-card, .status-label, .newsletter-text, .inline-underline, .word');
-    animatedEls.forEach(function(el) {
-      el.style.animation = 'none';
-      // Force reflow
-      el.offsetHeight;
-      el.style.animation = '';
     });
   }
 

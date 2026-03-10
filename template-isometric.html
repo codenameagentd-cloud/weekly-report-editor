@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Report — Isometric</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --purple: #7C3AED;
+    --purple-light: #A78BFA;
+    --teal: #14B8A6;
+    --teal-light: #5EEAD4;
+    --red: #EF4444;
+    --red-light: #FCA5A5;
+    --bg-dark: #0F0F1A;
+    --bg-card: rgba(255,255,255,0.04);
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255,255,255,0.65);
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg-dark);
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── slide wrapper ─────────────────────────── */
+  .deck {
+    position: relative;
+    width: 100vw; height: 100vh;
+    perspective: 1800px;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: rotateY(90deg) scale(0.8);
+    transition: opacity 0.7s cubic-bezier(.4,0,.2,1),
+                transform 0.7s cubic-bezier(.4,0,.2,1);
+    z-index: 0;
+  }
+  .slide.active {
+    opacity: 1; pointer-events: auto;
+    transform: rotateY(0deg) scale(1);
+    z-index: 2;
+  }
+  .slide.prev {
+    opacity: 0;
+    transform: rotateY(-90deg) scale(0.8) translateZ(-400px);
+  }
+
+  /* ── shared background layer ───────────────── */
+  .slide-bg {
+    position: absolute; inset: 0; overflow: hidden; z-index: 0;
+  }
+
+  /* dot grid */
+  .dot-grid {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* geometric floating shapes */
+  .geo {
+    position: absolute;
+    border-radius: 0;
+    opacity: 0.10;
+    pointer-events: none;
+  }
+  .geo.circle { border-radius: 50%; }
+
+  /* ── content wrapper ───────────────────────── */
+  .slide-content {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1080px;
+    padding: 60px 48px;
+  }
+
+  /* ── label / tag ───────────────────────────── */
+  .label {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 6px;
+    margin-bottom: 28px;
+    background: rgba(124,58,237,0.18);
+    color: var(--purple-light);
+    border: 1px solid rgba(124,58,237,0.25);
+  }
+
+  /* ── isometric 3D card ─────────────────────── */
+  .iso-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    padding: 48px 52px;
+    transform: perspective(1000px) rotateX(-4deg) rotateY(8deg);
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.25),
+      0 8px 16px rgba(0,0,0,0.25),
+      0 24px 48px rgba(0,0,0,0.30),
+      0 48px 80px rgba(0,0,0,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    transition: transform 0.5s cubic-bezier(.4,0,.2,1),
+                box-shadow 0.5s cubic-bezier(.4,0,.2,1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .slide.active .iso-card {
+    animation: cardFloat 4s ease-in-out infinite alternate;
+  }
+  @keyframes cardFloat {
+    0%   { transform: perspective(1000px) rotateX(-4deg) rotateY(8deg) translateY(0); }
+    100% { transform: perspective(1000px) rotateX(-3deg) rotateY(7deg) translateY(-8px); }
+  }
+
+  .iso-card h2 {
+    font-family: var(--font-heading);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 20px;
+  }
+  .iso-card p, .iso-card .body-text {
+    font-family: var(--font-body);
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  /* ── glow accent bar on card ───────────────── */
+  .iso-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 32px; right: 32px;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: linear-gradient(90deg, var(--purple), var(--teal));
+    box-shadow: 0 0 20px rgba(124,58,237,0.5), 0 0 40px rgba(20,184,166,0.3);
+  }
+  .iso-card { position: relative; overflow: visible; }
+
+  /* ── progress stack ────────────────────────── */
+  .progress-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    perspective: 1200px;
+  }
+
+  .progress-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 30px 36px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: transform 0.45s cubic-bezier(.4,0,.2,1),
+                box-shadow 0.45s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-card:nth-child(1) {
+    transform: perspective(1000px) rotateX(-5deg) rotateY(10deg) translateZ(0px);
+    z-index: 3;
+    box-shadow:
+      0 4px 8px rgba(0,0,0,0.3),
+      0 16px 32px rgba(0,0,0,0.3),
+      0 32px 64px rgba(0,0,0,0.2);
+  }
+  .progress-card:nth-child(2) {
+    transform: perspective(1000px) rotateX(-5deg) rotateY(10deg) translateZ(-30px) translateY(-8px) translateX(14px);
+    z-index: 2;
+    box-shadow:
+      0 8px 16px rgba(0,0,0,0.3),
+      0 24px 48px rgba(0,0,0,0.25);
+  }
+  .progress-card:nth-child(3) {
+    transform: perspective(1000px) rotateX(-5deg) rotateY(10deg) translateZ(-60px) translateY(-16px) translateX(28px);
+    z-index: 1;
+    box-shadow:
+      0 12px 24px rgba(0,0,0,0.3),
+      0 32px 64px rgba(0,0,0,0.2);
+  }
+
+  .slide.active .progress-card:nth-child(1) {
+    animation: stackFloat1 4s ease-in-out infinite alternate;
+  }
+  .slide.active .progress-card:nth-child(2) {
+    animation: stackFloat2 4s 0.15s ease-in-out infinite alternate;
+  }
+  .slide.active .progress-card:nth-child(3) {
+    animation: stackFloat3 4s 0.3s ease-in-out infinite alternate;
+  }
+  @keyframes stackFloat1 {
+    0%   { transform: perspective(1000px) rotateX(-5deg) rotateY(10deg) translateZ(0px) translateY(0); }
+    100% { transform: perspective(1000px) rotateX(-4deg) rotateY(9deg) translateZ(0px) translateY(-6px); }
+  }
+  @keyframes stackFloat2 {
+    0%   { transform: perspective(1000px) rotateX(-5deg) rotateY(10deg) translateZ(-30px) translateY(-8px) translateX(14px); }
+    100% { transform: perspective(1000px) rotateX(-4deg) rotateY(9deg) translateZ(-30px) translateY(-14px) translateX(14px); }
+  }
+  @keyframes stackFloat3 {
+    0%   { transform: perspective(1000px) rotateX(-5deg) rotateY(10deg) translateZ(-60px) translateY(-16px) translateX(28px); }
+    100% { transform: perspective(1000px) rotateX(-4deg) rotateY(9deg) translateZ(-60px) translateY(-22px) translateX(28px); }
+  }
+
+  /* accent bar on progress cards */
+  .progress-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 16px; bottom: 16px;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+  }
+  .progress-card.done::before {
+    background: var(--teal);
+    box-shadow: 0 0 14px rgba(20,184,166,0.6);
+  }
+  .progress-card.in-progress::before {
+    background: var(--purple);
+    box-shadow: 0 0 14px rgba(124,58,237,0.6);
+  }
+  .progress-card.blocked::before {
+    background: var(--red);
+    box-shadow: 0 0 14px rgba(239,68,68,0.6);
+  }
+
+  .progress-card .card-title {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+  }
+  .progress-card .card-subtitle {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .status-badge {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-top: 10px;
+  }
+  .done .status-badge {
+    background: rgba(20,184,166,0.15);
+    color: var(--teal-light);
+    border: 1px solid rgba(20,184,166,0.3);
+  }
+  .in-progress .status-badge {
+    background: rgba(124,58,237,0.15);
+    color: var(--purple-light);
+    border: 1px solid rgba(124,58,237,0.3);
+  }
+  .blocked .status-badge {
+    background: rgba(239,68,68,0.15);
+    color: var(--red-light);
+    border: 1px solid rgba(239,68,68,0.3);
+  }
+
+  /* progress bar */
+  .progress-bar-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s cubic-bezier(.4,0,.2,1);
+  }
+  .done .progress-bar-fill {
+    width: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--teal-light));
+    box-shadow: 0 0 10px rgba(20,184,166,0.4);
+  }
+  .in-progress .progress-bar-fill {
+    width: 70%;
+    background: linear-gradient(90deg, var(--purple), var(--purple-light));
+    box-shadow: 0 0 10px rgba(124,58,237,0.4);
+  }
+  .blocked .progress-bar-fill {
+    width: 15%;
+    background: linear-gradient(90deg, var(--red), var(--red-light));
+    box-shadow: 0 0 10px rgba(239,68,68,0.4);
+  }
+
+  /* ── stat highlight ────────────────────────── */
+  .stat-highlight {
+    font-family: var(--font-heading);
+    font-size: 72px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple-light), var(--teal-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  /* ── page indicator ────────────────────────── */
+  .page-indicator {
+    position: fixed;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+  }
+  .page-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer;
+    transition: all 0.35s ease;
+  }
+  .page-dot.active {
+    background: var(--purple);
+    box-shadow: 0 0 12px rgba(124,58,237,0.6), 0 0 24px rgba(124,58,237,0.3);
+    transform: scale(1.3);
+  }
+
+  /* ── slide number ──────────────────────────── */
+  .slide-number {
+    position: fixed;
+    bottom: 36px;
+    right: 48px;
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 1px;
+    z-index: 100;
+  }
+
+  /* ── geometric background elements ─────────── */
+
+  /* large gradient blobs */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  /* hexagon shape via clip-path */
+  .hex {
+    position: absolute;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    pointer-events: none;
+  }
+
+  /* triangle */
+  .tri {
+    position: absolute;
+    width: 0; height: 0;
+    pointer-events: none;
+  }
+
+  /* grid lines */
+  .grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  /* ── slide-specific backgrounds ────────────── */
+
+  /* Slide 1 */
+  .slide-1 .blob-1 {
+    width: 600px; height: 600px;
+    background: var(--purple);
+    top: -150px; right: -100px;
+  }
+  .slide-1 .blob-2 {
+    width: 400px; height: 400px;
+    background: var(--teal);
+    bottom: -100px; left: -50px;
+  }
+  .slide-1 .hex-1 {
+    width: 120px; height: 120px;
+    background: rgba(124,58,237,0.08);
+    top: 15%; right: 12%;
+    transform: rotate(15deg);
+  }
+  .slide-1 .hex-2 {
+    width: 60px; height: 60px;
+    background: rgba(20,184,166,0.1);
+    bottom: 25%; right: 25%;
+    transform: rotate(-10deg);
+  }
+  .slide-1 .tri-1 {
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-bottom: 70px solid rgba(124,58,237,0.06);
+    top: 30%; left: 8%;
+    transform: rotate(20deg);
+  }
+  .slide-1 .circle-1 {
+    width: 180px; height: 180px;
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 50%;
+    bottom: 15%; right: 8%;
+  }
+
+  /* Slide 2 */
+  .slide-2 .blob-1 {
+    width: 500px; height: 500px;
+    background: var(--teal);
+    top: -100px; left: -150px;
+  }
+  .slide-2 .blob-2 {
+    width: 450px; height: 450px;
+    background: var(--purple);
+    bottom: -150px; right: -100px;
+  }
+  .slide-2 .hex-1 {
+    width: 90px; height: 90px;
+    background: rgba(20,184,166,0.07);
+    top: 10%; left: 15%;
+    transform: rotate(30deg);
+  }
+  .slide-2 .tri-1 {
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-bottom: 52px solid rgba(20,184,166,0.05);
+    bottom: 20%; left: 10%;
+    transform: rotate(-15deg);
+  }
+  .slide-2 .circle-1 {
+    width: 140px; height: 140px;
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 50%;
+    top: 20%; right: 10%;
+  }
+
+  /* Slide 3 */
+  .slide-3 .blob-1 {
+    width: 550px; height: 550px;
+    background: var(--purple);
+    bottom: -200px; left: 20%;
+  }
+  .slide-3 .blob-2 {
+    width: 350px; height: 350px;
+    background: var(--teal);
+    top: -80px; right: 10%;
+  }
+  .slide-3 .hex-1 {
+    width: 100px; height: 100px;
+    background: rgba(124,58,237,0.06);
+    top: 18%; left: 8%;
+    transform: rotate(-20deg);
+  }
+  .slide-3 .tri-1 {
+    border-left: 35px solid transparent;
+    border-right: 35px solid transparent;
+    border-bottom: 60px solid rgba(124,58,237,0.05);
+    top: 15%; right: 20%;
+    transform: rotate(25deg);
+  }
+  .slide-3 .circle-1 {
+    width: 200px; height: 200px;
+    border: 1px solid rgba(255,255,255,0.03);
+    border-radius: 50%;
+    bottom: 10%; left: 5%;
+  }
+
+  /* Slide 4 */
+  .slide-4 .blob-1 {
+    width: 500px; height: 500px;
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .slide-4 .hex-1 {
+    width: 80px; height: 80px;
+    background: rgba(124,58,237,0.08);
+    bottom: 20%; left: 12%;
+    transform: rotate(10deg);
+  }
+  .slide-4 .hex-2 {
+    width: 50px; height: 50px;
+    background: rgba(20,184,166,0.08);
+    top: 15%; right: 15%;
+    transform: rotate(-25deg);
+  }
+  .slide-4 .tri-1 {
+    border-left: 45px solid transparent;
+    border-right: 45px solid transparent;
+    border-bottom: 78px solid rgba(20,184,166,0.04);
+    bottom: 30%; right: 8%;
+    transform: rotate(10deg);
+  }
+  .slide-4 .circle-1 {
+    width: 160px; height: 160px;
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 50%;
+    top: 25%; left: 10%;
+  }
+
+  /* ── quote / emphasis ──────────────────────── */
+  .quote-mark {
+    font-family: var(--font-heading);
+    font-size: 120px;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0.25;
+    position: absolute;
+    top: -20px; left: -10px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* ── responsive ────────────────────────────── */
+  @media (max-width: 768px) {
+    .slide-content { padding: 40px 24px; }
+    .iso-card { padding: 32px 28px; }
+    .iso-card h2 { font-size: 28px; }
+    .iso-card p, .iso-card .body-text { font-size: 16px; }
+    .stat-highlight { font-size: 48px; }
+    .progress-card .card-title { font-size: 17px; }
+    .progress-card { padding: 22px 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ════════ SLIDE 1: SUMMARY ════════ -->
+  <div class="slide slide-1 active" data-index="0">
+    <div class="slide-bg">
+      <div class="grid-lines"></div>
+      <div class="dot-grid"></div>
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="hex hex-1"></div>
+      <div class="hex hex-2"></div>
+      <div class="tri tri-1"></div>
+      <div class="geo circle-1"></div>
+    </div>
+    <div class="slide-content">
+      <div class="label">Summary</div>
+      <div class="iso-card">
+        <div class="stat-highlight">85%</div>
+        <h2>Copilot Adoption Exceeded Target</h2>
+        <p class="body-text">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ SLIDE 2: PROGRESS ════════ -->
+  <div class="slide slide-2" data-index="1">
+    <div class="slide-bg">
+      <div class="grid-lines"></div>
+      <div class="dot-grid"></div>
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="hex hex-1"></div>
+      <div class="tri tri-1"></div>
+      <div class="geo circle-1"></div>
+    </div>
+    <div class="slide-content">
+      <div class="label">Progress</div>
+      <div class="progress-stack">
+
+        <div class="progress-card done">
+          <div class="card-title">Design System v3</div>
+          <div class="card-subtitle">Shipped to production</div>
+          <span class="status-badge">Complete</span>
+          <div class="progress-bar-track"><div class="progress-bar-fill"></div></div>
+        </div>
+
+        <div class="progress-card in-progress">
+          <div class="card-title">AI Assistant Integration</div>
+          <div class="card-subtitle">Development at 70%</div>
+          <span class="status-badge">In Progress</span>
+          <div class="progress-bar-track"><div class="progress-bar-fill"></div></div>
+        </div>
+
+        <div class="progress-card blocked">
+          <div class="card-title">Accessibility Audit</div>
+          <div class="card-subtitle">Blocked by vendor response</div>
+          <span class="status-badge">Blocked</span>
+          <div class="progress-bar-track"><div class="progress-bar-fill"></div></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ SLIDE 3: NEWSLETTER ════════ -->
+  <div class="slide slide-3" data-index="2">
+    <div class="slide-bg">
+      <div class="grid-lines"></div>
+      <div class="dot-grid"></div>
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="hex hex-1"></div>
+      <div class="tri tri-1"></div>
+      <div class="geo circle-1"></div>
+    </div>
+    <div class="slide-content">
+      <div class="label">Newsletter</div>
+      <div class="iso-card" style="overflow: visible;">
+        <div class="quote-mark">"</div>
+        <h2>Q1 Design Retrospective</h2>
+        <p class="body-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</p>
+        <div style="margin-top: 28px; display: inline-flex; align-items: center; gap: 10px; padding: 10px 20px; border-radius: 10px; background: rgba(20,184,166,0.1); border: 1px solid rgba(20,184,166,0.2);">
+          <span style="font-family: var(--font-heading); font-size: 28px; font-weight: 700; color: var(--teal-light);">+23%</span>
+          <span style="font-size: 13px; color: var(--text-secondary);">Task completion rate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ SLIDE 4: TOP OF MIND ════════ -->
+  <div class="slide slide-4" data-index="3">
+    <div class="slide-bg">
+      <div class="grid-lines"></div>
+      <div class="dot-grid"></div>
+      <div class="blob blob-1"></div>
+      <div class="hex hex-1"></div>
+      <div class="hex hex-2"></div>
+      <div class="tri tri-1"></div>
+      <div class="geo circle-1"></div>
+    </div>
+    <div class="slide-content">
+      <div class="label">Top of Mind</div>
+      <div class="iso-card">
+        <h2>Scaling Design Reviews</h2>
+        <p class="body-text">Scaling the design review process without creating bottlenecks on senior designers.</p>
+        <div style="margin-top: 36px; display: flex; gap: 16px;">
+          <div style="flex: 1; padding: 20px; border-radius: 12px; background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.15);">
+            <div style="font-family: var(--font-heading); font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--purple-light); margin-bottom: 8px;">Challenge</div>
+            <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">Senior designer time is the constraint</div>
+          </div>
+          <div style="flex: 1; padding: 20px; border-radius: 12px; background: rgba(20,184,166,0.08); border: 1px solid rgba(20,184,166,0.15);">
+            <div style="font-family: var(--font-heading); font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-light); margin-bottom: 8px;">Exploring</div>
+            <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">Tiered review system &amp; async critique</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- page indicator -->
+<div class="page-indicator" id="pageIndicator">
+  <div class="page-dot active" data-slide="0"></div>
+  <div class="page-dot" data-slide="1"></div>
+  <div class="page-dot" data-slide="2"></div>
+  <div class="page-dot" data-slide="3"></div>
+</div>
+
+<div class="slide-number" id="slideNumber">01 / 04</div>
+
+<script>
+(function () {
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.page-dot');
+  const slideNumber = document.getElementById('slideNumber');
+  const total = slides.length;
+  let current = 0;
+  let transitioning = false;
+
+  function goTo(index) {
+    if (index < 0 || index >= total || index === current || transitioning) return;
+    transitioning = true;
+
+    slides[current].classList.remove('active');
+    slides[current].classList.add(index > current ? 'prev' : '');
+
+    slides[index].classList.add('active');
+
+    dots[current].classList.remove('active');
+    dots[index].classList.add('active');
+
+    current = index;
+    slideNumber.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+
+    setTimeout(function () {
+      slides.forEach(function (s, i) {
+        if (i !== current) { s.classList.remove('prev'); }
+      });
+      transitioning = false;
+    }, 750);
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goTo(current + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); goTo(current - 1); }
+  });
+
+  dots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      goTo(parseInt(this.dataset.slide, 10));
+    });
+  });
+
+  /* swipe support for touch devices */
+  let touchStartX = 0;
+  document.addEventListener('touchstart', function (e) { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', function (e) {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 60) { diff > 0 ? goTo(current + 1) : goTo(current - 1); }
+  });
+})();
+</script>
+
+</body>
+</html>
