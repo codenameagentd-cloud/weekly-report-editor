@@ -389,6 +389,52 @@ function fillTemplate(html, data) {
   `;
   doc.body.appendChild(adaptScript);
 
+
+  // Extract stat from user summary (first percentage found)
+  const summaryStatEls = doc.querySelectorAll('[data-content="summary-stat"]');
+  if (summaryStatEls.length) {
+    const pctMatch = data.summary.match(/(\d+(?:\.\d+)?%)/);
+    if (pctMatch) {
+      summaryStatEls.forEach(el => { el.textContent = pctMatch[1]; });
+    } else {
+      // No percentage in user text — hide the stat element
+      summaryStatEls.forEach(el => { el.style.display = 'none'; });
+    }
+  }
+
+  // Extract stat from newsletter
+  const newsStatEls = doc.querySelectorAll('[data-content="newsletter-stat"]');
+  if (newsStatEls.length) {
+    const nPct = data.newsletter ? data.newsletter.match(/(\d+(?:\.\d+)?%)/) : null;
+    if (nPct) {
+      newsStatEls.forEach(el => { el.textContent = nPct[1]; });
+    } else {
+      newsStatEls.forEach(el => { el.style.display = 'none'; });
+    }
+  }
+
+  // Clean remaining demo text that wasn't tagged
+  // Replace inline demo snippets in text nodes
+  const demoPatterns = [
+    /Copilot adoption reached \d+%[^.]*/g,
+    /exceeding our Q1 target of \d+%/gi,
+    /Exceeding Q1 target by \d+ points/gi,
+    /across all engineering teams/gi,
+  ];
+  // Walk text in summary-adjacent elements and clean
+  const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT);
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    const parent = node.parentElement;
+    if (parent && parent.hasAttribute('data-content')) continue; // Already handled
+    let text = node.textContent;
+    let changed = false;
+    demoPatterns.forEach(pat => {
+      if (pat.test(text)) { text = text.replace(pat, ''); changed = true; pat.lastIndex = 0; }
+    });
+    if (changed) node.textContent = text.trim();
+  }
+
   // Serialize back
   return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
 }
