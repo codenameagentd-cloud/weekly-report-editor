@@ -413,26 +413,57 @@ function fillTemplate(html, data) {
     }
   }
 
-  // Clean remaining demo text that wasn't tagged
-  // Replace inline demo snippets in text nodes
-  const demoPatterns = [
-    /Copilot adoption reached \d+%[^.]*/g,
-    /exceeding our Q1 target of \d+%/gi,
-    /Exceeding Q1 target by \d+ points/gi,
-    /across all engineering teams/gi,
+  // Clean ALL remaining demo text comprehensively
+  // Remove known demo strings from any text node not inside data-content elements
+  const demoStrings = [
+    'Copilot adoption reached', 'exceeding our Q1 target', 'Exceeding Q1 target',
+    'across all engineering teams', 'Design Engineering', 'Sprint 12',
+    'Sprint completion rate', 'Strong execution across all workstreams',
+    'Shipped key features on schedule', 'blocker identified in the review pipeline',
+    'Component library v2', 'token system, 14 components',
+    'Interactive examples and usage guidelines', 'Expected completion next Tuesday',
+    'third-party vendor credentials', 'Escalated to procurement on Friday',
+    'Q1 design retrospective', 'reducing visual noise improved task completion',
+    'Scaling the design review process', 'bottlenecks on senior designers',
+    'High priority', 'Needs team discussion',
+    'Published Q1 design retrospective',
+    'Copilot Adoption Exceeds Q1 Target',
+    'Copilot Adoption', 'Q1 Target',
   ];
-  // Walk text in summary-adjacent elements and clean
+  // Also strip orphaned percentages (85%, 75%, 23%, 70%) in non-tagged elements
   const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT);
   while (walker.nextNode()) {
     const node = walker.currentNode;
     const parent = node.parentElement;
-    if (parent && parent.hasAttribute('data-content')) continue; // Already handled
+    // Skip if inside a data-content element
+    let inDC = false;
+    let p = parent;
+    while (p) {
+      if (p.hasAttribute && p.hasAttribute('data-content')) { inDC = true; break; }
+      p = p.parentElement;
+    }
+    if (inDC) continue;
+    
     let text = node.textContent;
     let changed = false;
-    demoPatterns.forEach(pat => {
-      if (pat.test(text)) { text = text.replace(pat, ''); changed = true; pat.lastIndex = 0; }
+    // Remove demo strings
+    demoStrings.forEach(s => {
+      if (text.includes(s)) { text = text.replace(s, ''); changed = true; }
     });
+    // Remove orphaned demo percentages (85%, 75%, 23%, 70%) 
+    text = text.replace(/\b(85|75|23|70)%/g, (match) => { changed = true; return ''; });
+    // Clean up "of ." or ", ." artifacts
+    text = text.replace(/\s*of\s*\.?\s*/g, ' ').replace(/\s*,\s*,/g, ',').replace(/\s{2,}/g, ' ');
     if (changed) node.textContent = text.trim();
+  }
+  
+  // Also hide elements that became empty after cleanup
+  doc.querySelectorAll('strong, em, b, span').forEach(el => {
+    if (!el.textContent.trim() && !el.querySelector('*')) {
+      el.style.display = 'none';
+    }
+  });
+
   }
 
   // Serialize back
