@@ -569,24 +569,175 @@ function validate() {
   return d;
 }
 
+
+const STYLE_DNA = {
+  "dark": {
+    "name": "Dark / Bold",
+    "vibe": "Cinematic, moody, dramatic. Dark backgrounds with bright accent pops.",
+    "palette": ["#0a0a0a", "#1a1a1a", "#ffffff", "#ff3366", "#00ffaa"],
+    "fonts": ["Space Grotesk", "JetBrains Mono"],
+    "traits": ["Full-bleed dark slides", "Neon or vibrant accents", "Monospace code-style elements", "Dramatic hero text 60-80px", "Subtle gradients", "Film-grain or noise texture optional"]
+  },
+  "minimal": {
+    "name": "Minimal / Clean",
+    "vibe": "Swiss-inspired, restrained, typographic. Maximum whitespace.",
+    "palette": ["#ffffff", "#fafafa", "#111111", "#666666", "#0066ff"],
+    "fonts": ["Inter", "DM Sans", "IBM Plex Mono"],
+    "traits": ["Clean white backgrounds", "Strict grid system (8pt)", "One accent color max", "Headlines 48-60px bold", "Body 18-24px regular", "No decorative elements — content IS the design"]
+  },
+  "editorial": {
+    "name": "Editorial / Warm",
+    "vibe": "Magazine-style, warm tones, editorial typography. Like a print publication.",
+    "palette": ["#faf7f2", "#1a1a1a", "#c8553d", "#588157", "#f2cc8f"],
+    "fonts": ["Playfair Display", "Source Serif 4", "Inter"],
+    "traits": ["Warm cream/paper backgrounds", "Serif headlines, sans body", "Pull quotes and callout boxes", "Column layouts like print", "Subtle borders and dividers", "Warm earth-tone accents"]
+  },
+  "structural": {
+    "name": "Structural / Layout",
+    "vibe": "Dashboard-style, data-driven, multi-panel. Information-dense but organized.",
+    "palette": ["#f8f9fa", "#1a1a2e", "#16213e", "#0f3460", "#e94560"],
+    "fonts": ["Inter", "JetBrains Mono"],
+    "traits": ["Multi-panel grid layouts", "Card-based sections", "Progress bars and ring charts in CSS", "Metric callout boxes", "Split layouts (sidebar + main)", "Dense but scannable"]
+  },
+  "experimental": {
+    "name": "Experimental",
+    "vibe": "Breaking conventions. Brutalist, isometric, or unconventional layouts.",
+    "palette": ["#ffffff", "#000000", "#ff0000", "#ffff00", "#0000ff"],
+    "fonts": ["Space Mono", "Archivo Black", "IBM Plex Mono"],
+    "traits": ["Broken grids, overlapping elements", "Raw/unpolished aesthetic on purpose", "Bold borders, harsh contrasts", "Unconventional typography (all-caps, oversized)", "Rotation, skew, geometric shapes", "Numbered sections, visible structure"]
+  }
+}
+;
+
+async function generateWithAI(data, category) {
+  const token = document.getElementById('aiKey').value.trim() || localStorage.getItem('wr-gh-token');
+  const model = document.getElementById('aiModel').value;
+  if (!token) throw new Error('Token required for AI generation');
+  
+  const style = STYLE_DNA[category];
+  const optionalSections = [];
+  if (data.newsletter) optionalSections.push('Newsletter: ' + data.newsletter);
+  if (data.others) optionalSections.push('Others: ' + data.others);
+  if (data.topofmind) optionalSections.push('Top of Mind: ' + data.topofmind);
+  
+  const userPrompt = `Generate a weekly status report presentation in the "${style.name}" style.
+
+STYLE DIRECTION:
+- Vibe: ${style.vibe}
+- Color palette: ${style.palette.join(', ')}
+- Fonts: ${style.fonts.join(', ')} (use Google Fonts import)
+- Design traits: ${style.traits.join('; ')}
+
+USER CONTENT:
+Summary: ${data.summary}
+
+Progress Status:
+${data.progress}
+
+${optionalSections.length ? optionalSections.join('\n\n') : '(No optional sections)'}
+
+Generate the complete standalone HTML now.`;
+
+  const systemPrompt = `You are a presentation slide generator. Generate a standalone HTML file with scroll-snap slides for a weekly status report.
+
+REQUIREMENTS:
+- Standalone HTML with embedded CSS (no external deps except Google Fonts)
+- scroll-snap-type: y mandatory for vertical slide navigation
+- Each section = one full-viewport slide (100vh)
+- Keyboard navigation (ArrowDown/ArrowUp/Space) with smooth scrolling
+- Page counter overlay showing current/total (bottom-right)
+- Responsive (desktop + mobile)
+- McKinsey-style: headline IS the conclusion
+- Body text >= 24px, headlines 36-60pt
+- 8pt grid spacing
+
+SLIDES (in order):
+1. Title — "Weekly Status Update" + week date
+2. Summary — user's text with visual treatment
+3. Progress Status — each item as card with status icon
+4. [ONLY if provided] Newsletter
+5. [ONLY if provided] Others
+6. [ONLY if provided] Top of Mind
+
+CONTENT RULES:
+- ALL text must come from user input. NEVER invent content.
+- Parse progress items for status: done/released/completed→green, in progress/ongoing/dev→blue, blocked/stuck→red
+- If statuses are parseable, show completion % as decorative stat
+- Short text = big hero type; long text = smaller, may use columns
+- Few items = large cards; many items = compact list
+
+OUTPUT: Only the complete HTML. No markdown fences, no explanation.`;
+
+  const resp = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify({
+      model: model,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      max_tokens: 16000,
+      temperature: 0.7
+    })
+  });
+  
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error('AI API error: ' + resp.status + ' ' + err.substring(0, 200));
+  }
+  
+  const json = await resp.json();
+  let html = json.choices[0].message.content;
+  
+  // Strip markdown fences if present
+  html = html.replace(/^```html?\n?/i, '').replace(/\n?```$/i, '').trim();
+  
+  // Validate it's actual HTML
+  if (!html.includes('<html') && !html.includes('<!DOCTYPE')) {
+    throw new Error('AI did not return valid HTML');
+  }
+  
+  return html;
+}
+
+
 async function generate() {
   const data = validate();
   if (!data) return;
   const btn = document.getElementById('genBtn');
-  btn.disabled = true; btn.textContent = 'Generating…';
+  const token = document.getElementById('aiKey').value.trim() || localStorage.getItem('wr-gh-token');
+  const useAI = !!token;
+  
+  btn.disabled = true;
+  btn.textContent = useAI ? 'AI Generating…' : 'Generating…';
+  
   try {
-    const templates = CATEGORIES[selectedCategory];
-    const name = templates[Math.floor(Math.random() * templates.length)];
-    lastTemplateName = name;
-    const templateHTML = await loadTemplate(name);
-    generatedHTML = fillTemplate(templateHTML, data);
-    const skipped = [];
-    if (!data.newsletter) skipped.push('Newsletter');
-    if (!data.others) skipped.push('Others');
-    if (!data.topofmind) skipped.push('Top of Mind');
-    document.getElementById('output').classList.add('active');
-    document.getElementById('outputMeta').textContent = 'Template: ' + name + ' (' + selectedCategory + ')' + (skipped.length ? ' · Skipped: ' + skipped.join(', ') : '');
-    showToast('Generated with "' + name + '" template');
+    if (useAI) {
+      // GenUI mode: AI generates the entire HTML
+      generatedHTML = await generateWithAI(data, selectedCategory);
+      lastTemplateName = 'AI-generated';
+      document.getElementById('output').classList.add('active');
+      document.getElementById('outputMeta').textContent = 'AI Generated (' + selectedCategory + ' style)';
+      showToast('AI generated ' + selectedCategory + ' slides');
+    } else {
+      // Fallback: template fill mode
+      const templates = CATEGORIES[selectedCategory];
+      const name = templates[Math.floor(Math.random() * templates.length)];
+      lastTemplateName = name;
+      const templateHTML = await loadTemplate(name);
+      generatedHTML = fillTemplate(templateHTML, data);
+      const skipped = [];
+      if (!data.newsletter) skipped.push('Newsletter');
+      if (!data.others) skipped.push('Others');
+      if (!data.topofmind) skipped.push('Top of Mind');
+      document.getElementById('output').classList.add('active');
+      document.getElementById('outputMeta').textContent = 'Template: ' + name + ' (' + selectedCategory + ')' + (skipped.length ? ' · Skipped: ' + skipped.join(', ') : '';
+      showToast('Generated with "' + name + '" template');
+    }
   } catch(e) {
     console.error(e);
     showToast('Error: ' + e.message);
@@ -595,20 +746,9 @@ async function generate() {
 }
 
 async function preview() {
-  const data = validate();
-  if (!data) return;
-  try {
-    const templates = CATEGORIES[selectedCategory];
-    const name = templates[Math.floor(Math.random() * templates.length)];
-    lastTemplateName = name;
-    const templateHTML = await loadTemplate(name);
-    generatedHTML = fillTemplate(templateHTML, data);
-    document.getElementById('previewOverlay').classList.add('active');
-    document.getElementById('previewIframe').srcdoc = generatedHTML;
-  } catch(e) {
-    console.error(e);
-    showToast('Error: ' + e.message);
-  }
+  if (!generatedHTML) { await generate(); }
+  document.getElementById('previewOverlay').classList.add('active');
+  document.getElementById('previewIframe').srcdoc = generatedHTML;
 }
 function closePreview() { document.getElementById('previewOverlay').classList.remove('active'); }
 

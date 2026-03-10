@@ -1,0 +1,37 @@
+{
+  "dark": {
+    "name": "Dark / Bold",
+    "vibe": "Cinematic, moody, dramatic. Dark backgrounds with bright accent pops.",
+    "palette": ["#0a0a0a", "#1a1a1a", "#ffffff", "#ff3366", "#00ffaa"],
+    "fonts": ["Space Grotesk", "JetBrains Mono"],
+    "traits": ["Full-bleed dark slides", "Neon or vibrant accents", "Monospace code-style elements", "Dramatic hero text 60-80px", "Subtle gradients", "Film-grain or noise texture optional"]
+  },
+  "minimal": {
+    "name": "Minimal / Clean",
+    "vibe": "Swiss-inspired, restrained, typographic. Maximum whitespace.",
+    "palette": ["#ffffff", "#fafafa", "#111111", "#666666", "#0066ff"],
+    "fonts": ["Inter", "DM Sans", "IBM Plex Mono"],
+    "traits": ["Clean white backgrounds", "Strict grid system (8pt)", "One accent color max", "Headlines 48-60px bold", "Body 18-24px regular", "No decorative elements — content IS the design"]
+  },
+  "editorial": {
+    "name": "Editorial / Warm",
+    "vibe": "Magazine-style, warm tones, editorial typography. Like a print publication.",
+    "palette": ["#faf7f2", "#1a1a1a", "#c8553d", "#588157", "#f2cc8f"],
+    "fonts": ["Playfair Display", "Source Serif 4", "Inter"],
+    "traits": ["Warm cream/paper backgrounds", "Serif headlines, sans body", "Pull quotes and callout boxes", "Column layouts like print", "Subtle borders and dividers", "Warm earth-tone accents"]
+  },
+  "structural": {
+    "name": "Structural / Layout",
+    "vibe": "Dashboard-style, data-driven, multi-panel. Information-dense but organized.",
+    "palette": ["#f8f9fa", "#1a1a2e", "#16213e", "#0f3460", "#e94560"],
+    "fonts": ["Inter", "JetBrains Mono"],
+    "traits": ["Multi-panel grid layouts", "Card-based sections", "Progress bars and ring charts in CSS", "Metric callout boxes", "Split layouts (sidebar + main)", "Dense but scannable"]
+  },
+  "experimental": {
+    "name": "Experimental",
+    "vibe": "Breaking conventions. Brutalist, isometric, or unconventional layouts.",
+    "palette": ["#ffffff", "#000000", "#ff0000", "#ffff00", "#0000ff"],
+    "fonts": ["Space Mono", "Archivo Black", "IBM Plex Mono"],
+    "traits": ["Broken grids, overlapping elements", "Raw/unpolished aesthetic on purpose", "Bold borders, harsh contrasts", "Unconventional typography (all-caps, oversized)", "Rotation, skew, geometric shapes", "Numbered sections, visible structure"]
+  }
+}
