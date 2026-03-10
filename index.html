@@ -358,6 +358,37 @@ function fillTemplate(html, data) {
     sidebarNav.querySelectorAll('li').forEach((li, i) => li.setAttribute('data-slide', i));
   }
 
+
+  // Adaptive content sizing
+  const adaptScript = doc.createElement('script');
+  adaptScript.textContent = `
+    document.addEventListener('DOMContentLoaded', function() {
+      var sum = document.querySelector('[data-content="summary"]');
+      if (sum) {
+        var len = sum.textContent.length;
+        if (len < 40) sum.style.fontSize = '1.3em';
+        else if (len > 300) { sum.style.fontSize = '0.75em'; sum.style.lineHeight = '1.4'; }
+        else if (len > 200) { sum.style.fontSize = '0.85em'; sum.style.lineHeight = '1.5'; }
+      }
+      document.querySelectorAll('[data-content$="-desc"]').forEach(function(el) {
+        if (el.textContent.length > 200) { el.style.fontSize = '0.8em'; el.style.lineHeight = '1.4'; }
+        else if (el.textContent.length > 120) { el.style.fontSize = '0.9em'; }
+      });
+      ['newsletter','topofmind'].forEach(function(key) {
+        var el = document.querySelector('[data-content="' + key + '"]');
+        if (el && el.textContent.length > 200) { el.style.fontSize = '0.9em'; el.style.lineHeight = '1.5'; }
+      });
+      for (var i = 1; i <= 3; i++) {
+        var title = document.querySelector('[data-content="progress-' + i + '-title"]');
+        if (title && !title.textContent.trim()) {
+          var card = title.closest('.card, .status-card, .progress-item, .item, [class*=card]');
+          if (card) card.style.display = 'none';
+        }
+      }
+    });
+  `;
+  doc.body.appendChild(adaptScript);
+
   // Serialize back
   return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
 }
