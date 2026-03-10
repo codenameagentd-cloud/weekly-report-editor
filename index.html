@@ -361,6 +361,68 @@ function removeSlide(html, sectionType) {
     if (b.content.includes(keyword) || b.content.includes(keywordAlt) || classHint.test(b.content)) {
       html = html.substring(0, b.start) + html.substring(b.end);
     }
+<<<<<<< Updated upstream
+=======
+  });
+
+  // Build HTML output
+  const slideHTML = slides.map((inner, i) => {
+    const sec = i === 0 ? 'title' : sections[i - 1].key;
+    return '<div class="slide' + (i === 0 ? ' active' : '') + '" data-slide="' + (i+1) + '" data-section="' + sec + '"><div class="slide-inner">' + inner + '</div></div>';
+  }).join('\n');
+
+  // Page dots
+  const dotsHTML = slides.map((_, i) =>
+    '<div class="pg-dot' + (i === 0 ? ' active' : '') + '"></div>'
+  ).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Report \u2014 ${week}</title>
+<link href="https://fonts.googleapis.com/css2?family=${fp.gf}&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:${bg};--text:${text};--muted:${muted};--light:${light};--card:${card};--border:${border};--accent1:${accent1};--accent2:${accent2}}
+html,body{font-family:'${fp.b}',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;height:100vh}
+.presentation{height:100vh;overflow:hidden}
+.slide{display:none;width:100%;min-height:100vh;padding:56px 80px;animation:fadeIn 0.4s ease}
+.slide.active{display:flex;flex-direction:column}
+.slide-inner{max-width:1300px;margin:0 auto;width:100%;flex:1;display:flex;flex-direction:column}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+h1,h2{font-family:'${fp.h}',-apple-system,sans-serif}
+strong{color:var(--text);font-weight:600}
+.nav-hint{position:fixed;bottom:24px;right:24px;font-size:11px;color:var(--light);background:var(--card);padding:8px 16px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);z-index:100}
+.nav-hint kbd{background:var(--bg);padding:2px 8px;border-radius:4px;font-family:inherit;margin:0 2px}
+.pg-dots{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:100}
+.pg-dot{width:6px;height:6px;border-radius:50%;background:var(--light);opacity:0.3;transition:all 0.3s;cursor:pointer}
+.pg-dot.active{opacity:1;background:var(--accent1);transform:scale(1.4)}
+@media(max-width:1024px){.slide{padding:40px 48px}}
+@media(max-width:768px){.slide{padding:24px 24px}h1{font-size:42px!important}h2{font-size:28px!important}.pg-dots{display:none}}
+</style>
+</head>
+<body>
+<div class="presentation">
+${slideHTML}
+</div>
+<div class="pg-dots" id="pgDots">${dotsHTML}</div>
+<div class="nav-hint"><kbd>\u2190</kbd> <kbd>\u2192</kbd> to navigate</div>
+<script>
+(function(){
+  let cur=0;
+  const slides=document.querySelectorAll('.slide');
+  const dots=document.querySelectorAll('.pg-dot');
+  const total=slides.length;
+  function go(n){
+    if(n<0||n>=total)return;
+    slides[cur].classList.remove('active');
+    dots[cur]&&dots[cur].classList.remove('active');
+    cur=n;
+    slides[cur].classList.add('active');
+    dots[cur]&&dots[cur].classList.add('active');
+>>>>>>> Stashed changes
   }
   return html;
 }
@@ -373,6 +435,43 @@ function updatePageCounters(html) {
   return html.replace(/(\/ )\d+(<\/(?:span|div)>)/g, `$1${count}$2`);
 }
 
+function removeSlide(html, section) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const slide = doc.querySelector('[data-section="' + section + '"]');
+  if (!slide) return html;
+  slide.remove();
+  // Renumber remaining slides and update page counters
+  const slides = doc.querySelectorAll('.slide');
+  const totalContent = slides.length - 1; // exclude title slide
+  slides.forEach(function(s, i) {
+    s.setAttribute('data-slide', String(i + 1));
+    if (i === 0) s.classList.add('active');
+  });
+  // Update page counter text (NN / NN) in each slide
+  slides.forEach(function(s, i) {
+    if (i === 0) return;
+    const divs = s.querySelectorAll('div');
+    divs.forEach(function(d) {
+      const t = d.textContent.trim();
+      if (/^\d{2}\s*\/\s*\d{2}$/.test(t)) {
+        d.textContent = String(i).padStart(2, '0') + ' / ' + String(totalContent).padStart(2, '0');
+      }
+    });
+  });
+  // Rebuild page dots
+  const dotsContainer = doc.getElementById('pgDots');
+  if (dotsContainer) {
+    dotsContainer.innerHTML = '';
+    slides.forEach(function(_, i) {
+      const dot = doc.createElement('div');
+      dot.className = 'pg-dot' + (i === 0 ? ' active' : '');
+      dotsContainer.appendChild(dot);
+    });
+  }
+  return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+}
+
 function validate() {
   const d = getData();
   if (!d.summary || !d.progress) { showToast('Summary and Progress are required.'); return null; }
@@ -382,6 +481,7 @@ function validate() {
 async function generate() {
   const data = validate();
   if (!data) return;
+<<<<<<< Updated upstream
   const btn = document.getElementById('genBtn');
   btn.disabled = true; btn.textContent = 'Generating…';
   try {
@@ -402,11 +502,25 @@ async function generate() {
     showToast('Error: ' + e.message);
   }
   btn.disabled = false; btn.textContent = 'Generate Slides';
+=======
+  generatedHTML = buildSlides(data, selectedStyle);
+  if (!data.newsletter) generatedHTML = removeSlide(generatedHTML, 'newsletter');
+  if (!data.others) generatedHTML = removeSlide(generatedHTML, 'others');
+  if (!data.topofmind) generatedHTML = removeSlide(generatedHTML, 'topofmind');
+  const skipped = [];
+  if (!data.newsletter) skipped.push('Newsletter');
+  if (!data.others) skipped.push('Others');
+  if (!data.topofmind) skipped.push('Top of Mind');
+  document.getElementById('output').classList.add('active');
+  document.getElementById('outputMeta').textContent = 'Style: ' + selectedStyle + (skipped.length ? ' \u00b7 Skipped: ' + skipped.join(', ') : '');
+  showToast('Slides generated');
+>>>>>>> Stashed changes
 }
 
 async function preview() {
   const data = validate();
   if (!data) return;
+<<<<<<< Updated upstream
   try {
     const templates = CATEGORIES[selectedCategory];
     const name = templates[Math.floor(Math.random() * templates.length)];
@@ -419,6 +533,14 @@ async function preview() {
     console.error(e);
     showToast('Error: ' + e.message);
   }
+=======
+  generatedHTML = buildSlides(data, selectedStyle);
+  if (!data.newsletter) generatedHTML = removeSlide(generatedHTML, 'newsletter');
+  if (!data.others) generatedHTML = removeSlide(generatedHTML, 'others');
+  if (!data.topofmind) generatedHTML = removeSlide(generatedHTML, 'topofmind');
+  document.getElementById('previewOverlay').classList.add('active');
+  document.getElementById('previewIframe').srcdoc = generatedHTML;
+>>>>>>> Stashed changes
 }
 function closePreview() { document.getElementById('previewOverlay').classList.remove('active'); }
 
