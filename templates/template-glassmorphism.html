@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status Update</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #ffffff;
+    height: 100%;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #0f0a1a;
+  }
+
+  /* ── Animated gradient background ── */
+
+  .bg-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #7c3aed, #3b82f6, #ec4899, #7c3aed, #3b82f6);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    z-index: 0;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    25% { background-position: 100% 0%; }
+    50% { background-position: 100% 100%; }
+    75% { background-position: 0% 100%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* ── Floating decorative blobs ── */
+
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    filter: blur(80px);
+    opacity: 0.5;
+  }
+
+  .blob-1 {
+    width: 600px;
+    height: 600px;
+    top: -200px;
+    left: -150px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.8), transparent 70%);
+    animation: blobFloat1 20s ease-in-out infinite;
+  }
+
+  .blob-2 {
+    width: 500px;
+    height: 500px;
+    top: 50%;
+    right: -120px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.7), transparent 70%);
+    animation: blobFloat2 18s ease-in-out infinite;
+    animation-delay: -5s;
+  }
+
+  .blob-3 {
+    width: 450px;
+    height: 450px;
+    bottom: -180px;
+    left: 30%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.7), transparent 70%);
+    animation: blobFloat3 22s ease-in-out infinite;
+    animation-delay: -8s;
+  }
+
+  .blob-4 {
+    width: 350px;
+    height: 350px;
+    top: 20%;
+    left: 50%;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.5), transparent 70%);
+    animation: blobFloat4 16s ease-in-out infinite;
+    animation-delay: -3s;
+  }
+
+  .blob-5 {
+    width: 300px;
+    height: 300px;
+    bottom: 10%;
+    right: 20%;
+    background: radial-gradient(circle, rgba(244, 114, 182, 0.45), transparent 70%);
+    animation: blobFloat1 24s ease-in-out infinite reverse;
+    animation-delay: -10s;
+  }
+
+  @keyframes blobFloat1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(40px, -30px) scale(1.05); }
+    50% { transform: translate(-20px, -60px) scale(0.95); }
+    75% { transform: translate(-50px, -20px) scale(1.02); }
+  }
+
+  @keyframes blobFloat2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-30px, 40px) scale(1.08); }
+    50% { transform: translate(20px, -30px) scale(0.92); }
+    75% { transform: translate(50px, 20px) scale(1.04); }
+  }
+
+  @keyframes blobFloat3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(60px, -40px) scale(1.1); }
+    66% { transform: translate(-40px, 30px) scale(0.9); }
+  }
+
+  @keyframes blobFloat4 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-50px, -50px) scale(1.15); }
+  }
+
+  /* ── Noise overlay for texture ── */
+
+  .noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+  }
+
+  /* ── Slides ── */
+
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 60px 80px;
+    overflow: hidden;
+    z-index: 3;
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Glass card base ── */
+
+  .glass {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 48px;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 2px 8px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  }
+
+  /* ── Glass pill / label ── */
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .pill-sm {
+    padding: 5px 14px;
+    font-size: 11px;
+    letter-spacing: 0.8px;
+  }
+
+  /* ═══════════════════════════════════
+     SLIDE 1 — Title
+     ═══════════════════════════════════ */
+
+  .slide-1 {
+    gap: 0;
+  }
+
+  .slide-1 .glass {
+    text-align: center;
+    padding: 64px 80px;
+    max-width: 680px;
+    width: 100%;
+  }
+
+  .title-main {
+    font-size: 72px;
+    font-weight: 800;
+    letter-spacing: -2.5px;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .title-date {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 8px;
+  }
+
+  .title-divider {
+    width: 60px;
+    height: 3px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.15));
+    margin: 24px auto;
+  }
+
+  .title-team {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.3px;
+  }
+
+  /* ═══════════════════════════════════
+     SLIDE 2 — Summary
+     ═══════════════════════════════════ */
+
+  .slide-2 {
+    gap: 28px;
+  }
+
+  .slide-2 .glass {
+    max-width: 760px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .summary-text {
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: -0.2px;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .summary-text strong {
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .highlight-float {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 28px;
+    padding: 24px 56px;
+    box-shadow:
+      0 12px 48px rgba(124, 58, 237, 0.2),
+      0 4px 16px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+  }
+
+  .highlight-float::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  }
+
+  .highlight-number {
+    font-size: 96px;
+    font-weight: 800;
+    letter-spacing: -4px;
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    line-height: 1;
+  }
+
+  .highlight-suffix {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* ═══════════════════════════════════
+     SLIDE 3 — Progress
+     ═══════════════════════════════════ */
+
+  .progress-header {
+    margin-bottom: 36px;
+  }
+
+  .progress-grid {
+    display: flex;
+    gap: 24px;
+    max-width: 1100px;
+    width: 100%;
+  }
+
+  .progress-card {
+    flex: 1;
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .status-bar {
+    width: 40px;
+    height: 4px;
+    border-radius: 4px;
+  }
+
+  .status-bar.done { background: linear-gradient(90deg, #34d399, #6ee7b7); box-shadow: 0 0 16px rgba(52, 211, 153, 0.4); }
+  .status-bar.progress { background: linear-gradient(90deg, #60a5fa, #93c5fd); box-shadow: 0 0 16px rgba(96, 165, 250, 0.4); }
+  .status-bar.blocked { background: linear-gradient(90deg, #fbbf24, #fcd34d); box-shadow: 0 0 16px rgba(251, 191, 36, 0.4); }
+
+  .card-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: #fff;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+  }
+
+  .card-tag {
+    margin-top: auto;
+  }
+
+  .card-tag.done {
+    background: rgba(52, 211, 153, 0.15);
+    border-color: rgba(52, 211, 153, 0.3);
+    color: #6ee7b7;
+  }
+
+  .card-tag.progress {
+    background: rgba(96, 165, 250, 0.15);
+    border-color: rgba(96, 165, 250, 0.3);
+    color: #93c5fd;
+  }
+
+  .card-tag.blocked {
+    background: rgba(251, 191, 36, 0.15);
+    border-color: rgba(251, 191, 36, 0.3);
+    color: #fcd34d;
+  }
+
+  /* ═══════════════════════════════════
+     SLIDE 4 — Newsletter
+     ═══════════════════════════════════ */
+
+  .slide-4 .glass {
+    max-width: 780px;
+    width: 100%;
+  }
+
+  .newsletter-text {
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: -0.2px;
+    color: rgba(255, 255, 255, 0.92);
+    margin-top: 28px;
+  }
+
+  .newsletter-text strong {
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .metric-strip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 32px;
+    padding: 16px 28px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+  }
+
+  .metric-value {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    background: linear-gradient(135deg, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .metric-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.3px;
+  }
+
+  /* ═══════════════════════════════════
+     SLIDE 5 — Top of Mind
+     ═══════════════════════════════════ */
+
+  .slide-5 {
+    gap: 0;
+  }
+
+  .slide-5 .glass {
+    max-width: 780px;
+    width: 100%;
+    padding: 56px;
+    text-align: center;
+  }
+
+  .tom-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    font-size: 24px;
+  }
+
+  .tom-text {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: -0.5px;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .tom-subtext {
+    margin-top: 24px;
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.2px;
+  }
+
+  /* ── Glass dot indicators ── */
+
+  .indicators {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 100px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dot:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.15);
+  }
+
+  .dot.active {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(255, 255, 255, 0.6);
+    width: 28px;
+    border-radius: 100px;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+  }
+
+  /* ── Keyframes ── */
+
+  @keyframes glassFloatUp {
+    from { opacity: 0; transform: translateY(50px) scale(0.96); filter: blur(6px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+
+  @keyframes glassFadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes glassScaleIn {
+    from { opacity: 0; transform: scale(0.85); filter: blur(8px); }
+    to { opacity: 1; transform: scale(1); filter: blur(0); }
+  }
+
+  @keyframes shimmerIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── Slide entry animations ── */
+
+  .slide.active .glass {
+    animation: glassFloatUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.08s;
+  }
+
+  .slide.active .title-main {
+    animation: glassFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.15s;
+  }
+
+  .slide.active .pill {
+    animation: glassFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.2s;
+  }
+
+  .slide.active .title-divider {
+    animation: shimmerIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.28s;
+  }
+
+  .slide.active .title-team {
+    animation: glassFadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.35s;
+  }
+
+  .slide.active .summary-text,
+  .slide.active .newsletter-text,
+  .slide.active .tom-text {
+    animation: glassFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.2s;
+  }
+
+  .slide.active .highlight-float {
+    animation: glassScaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.35s;
+  }
+
+  .slide.active .metric-strip {
+    animation: glassFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.35s;
+  }
+
+  .slide.active .tom-icon {
+    animation: glassScaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.1s;
+  }
+
+  .slide.active .tom-subtext {
+    animation: glassFadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.35s;
+  }
+
+  /* Progress cards stagger */
+  .slide.active .progress-card:nth-child(1) {
+    animation: glassFloatUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.08s;
+  }
+
+  .slide.active .progress-card:nth-child(2) {
+    animation: glassFloatUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.18s;
+  }
+
+  .slide.active .progress-card:nth-child(3) {
+    animation: glassFloatUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.28s;
+  }
+
+  .slide.active .progress-header {
+    animation: glassFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.05s;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Animated gradient background ── -->
+<div class="bg-gradient"></div>
+
+<!-- ── Floating decorative blobs ── -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+<div class="blob blob-4"></div>
+<div class="blob blob-5"></div>
+
+<!-- ── Noise texture overlay ── -->
+<div class="noise"></div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 1 — Title
+     ════════════════════════════════════════ -->
+<div class="slide slide-1 active" data-slide="0">
+  <div class="glass">
+    <h1 class="title-main">Weekly Status</h1>
+    <div class="title-divider"></div>
+    <div class="pill title-date">March 10, 2026</div>
+    <p class="title-team">Design &amp; Engineering — Weekly Sync</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 2 — Summary
+     ════════════════════════════════════════ -->
+<div class="slide slide-2" data-slide="1">
+  <div class="pill" style="margin-bottom: 24px;">Summary</div>
+  <div class="glass">
+    <p class="summary-text">Copilot adoption reached <strong>85%</strong> across all engineering teams, exceeding our Q1 target of 75%.</p>
+  </div>
+  <div class="highlight-float" style="margin-top: 28px;">
+    <div>
+      <div class="highlight-number">85%</div>
+      <div class="highlight-suffix">Adoption Rate</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 3 — Progress
+     ════════════════════════════════════════ -->
+<div class="slide slide-3" data-slide="2">
+  <div class="pill progress-header">Progress</div>
+  <div class="progress-grid">
+    <!-- Card 1 — Done -->
+    <div class="glass progress-card">
+      <div class="status-bar done"></div>
+      <div class="card-title">Design System v3</div>
+      <div class="card-desc">Shipped to production</div>
+      <div class="pill pill-sm card-tag done">Done</div>
+    </div>
+
+    <!-- Card 2 — In Progress -->
+    <div class="glass progress-card">
+      <div class="status-bar progress"></div>
+      <div class="card-title">AI Assistant Integration</div>
+      <div class="card-desc">Development at 70%</div>
+      <div class="pill pill-sm card-tag progress">In Progress</div>
+    </div>
+
+    <!-- Card 3 — Blocked -->
+    <div class="glass progress-card">
+      <div class="status-bar blocked"></div>
+      <div class="card-title">Accessibility Audit</div>
+      <div class="card-desc">Blocked by vendor response</div>
+      <div class="pill pill-sm card-tag blocked">Blocked</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 4 — Newsletter
+     ════════════════════════════════════════ -->
+<div class="slide slide-4" data-slide="3">
+  <div class="glass">
+    <div class="pill">Newsletter</div>
+    <p class="newsletter-text">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <strong>23%</strong>.</p>
+    <div class="metric-strip">
+      <span class="metric-value">+23%</span>
+      <span class="metric-label">Task Completion Rate</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 5 — Top of Mind
+     ════════════════════════════════════════ -->
+<div class="slide slide-5" data-slide="4">
+  <div class="glass">
+    <div class="tom-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4"/>
+        <path d="M12 8h.01"/>
+      </svg>
+    </div>
+    <div class="pill" style="margin-bottom: 28px;">Top of Mind</div>
+    <p class="tom-text">Scaling the design review process without creating bottlenecks on senior designers.</p>
+    <p class="tom-subtext">Open discussion item for next week's sync</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     Glass Dot Indicators
+     ════════════════════════════════════════ -->
+<div class="indicators">
+  <div class="dot active" data-target="0"></div>
+  <div class="dot" data-target="1"></div>
+  <div class="dot" data-target="2"></div>
+  <div class="dot" data-target="3"></div>
+  <div class="dot" data-target="4"></div>
+</div>
+
+<script>
+(function () {
+  var current = 0;
+  var total = 5;
+  var slides = document.querySelectorAll('.slide');
+  var dots = document.querySelectorAll('.dot');
+  var transitioning = false;
+
+  function resetAnimations(slide) {
+    var els = slide.querySelectorAll('.glass, .title-main, .pill, .title-divider, .title-team, .summary-text, .newsletter-text, .tom-text, .tom-icon, .tom-subtext, .highlight-float, .metric-strip, .progress-card, .progress-header');
+    for (var j = 0; j < els.length; j++) {
+      els[j].style.animation = 'none';
+      els[j].offsetHeight; /* force reflow */
+      els[j].style.animation = '';
+    }
+  }
+
+  function go(index) {
+    if (index < 0 || index >= total || index === current || transitioning) return;
+    transitioning = true;
+
+    var oldSlide = slides[current];
+    oldSlide.classList.remove('active');
+    dots[current].classList.remove('active');
+    resetAnimations(oldSlide);
+
+    current = index;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+
+    setTimeout(function () { transitioning = false; }, 700);
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      go(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      go(current - 1);
+    }
+  });
+
+  dots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      go(parseInt(this.getAttribute('data-target'), 10));
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

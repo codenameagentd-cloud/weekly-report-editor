@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status Update — Design Engineering</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: #f5f0eb;
+    color: #2d2d2d;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ── Slide Container ── */
+  .deck {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 80px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  /* ── Dot Navigation ── */
+  .dot-nav {
+    position: fixed;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 100;
+  }
+
+  .dot-nav button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #2d2d2d;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+
+  .dot-nav button:hover {
+    transform: scale(1.4);
+  }
+
+  .dot-nav button.active {
+    background: #c45d35;
+    border-color: #c45d35;
+  }
+
+  /* ── Horizontal Rules ── */
+  hr.editorial {
+    border: none;
+    border-top: 1px solid #c4b8ab;
+    width: 100%;
+    margin: 28px 0;
+  }
+
+  /* ══════════════════════════════════════
+     SLIDE 1 — HERO TITLE
+     ══════════════════════════════════════ */
+  .slide-hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 0 60px;
+  }
+
+  .slide-hero .label {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #c45d35;
+    margin-bottom: 32px;
+  }
+
+  .slide-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(64px, 10vw, 130px);
+    line-height: 1.0;
+    color: #2d2d2d;
+    margin-bottom: 36px;
+    letter-spacing: -2px;
+  }
+
+  .slide-hero .subtitle {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+    font-size: clamp(18px, 2.4vw, 26px);
+    color: #7a6f64;
+    letter-spacing: 0.5px;
+  }
+
+  .slide-hero .rule-bottom {
+    width: 80px;
+    border-top: 2px solid #c45d35;
+    margin: 40px auto 0;
+  }
+
+  /* ══════════════════════════════════════
+     SLIDE 2 — PULL-QUOTE / SUMMARY
+     ══════════════════════════════════════ */
+  .slide-summary {
+    padding: 60px 10%;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 0;
+    width: 100%;
+    max-width: 1100px;
+    align-items: center;
+  }
+
+  .summary-left {
+    padding-right: 60px;
+    border-right: 1px solid #c4b8ab;
+  }
+
+  .summary-left .section-label {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #c45d35;
+    margin-bottom: 24px;
+  }
+
+  .pull-quote {
+    position: relative;
+    padding-left: 8px;
+  }
+
+  .pull-quote .quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 120px;
+    line-height: 1;
+    color: #c45d35;
+    opacity: 0.25;
+    position: absolute;
+    top: -36px;
+    left: -20px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .pull-quote blockquote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 2.8vw, 32px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.5;
+    color: #2d2d2d;
+    position: relative;
+    z-index: 1;
+  }
+
+  .summary-right {
+    padding-left: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .summary-right .metric-value {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 72px;
+    color: #c45d35;
+    line-height: 1;
+  }
+
+  .summary-right .metric-label {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #7a6f64;
+    line-height: 1.5;
+  }
+
+  /* ══════════════════════════════════════
+     SLIDE 3 — PROGRESS CARDS
+     ══════════════════════════════════════ */
+  .slide-progress {
+    flex-direction: column;
+    padding: 60px 8%;
+  }
+
+  .progress-header {
+    text-align: center;
+    margin-bottom: 48px;
+    width: 100%;
+  }
+
+  .progress-header .section-label {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #c45d35;
+    margin-bottom: 12px;
+  }
+
+  .progress-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 44px);
+    color: #2d2d2d;
+  }
+
+  .card-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    width: 100%;
+    max-width: 1000px;
+  }
+
+  .card {
+    background: #ffffff;
+    border-radius: 4px;
+    padding: 32px 28px 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .card:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    transform: translateY(-3px);
+  }
+
+  .card-done    { border-top: 4px solid #3a8a5c; }
+  .card-wip     { border-top: 4px solid #3a6fa8; }
+  .card-blocked { border-top: 4px solid #c9963a; }
+
+  .card .card-status {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .card-done .card-status    { color: #3a8a5c; }
+  .card-wip .card-status     { color: #3a6fa8; }
+  .card-blocked .card-status { color: #c9963a; }
+
+  .card h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #2d2d2d;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .card p {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: #7a6f64;
+    line-height: 1.5;
+  }
+
+  /* ══════════════════════════════════════
+     SLIDE 4 — NEWSLETTER
+     ══════════════════════════════════════ */
+  .slide-newsletter {
+    padding: 60px 10%;
+  }
+
+  .newsletter-grid {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 0;
+    width: 100%;
+    max-width: 1100px;
+    align-items: start;
+  }
+
+  .newsletter-left {
+    padding-right: 60px;
+    border-right: 1px solid #c4b8ab;
+  }
+
+  .newsletter-left .section-label {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #c45d35;
+    margin-bottom: 20px;
+  }
+
+  .newsletter-left h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(26px, 3.2vw, 38px);
+    color: #2d2d2d;
+    line-height: 1.35;
+    margin-bottom: 20px;
+  }
+
+  .newsletter-left p {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 400;
+    font-size: 17px;
+    color: #4a4540;
+    line-height: 1.7;
+  }
+
+  .newsletter-right {
+    padding-left: 48px;
+    padding-top: 8px;
+  }
+
+  .newsletter-stat {
+    margin-bottom: 32px;
+  }
+
+  .newsletter-stat .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 56px;
+    color: #c45d35;
+    line-height: 1;
+  }
+
+  .newsletter-stat .stat-desc {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: #7a6f64;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* ══════════════════════════════════════
+     SLIDE 5 — TOP OF MIND
+     ══════════════════════════════════════ */
+  .slide-topofmind {
+    flex-direction: column;
+    text-align: center;
+    padding: 60px 12%;
+  }
+
+  .slide-topofmind .section-label {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #c45d35;
+    margin-bottom: 32px;
+  }
+
+  .slide-topofmind h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(30px, 4.2vw, 52px);
+    color: #2d2d2d;
+    line-height: 1.35;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .slide-topofmind .rule-accent {
+    width: 60px;
+    border-top: 2px solid #c45d35;
+    margin: 36px auto 28px;
+  }
+
+  .slide-topofmind .closing-note {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+    font-size: 16px;
+    color: #7a6f64;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── Slide Content Animations ── */
+  @keyframes magazineFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Content entrance animations */
+  .slide.active .label,
+  .slide.active .section-label,
+  .slide.active .card-status,
+  .slide.active .stat-number,
+  .slide.active .stat-desc,
+  .slide.active .closing-note,
+  .slide.active .subtitle,
+  .slide.active .rule-bottom,
+  .slide.active .rule-accent {
+    animation: magazineFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  .slide.active h1,
+  .slide.active h2,
+  .slide.active .pull-quote,
+  .slide.active .summary-right,
+  .slide.active .newsletter-left h2,
+  .slide.active .newsletter-left p {
+    animation: magazineFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  /* Stagger delays */
+  .slide.active > *:nth-child(1),
+  .slide.active .label,
+  .slide.active .section-label { animation-delay: 0s; }
+
+  .slide.active > *:nth-child(2),
+  .slide.active h1,
+  .slide.active h2,
+  .slide.active .progress-header { animation-delay: 0.1s; }
+
+  .slide.active > *:nth-child(3),
+  .slide.active .subtitle,
+  .slide.active .pull-quote { animation-delay: 0.2s; }
+
+  .slide.active > *:nth-child(4),
+  .slide.active .rule-bottom,
+  .slide.active .summary-right { animation-delay: 0.3s; }
+
+  /* Card stagger */
+  .slide.active .card:nth-child(1) { animation-delay: 0.2s; }
+  .slide.active .card:nth-child(2) { animation-delay: 0.3s; }
+  .slide.active .card:nth-child(3) { animation-delay: 0.4s; }
+
+  /* Hide animated elements when slide is not active */
+  .slide:not(.active) .label,
+  .slide:not(.active) .section-label,
+  .slide:not(.active) .card-status,
+  .slide:not(.active) .stat-number,
+  .slide:not(.active) .stat-desc,
+  .slide:not(.active) .closing-note,
+  .slide:not(.active) .subtitle,
+  .slide:not(.active) .rule-bottom,
+  .slide:not(.active) .rule-accent,
+  .slide:not(.active) h1,
+  .slide:not(.active) h2,
+  .slide:not(.active) .pull-quote,
+  .slide:not(.active) .summary-right,
+  .slide:not(.active) .newsletter-left h2,
+  .slide:not(.active) .newsletter-left p,
+  .slide:not(.active) .card {
+    opacity: 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .slide {
+      padding: 40px 28px;
+    }
+
+    .dot-nav {
+      right: 16px;
+      gap: 10px;
+    }
+
+    .dot-nav button {
+      width: 8px;
+      height: 8px;
+    }
+
+    .summary-grid,
+    .newsletter-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .summary-left,
+    .newsletter-left {
+      padding-right: 0;
+      border-right: none;
+      padding-bottom: 32px;
+      border-bottom: 1px solid #c4b8ab;
+    }
+
+    .summary-right,
+    .newsletter-right {
+      padding-left: 0;
+      padding-top: 28px;
+    }
+
+    .card-row {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .slide-hero h1 {
+      letter-spacing: -1px;
+    }
+
+    .pull-quote .quote-mark {
+      font-size: 80px;
+      top: -24px;
+      left: -10px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ─── SLIDE 1: HERO TITLE ─── -->
+  <section class="slide slide-hero active" data-slide="0">
+    <div class="label">Design Engineering</div>
+    <h1>Weekly Status<br>Update</h1>
+    <div class="subtitle">Week of March 9, 2025</div>
+    <hr class="rule-bottom">
+  </section>
+
+  <!-- ─── SLIDE 2: SUMMARY / PULL-QUOTE ─── -->
+  <section class="slide slide-summary" data-slide="1">
+    <div class="summary-grid">
+      <div class="summary-left">
+        <div class="section-label">Executive Summary</div>
+        <div class="pull-quote">
+          <span class="quote-mark">&ldquo;</span>
+          <blockquote>Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</blockquote>
+        </div>
+      </div>
+      <div class="summary-right">
+        <div class="metric-value">85%</div>
+        <div class="metric-label">Copilot adoption rate<br>Q1 target was 75%</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SLIDE 3: PROGRESS CARDS ─── -->
+  <section class="slide slide-progress" data-slide="2">
+    <div class="progress-header">
+      <div class="section-label">Work in Progress</div>
+      <h2>Current Initiatives</h2>
+    </div>
+    <div class="card-row">
+      <div class="card card-done">
+        <div class="card-status">Done</div>
+        <h3>Design System v3</h3>
+        <hr class="editorial">
+        <p>Shipped to production</p>
+      </div>
+      <div class="card card-wip">
+        <div class="card-status">In Progress</div>
+        <h3>AI Assistant Integration</h3>
+        <hr class="editorial">
+        <p>Development at 70%</p>
+      </div>
+      <div class="card card-blocked">
+        <div class="card-status">Blocked</div>
+        <h3>Accessibility Audit</h3>
+        <hr class="editorial">
+        <p>Blocked by vendor response</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SLIDE 4: NEWSLETTER ─── -->
+  <section class="slide slide-newsletter" data-slide="3">
+    <div class="newsletter-grid">
+      <div class="newsletter-left">
+        <div class="section-label">Newsletter</div>
+        <h2>Q1 Design Retrospective Published</h2>
+        <hr class="editorial">
+        <p>Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</p>
+      </div>
+      <div class="newsletter-right">
+        <div class="newsletter-stat">
+          <div class="stat-number">23%</div>
+          <div class="stat-desc">Improvement in task<br>completion rate</div>
+        </div>
+        <div class="newsletter-stat">
+          <div class="stat-number" style="font-size:36px;color:#2d2d2d;">Less noise,</div>
+          <div class="stat-desc">better outcomes</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SLIDE 5: TOP OF MIND ─── -->
+  <section class="slide slide-topofmind" data-slide="4">
+    <div class="section-label">Top of Mind</div>
+    <h2>Scaling the design review process without creating bottlenecks on senior designers.</h2>
+    <hr class="rule-accent">
+    <div class="closing-note">An open question for the leadership team &mdash; how do we maintain quality at scale?</div>
+  </section>
+
+</div>
+
+<!-- ─── DOT NAVIGATION ─── -->
+<nav class="dot-nav" id="dotNav" aria-label="Slide navigation"></nav>
+
+<script>
+(function () {
+  var slides = document.querySelectorAll('.slide');
+  var dotNav = document.getElementById('dotNav');
+  var current = 0;
+  var total = slides.length;
+  var transitioning = false;
+
+  // Build dot buttons
+  for (var i = 0; i < total; i++) {
+    var btn = document.createElement('button');
+    btn.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    btn.dataset.index = i;
+    if (i === 0) btn.classList.add('active');
+    btn.addEventListener('click', function () {
+      goTo(parseInt(this.dataset.index, 10));
+    });
+    dotNav.appendChild(btn);
+  }
+
+  var dots = dotNav.querySelectorAll('button');
+
+  function goTo(index) {
+    if (index === current || index < 0 || index >= total || transitioning) return;
+    transitioning = true;
+
+    var leavingSlide = slides[current];
+    leavingSlide.classList.remove('active');
+    dots[current].classList.remove('active');
+    resetAnimations(leavingSlide);
+
+    current = index;
+
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+
+    setTimeout(function () {
+      transitioning = false;
+    }, 600);
+  }
+
+  function resetAnimations(slide) {
+    var els = slide.querySelectorAll('.label, .section-label, h1, h2, .subtitle, .rule-bottom, .rule-accent, .pull-quote, .summary-right, .card, .card-status, .stat-number, .stat-desc, .newsletter-left h2, .newsletter-left p, .closing-note, .metric-value, .metric-label');
+    for (var j = 0; j < els.length; j++) {
+      els[j].style.animation = 'none';
+      els[j].offsetHeight;
+      els[j].style.animation = '';
+    }
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goTo(current - 1);
+    }
+  });
+
+  // Touch / swipe support for mobile
+  var touchStartX = 0;
+  var touchStartY = 0;
+
+  document.addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (e) {
+    var dx = e.changedTouches[0].screenX - touchStartX;
+    var dy = e.changedTouches[0].screenY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) goTo(current + 1);
+      else goTo(current - 1);
+    }
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

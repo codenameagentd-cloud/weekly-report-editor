@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status — March 10, 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap');
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #FAFAF7;
+  --bg-warm: #F5F3EE;
+  --text: #1a1a1a;
+  --text-secondary: #2d2d2d;
+  --text-muted: #6b6b6b;
+  --text-faint: #999999;
+  --accent: #B8860B;
+  --accent-muted: rgba(184, 134, 11, 0.15);
+  --accent-deep: #8B0000;
+  --rule: #d4d0c8;
+  --rule-light: #e8e4dc;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Merriweather', Georgia, 'Times New Roman', serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ——— Slides ——— */
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 40px;
+  z-index: 1;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Content container — Medium reading width */
+.slide-content {
+  max-width: 700px;
+  width: 100%;
+}
+
+/* ——— Section Labels ——— */
+
+.section-label {
+  font-family: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--text-faint);
+  margin-bottom: 40px;
+}
+
+/* ——— Elegant Dividers ——— */
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 36px 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.divider-ornament {
+  width: 5px;
+  height: 5px;
+  background: var(--accent);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.divider-simple {
+  width: 80px;
+  height: 1px;
+  background: var(--rule);
+  margin: 32px 0;
+}
+
+/* ——— Drop Cap ——— */
+
+.drop-cap::first-letter {
+  font-family: 'Merriweather', Georgia, serif;
+  font-weight: 900;
+  font-size: 4.2em;
+  float: left;
+  line-height: 0.8;
+  margin-right: 12px;
+  margin-top: 6px;
+  color: var(--text);
+}
+
+/* ——— Pull-Quote ——— */
+
+.pull-quote {
+  position: relative;
+  padding: 16px 0 16px 0;
+  margin: 0;
+}
+
+.pull-quote::before {
+  content: '\201C';
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 160px;
+  font-weight: 900;
+  color: var(--accent);
+  opacity: 0.12;
+  position: absolute;
+  top: -70px;
+  left: -18px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.pull-quote::after {
+  content: '\201D';
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 160px;
+  font-weight: 900;
+  color: var(--accent);
+  opacity: 0.08;
+  position: absolute;
+  bottom: -110px;
+  right: 0;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.pull-quote-text {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 26px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.85;
+  color: var(--text);
+  position: relative;
+  z-index: 1;
+}
+
+/* ——— Body Text ——— */
+
+.body-text {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--text-secondary);
+}
+
+.body-text strong {
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ——— Slide 1: Summary ——— */
+
+.summary-kicker {
+  font-family: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--accent);
+  margin-bottom: 24px;
+}
+
+.summary-headline {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1.3;
+  color: var(--text);
+  margin-bottom: 28px;
+  letter-spacing: -0.5px;
+}
+
+.summary-byline {
+  font-family: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+  font-size: 14px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.summary-byline-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+
+/* ——— Slide 2: Progress ——— */
+
+.progress-list {
+  list-style: none;
+}
+
+.progress-item {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--rule-light);
+}
+
+.progress-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.progress-item:first-child {
+  padding-top: 0;
+}
+
+.progress-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  gap: 16px;
+}
+
+.progress-title {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.progress-status {
+  font-family: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 4px 12px;
+  border-radius: 2px;
+}
+
+.status-done {
+  color: #2E7D32;
+  background: rgba(46, 125, 50, 0.08);
+  border: 1px solid rgba(46, 125, 50, 0.15);
+}
+
+.status-progress {
+  color: var(--accent);
+  background: var(--accent-muted);
+  border: 1px solid rgba(184, 134, 11, 0.2);
+}
+
+.status-blocked {
+  color: var(--accent-deep);
+  background: rgba(139, 0, 0, 0.06);
+  border: 1px solid rgba(139, 0, 0, 0.12);
+}
+
+.progress-desc {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ——— Slide 3: Newsletter ——— */
+
+.newsletter-body .drop-cap {
+  font-size: 19px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--text-secondary);
+}
+
+.newsletter-stat {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 72px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.newsletter-stat-label {
+  font-family: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-faint);
+  margin-top: 8px;
+}
+
+/* ——— Slide 4: Top of Mind ——— */
+
+.topofmind-heading {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1.35;
+  color: var(--text);
+  margin-bottom: 32px;
+  letter-spacing: -0.3px;
+}
+
+.topofmind-body {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 19px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--text-secondary);
+}
+
+/* ——— Entry Animations ——— */
+
+@keyframes editorialFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes editorialFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes editorialReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide.active .section-label {
+  animation: editorialFadeIn 0.5s ease both;
+  animation-delay: 0s;
+}
+
+.slide.active .summary-kicker {
+  animation: editorialFadeIn 0.5s ease both;
+  animation-delay: 0s;
+}
+
+.slide.active .summary-headline {
+  animation: editorialFadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation-delay: 0.1s;
+}
+
+.slide.active .divider {
+  animation: editorialFadeIn 0.5s ease both;
+  animation-delay: 0.2s;
+}
+
+.slide.active .divider-simple {
+  animation: editorialFadeIn 0.5s ease both;
+  animation-delay: 0.2s;
+}
+
+.slide.active .pull-quote {
+  animation: editorialFadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation-delay: 0.25s;
+}
+
+.slide.active .summary-byline {
+  animation: editorialFadeIn 0.5s ease both;
+  animation-delay: 0.3s;
+}
+
+.slide.active .body-text,
+.slide.active .drop-cap {
+  animation: editorialFadeUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation-delay: 0.2s;
+}
+
+.slide.active .progress-item:nth-child(1) {
+  animation: editorialReveal 0.5s ease both;
+  animation-delay: 0.15s;
+}
+
+.slide.active .progress-item:nth-child(2) {
+  animation: editorialReveal 0.5s ease both;
+  animation-delay: 0.28s;
+}
+
+.slide.active .progress-item:nth-child(3) {
+  animation: editorialReveal 0.5s ease both;
+  animation-delay: 0.41s;
+}
+
+.slide.active .newsletter-stat {
+  animation: editorialFadeUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation-delay: 0.15s;
+}
+
+.slide.active .newsletter-stat-label {
+  animation: editorialFadeIn 0.4s ease both;
+  animation-delay: 0.3s;
+}
+
+.slide.active .newsletter-body {
+  animation: editorialFadeUp 0.6s ease both;
+  animation-delay: 0.35s;
+}
+
+.slide.active .topofmind-heading {
+  animation: editorialFadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation-delay: 0.1s;
+}
+
+.slide.active .topofmind-body {
+  animation: editorialFadeUp 0.6s ease both;
+  animation-delay: 0.25s;
+}
+
+/* ——— Page Indicator ——— */
+
+.page-indicator {
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+}
+
+.page-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rule);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+}
+
+.page-dot.active {
+  background: var(--accent);
+  width: 24px;
+  border-radius: 3px;
+}
+
+/* ——— Page Number ——— */
+
+.page-number {
+  position: fixed;
+  bottom: 36px;
+  right: 48px;
+  font-family: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: var(--text-faint);
+  z-index: 100;
+}
+
+/* ——— Top Rule ——— */
+
+.top-rule {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent);
+  z-index: 200;
+  opacity: 0.8;
+}
+
+/* ——— Navigation Hint ——— */
+
+.nav-hint {
+  position: fixed;
+  bottom: 36px;
+  left: 48px;
+  font-family: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--text-faint);
+  opacity: 0;
+  z-index: 100;
+  transition: opacity 0.8s ease;
+}
+
+.nav-hint.visible {
+  opacity: 0.5;
+}
+</style>
+</head>
+<body>
+
+<!-- Top accent rule -->
+<div class="top-rule"></div>
+
+<!-- Slide 1: Summary -->
+<div class="slide active" data-index="0">
+  <div class="slide-content">
+    <div class="summary-kicker">Weekly Status &mdash; March 10, 2026</div>
+    <h1 class="summary-headline">Copilot Adoption Exceeds Q1 Target at 85%</h1>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-ornament"></div>
+      <div class="divider-line"></div>
+    </div>
+    <div class="pull-quote">
+      <p class="pull-quote-text">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</p>
+    </div>
+    <div class="divider-simple"></div>
+    <div class="summary-byline">
+      <span>Engineering</span>
+      <span class="summary-byline-dot"></span>
+      <span>4 min read</span>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 2: Progress -->
+<div class="slide" data-index="1">
+  <div class="slide-content">
+    <div class="section-label">Progress</div>
+    <div class="divider-simple"></div>
+    <div class="progress-list">
+      <div class="progress-item">
+        <div class="progress-header">
+          <span class="progress-title">Design System v3</span>
+          <span class="progress-status status-done">Complete</span>
+        </div>
+        <p class="progress-desc">Shipped to production</p>
+      </div>
+      <div class="progress-item">
+        <div class="progress-header">
+          <span class="progress-title">AI Assistant Integration</span>
+          <span class="progress-status status-progress">In Progress</span>
+        </div>
+        <p class="progress-desc">Development at 70%</p>
+      </div>
+      <div class="progress-item">
+        <div class="progress-header">
+          <span class="progress-title">Accessibility Audit</span>
+          <span class="progress-status status-blocked">Blocked</span>
+        </div>
+        <p class="progress-desc">Blocked by vendor response</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 3: Newsletter -->
+<div class="slide" data-index="2">
+  <div class="slide-content">
+    <div class="section-label">Newsletter</div>
+    <div style="text-align: center; margin-bottom: 36px;">
+      <div class="newsletter-stat">23%</div>
+      <div class="newsletter-stat-label">Improvement in Task Completion</div>
+    </div>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-ornament"></div>
+      <div class="divider-line"></div>
+    </div>
+    <div class="newsletter-body">
+      <p class="body-text drop-cap">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <strong>23%</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: Top of Mind -->
+<div class="slide" data-index="3">
+  <div class="slide-content">
+    <div class="section-label">Top of Mind</div>
+    <div class="divider-simple"></div>
+    <h2 class="topofmind-heading">Scaling Design Review Without the Bottleneck</h2>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-ornament"></div>
+      <div class="divider-line"></div>
+    </div>
+    <p class="topofmind-body drop-cap">Scaling the design review process without creating bottlenecks on senior designers. As our team grows and project velocity increases, we need a framework that preserves quality while distributing decision-making more broadly.</p>
+  </div>
+</div>
+
+<!-- Page Indicator -->
+<div class="page-indicator">
+  <div class="page-dot active" data-dot="0"></div>
+  <div class="page-dot" data-dot="1"></div>
+  <div class="page-dot" data-dot="2"></div>
+  <div class="page-dot" data-dot="3"></div>
+</div>
+
+<!-- Page Number -->
+<div class="page-number"><span id="current">1</span> / 4</div>
+
+<!-- Navigation Hint -->
+<div class="nav-hint visible">&#8592; &#8594; Navigate</div>
+
+<script>
+(function() {
+  var slides = document.querySelectorAll('.slide');
+  var counter = document.getElementById('current');
+  var dots = document.querySelectorAll('.page-dot');
+  var navHint = document.querySelector('.nav-hint');
+  var total = slides.length;
+  var current = 0;
+  var transitioning = false;
+  var hintShown = true;
+
+  function resetAnimations(slide) {
+    var els = slide.querySelectorAll('.section-label, .summary-kicker, .summary-headline, .divider, .divider-simple, .pull-quote, .summary-byline, .body-text, .drop-cap, .progress-item, .newsletter-stat, .newsletter-stat-label, .newsletter-body, .topofmind-heading, .topofmind-body');
+    for (var j = 0; j < els.length; j++) {
+      els[j].style.animation = 'none';
+      els[j].offsetHeight;
+      els[j].style.animation = '';
+    }
+  }
+
+  function go(index) {
+    if (index < 0 || index >= total || index === current || transitioning) return;
+    transitioning = true;
+
+    if (hintShown) {
+      navHint.classList.remove('visible');
+      hintShown = false;
+    }
+
+    slides[current].classList.remove('active');
+    resetAnimations(slides[current]);
+
+    dots[current].classList.remove('active');
+    dots[index].classList.add('active');
+
+    current = index;
+    slides[current].classList.add('active');
+    counter.textContent = current + 1;
+
+    setTimeout(function() { transitioning = false; }, 700);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      go(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      go(current - 1);
+    }
+  });
+
+  dots.forEach(function(dot, i) {
+    dot.addEventListener('click', function() {
+      go(i);
+    });
+  });
+
+  setTimeout(function() {
+    if (hintShown) {
+      navHint.classList.remove('visible');
+      hintShown = false;
+    }
+  }, 4000);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status — March 10, 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --cyan: #00fff5;
+  --magenta: #ff00ff;
+  --red: #ff3333;
+  --bg: #0a0a0f;
+  --card-bg: rgba(255, 255, 255, 0.02);
+  --card-border: rgba(0, 255, 245, 0.15);
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  color: #e0e0e8;
+  font-family: 'Share Tech Mono', monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scanline overlay ── */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+}
+
+/* ── Ambient glow background ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 20% 50%, rgba(0, 255, 245, 0.03), transparent),
+    radial-gradient(ellipse 500px 500px at 80% 30%, rgba(255, 0, 255, 0.025), transparent);
+}
+
+/* ── Slides ── */
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.slide.active .slide-inner {
+  animation: glitchIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.slide.exiting .slide-inner {
+  animation: glitchOut 0.35s cubic-bezier(0.55, 0, 1, 0.45) both;
+}
+
+.slide-inner {
+  width: 100%;
+  max-width: 960px;
+  padding: 0 56px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Glitch transition keyframes ── */
+@keyframes glitchIn {
+  0% {
+    opacity: 0;
+    transform: translateX(8px) skewX(-2deg);
+    filter: blur(2px);
+  }
+  15% {
+    opacity: 0.6;
+    transform: translateX(-4px) skewX(1deg);
+    filter: blur(0);
+  }
+  30% {
+    opacity: 0.8;
+    transform: translateX(2px) skewX(-0.5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) skewX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes glitchOut {
+  0% {
+    opacity: 1;
+    transform: translateX(0) skewX(0);
+  }
+  40% {
+    opacity: 0.5;
+    transform: translateX(-6px) skewX(2deg);
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(12px) skewX(-3deg);
+    filter: blur(4px);
+  }
+}
+
+/* ── Stagger children on entry ── */
+.slide.active .stagger-1 { animation: fadeGlitchUp 0.5s 0.05s cubic-bezier(0.23,1,0.32,1) both; }
+.slide.active .stagger-2 { animation: fadeGlitchUp 0.5s 0.15s cubic-bezier(0.23,1,0.32,1) both; }
+.slide.active .stagger-3 { animation: fadeGlitchUp 0.5s 0.25s cubic-bezier(0.23,1,0.32,1) both; }
+.slide.active .stagger-4 { animation: fadeGlitchUp 0.5s 0.35s cubic-bezier(0.23,1,0.32,1) both; }
+.slide.active .stagger-5 { animation: fadeGlitchUp 0.5s 0.45s cubic-bezier(0.23,1,0.32,1) both; }
+
+@keyframes fadeGlitchUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) translateX(3px);
+  }
+  40% {
+    transform: translateY(4px) translateX(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+}
+
+/* ── Typography ── */
+.label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  color: var(--cyan);
+  margin-bottom: 40px;
+  opacity: 0.8;
+  text-shadow: 0 0 10px rgba(0, 255, 245, 0.4);
+}
+
+h1 {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 80px;
+  line-height: 0.95;
+  letter-spacing: -2px;
+  color: #fff;
+  text-shadow:
+    0 0 20px rgba(0, 255, 245, 0.3),
+    0 0 60px rgba(0, 255, 245, 0.1);
+  position: relative;
+}
+
+/* ── Glitch title effect ── */
+.glitch-title {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-title::before,
+.glitch-title::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.glitch-title::before {
+  color: var(--cyan);
+  z-index: -1;
+  animation: glitchShift 4s infinite;
+  clip-path: inset(0 0 65% 0);
+}
+
+.glitch-title::after {
+  color: var(--magenta);
+  z-index: -1;
+  animation: glitchShift2 4s infinite;
+  clip-path: inset(65% 0 0 0);
+}
+
+@keyframes glitchShift {
+  0%, 92%, 100% { transform: translate(0, 0); }
+  93% { transform: translate(-3px, -1px); }
+  95% { transform: translate(3px, 1px); }
+  97% { transform: translate(-2px, 0); }
+}
+
+@keyframes glitchShift2 {
+  0%, 90%, 100% { transform: translate(0, 0); }
+  91% { transform: translate(3px, 1px); }
+  93% { transform: translate(-3px, -1px); }
+  96% { transform: translate(2px, 0); }
+}
+
+.date {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  color: var(--magenta);
+  margin-top: 32px;
+  letter-spacing: 3px;
+  text-shadow: 0 0 12px rgba(255, 0, 255, 0.4);
+  opacity: 0.9;
+}
+
+.body-text {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px;
+  line-height: 1.85;
+  color: rgba(224, 224, 232, 0.85);
+  max-width: 640px;
+}
+
+.hero-stat {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 120px;
+  line-height: 1;
+  color: var(--cyan);
+  text-shadow:
+    0 0 30px rgba(0, 255, 245, 0.5),
+    0 0 80px rgba(0, 255, 245, 0.2);
+  letter-spacing: -3px;
+  margin-bottom: 24px;
+}
+
+/* ── Neon Card ── */
+.neon-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 2px;
+  padding: 28px 32px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+  animation: cardPulse 3s ease-in-out infinite;
+}
+
+.neon-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.6;
+}
+
+@keyframes cardPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 8px rgba(0, 255, 245, 0.05),
+      inset 0 0 8px rgba(0, 255, 245, 0.02);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(0, 255, 245, 0.1),
+      inset 0 0 16px rgba(0, 255, 245, 0.04);
+  }
+}
+
+.neon-card.magenta {
+  border-color: rgba(255, 0, 255, 0.15);
+  animation: cardPulseMagenta 3s ease-in-out infinite;
+}
+
+.neon-card.magenta::before {
+  background: linear-gradient(90deg, transparent, var(--magenta), transparent);
+}
+
+@keyframes cardPulseMagenta {
+  0%, 100% {
+    box-shadow:
+      0 0 8px rgba(255, 0, 255, 0.05),
+      inset 0 0 8px rgba(255, 0, 255, 0.02);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(255, 0, 255, 0.1),
+      inset 0 0 16px rgba(255, 0, 255, 0.04);
+  }
+}
+
+.neon-card.red {
+  border-color: rgba(255, 51, 51, 0.2);
+  animation: cardPulseRed 3s ease-in-out infinite;
+}
+
+.neon-card.red::before {
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
+}
+
+@keyframes cardPulseRed {
+  0%, 100% {
+    box-shadow:
+      0 0 8px rgba(255, 51, 51, 0.05),
+      inset 0 0 8px rgba(255, 51, 51, 0.02);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(255, 51, 51, 0.1),
+      inset 0 0 16px rgba(255, 51, 51, 0.04);
+  }
+}
+
+.card-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.card-meta {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+}
+
+.card-meta.done { color: var(--cyan); text-shadow: 0 0 8px rgba(0, 255, 245, 0.3); }
+.card-meta.progress { color: var(--magenta); text-shadow: 0 0 8px rgba(255, 0, 255, 0.3); }
+.card-meta.blocked { color: var(--red); text-shadow: 0 0 8px rgba(255, 51, 51, 0.3); }
+
+/* ── Neon Status Bars ── */
+.status-bar-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.status-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  position: relative;
+  transition: width 1s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.status-bar-fill.cyan {
+  background: var(--cyan);
+  box-shadow: 0 0 12px rgba(0, 255, 245, 0.6), 0 0 30px rgba(0, 255, 245, 0.2);
+  width: 100%;
+}
+
+.status-bar-fill.magenta {
+  background: var(--magenta);
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.6), 0 0 30px rgba(255, 0, 255, 0.2);
+  width: 70%;
+}
+
+.status-bar-fill.red {
+  background: var(--red);
+  box-shadow: 0 0 12px rgba(255, 51, 51, 0.6), 0 0 30px rgba(255, 51, 51, 0.2);
+  width: 15%;
+  animation: barFlicker 2s ease-in-out infinite;
+}
+
+@keyframes barFlicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ── Page Indicator ── */
+.page-indicator {
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 100;
+}
+
+.page-dot {
+  width: 32px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 1px;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+}
+
+.page-dot.active {
+  background: var(--cyan);
+  box-shadow: 0 0 10px rgba(0, 255, 245, 0.5);
+  width: 48px;
+}
+
+/* ── Page Counter ── */
+.page-counter {
+  position: fixed;
+  bottom: 36px;
+  right: 48px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.2);
+  z-index: 100;
+}
+
+/* ── Corner Decoration ── */
+.corner-deco {
+  position: fixed;
+  z-index: 50;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+
+.corner-deco.tl {
+  top: 24px;
+  left: 24px;
+  border-top: 1px solid rgba(0, 255, 245, 0.2);
+  border-left: 1px solid rgba(0, 255, 245, 0.2);
+}
+
+.corner-deco.tr {
+  top: 24px;
+  right: 24px;
+  border-top: 1px solid rgba(0, 255, 245, 0.2);
+  border-right: 1px solid rgba(0, 255, 245, 0.2);
+}
+
+.corner-deco.bl {
+  bottom: 24px;
+  left: 24px;
+  border-bottom: 1px solid rgba(0, 255, 245, 0.2);
+  border-left: 1px solid rgba(0, 255, 245, 0.2);
+}
+
+.corner-deco.br {
+  bottom: 24px;
+  right: 24px;
+  border-bottom: 1px solid rgba(0, 255, 245, 0.2);
+  border-right: 1px solid rgba(0, 255, 245, 0.2);
+}
+
+/* ── Slide-specific: Title ── */
+.slide-title h1 {
+  font-size: 88px;
+  margin-bottom: 0;
+}
+
+.slide-title .subtitle {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 5px;
+  color: rgba(255, 255, 255, 0.25);
+  margin-top: 48px;
+  text-transform: uppercase;
+}
+
+/* ── Slide-specific: Summary ── */
+.slide-summary .body-text {
+  font-size: 18px;
+  line-height: 2;
+  max-width: 600px;
+}
+
+/* ── Slide-specific: Newsletter ── */
+.slide-newsletter .body-text {
+  line-height: 2;
+  max-width: 600px;
+}
+
+/* ── Slide-specific: Top of Mind ── */
+.slide-topofmind .body-text {
+  font-size: 22px;
+  line-height: 1.9;
+  max-width: 580px;
+  color: rgba(224, 224, 232, 0.7);
+}
+
+.slide-topofmind .accent-line {
+  width: 48px;
+  height: 2px;
+  background: var(--magenta);
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.4);
+  margin-bottom: 32px;
+}
+
+/* ── Bar fill animation on active ── */
+.slide.active .status-bar-fill {
+  animation: barGrow 1s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.slide.active .status-bar-fill.red {
+  animation: barGrow 1s cubic-bezier(0.23, 1, 0.32, 1) both, barFlicker 2s 1s ease-in-out infinite;
+}
+
+@keyframes barGrow {
+  from { width: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Corner Decorations -->
+<div class="corner-deco tl"></div>
+<div class="corner-deco tr"></div>
+<div class="corner-deco bl"></div>
+<div class="corner-deco br"></div>
+
+<!-- Slide 1: Title -->
+<div class="slide slide-title active" data-index="0">
+  <div class="slide-inner">
+    <div class="label stagger-1">// status_report</div>
+    <h1 class="stagger-2">
+      <span class="glitch-title" data-text="Weekly">Weekly</span><br>
+      <span class="glitch-title" data-text="Status">Status</span>
+    </h1>
+    <div class="date stagger-3">March 10, 2026</div>
+    <div class="subtitle stagger-4">Arrow keys to navigate</div>
+  </div>
+</div>
+
+<!-- Slide 2: Summary -->
+<div class="slide slide-summary" data-index="1">
+  <div class="slide-inner">
+    <div class="label stagger-1">// summary</div>
+    <div class="hero-stat stagger-2">85%</div>
+    <div class="body-text stagger-3">Copilot adoption reached 85% across all engineering teams, exceeding our Q1 target of 75%.</div>
+  </div>
+</div>
+
+<!-- Slide 3: Progress -->
+<div class="slide slide-progress" data-index="2">
+  <div class="slide-inner">
+    <div class="label stagger-1">// progress</div>
+
+    <div class="neon-card stagger-2">
+      <div class="card-meta done">Shipped</div>
+      <div class="card-title">Design System v3</div>
+      <div class="status-bar-track">
+        <div class="status-bar-fill cyan"></div>
+      </div>
+    </div>
+
+    <div class="neon-card magenta stagger-3">
+      <div class="card-meta progress">In Progress — 70%</div>
+      <div class="card-title">AI Assistant Integration</div>
+      <div class="status-bar-track">
+        <div class="status-bar-fill magenta"></div>
+      </div>
+    </div>
+
+    <div class="neon-card red stagger-4">
+      <div class="card-meta blocked">Blocked</div>
+      <div class="card-title">Accessibility Audit</div>
+      <div class="status-bar-track">
+        <div class="status-bar-fill red"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: Newsletter -->
+<div class="slide slide-newsletter" data-index="3">
+  <div class="slide-inner">
+    <div class="label stagger-1">// newsletter</div>
+    <div class="hero-stat stagger-2">23%</div>
+    <div class="body-text stagger-3">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by 23%.</div>
+  </div>
+</div>
+
+<!-- Slide 5: Top of Mind -->
+<div class="slide slide-topofmind" data-index="4">
+  <div class="slide-inner">
+    <div class="label stagger-1">// top_of_mind</div>
+    <div class="accent-line stagger-2"></div>
+    <div class="body-text stagger-3">Scaling the design review process without creating bottlenecks on senior designers.</div>
+  </div>
+</div>
+
+<!-- Page Indicator -->
+<div class="page-indicator">
+  <div class="page-dot active" data-dot="0"></div>
+  <div class="page-dot" data-dot="1"></div>
+  <div class="page-dot" data-dot="2"></div>
+  <div class="page-dot" data-dot="3"></div>
+  <div class="page-dot" data-dot="4"></div>
+</div>
+
+<!-- Page Counter -->
+<div class="page-counter"><span id="current">1</span> / 5</div>
+
+<script>
+(function() {
+  var slides = document.querySelectorAll('.slide');
+  var dots = document.querySelectorAll('.page-dot');
+  var counter = document.getElementById('current');
+  var total = slides.length;
+  var current = 0;
+  var transitioning = false;
+
+  function go(index) {
+    if (index < 0 || index >= total || index === current || transitioning) return;
+    transitioning = true;
+
+    var oldSlide = slides[current];
+    oldSlide.classList.remove('active');
+    oldSlide.classList.add('exiting');
+    dots[current].classList.remove('active');
+
+    // Reset stagger animations on old slide
+    var els = oldSlide.querySelectorAll('[class*="stagger-"]');
+    for (var j = 0; j < els.length; j++) {
+      els[j].style.animation = 'none';
+      els[j].offsetHeight;
+      els[j].style.animation = '';
+    }
+
+    // Reset bar widths for re-animation
+    var bars = slides[index].querySelectorAll('.status-bar-fill');
+    for (var b = 0; b < bars.length; b++) {
+      bars[b].style.animation = 'none';
+      bars[b].offsetHeight;
+      bars[b].style.animation = '';
+    }
+
+    setTimeout(function() {
+      oldSlide.classList.remove('exiting');
+      current = index;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+      counter.textContent = current + 1;
+      setTimeout(function() { transitioning = false; }, 400);
+    }, 350);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      go(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      go(current - 1);
+    }
+  });
+
+  // Dot click navigation
+  for (var i = 0; i < dots.length; i++) {
+    dots[i].addEventListener('click', function() {
+      go(parseInt(this.getAttribute('data-dot')));
+    });
+  }
+})();
+</script>
+</body>
+</html>
