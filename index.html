@@ -616,54 +616,55 @@ async function generateWithAI(data, category) {
   
   const style = STYLE_DNA[category];
   
-  // Load ALL templates in this category as references
+  // Load ONE random template from this category as the design reference
   const catTemplates = CATEGORIES[category] || ['noir'];
+  const pickedName = catTemplates[Math.floor(Math.random() * catTemplates.length)];
   let refHTML = '';
   try {
-    const loaded = await Promise.all(catTemplates.map(async name => {
-      try { return {name, html: await loadTemplate(name)}; }
-      catch(e) { return null; }
-    }));
-    const valid = loaded.filter(Boolean);
-    // Include all templates, labeled
-    refHTML = valid.map(t => `=== TEMPLATE: ${t.name} ===\n${t.html}`).join('\n\n');
-  } catch(e) { console.warn('Could not load reference templates'); }
+    refHTML = await loadTemplate(pickedName);
+  } catch(e) { console.warn('Could not load reference template'); }
   const optionalSections = [];
   if (data.newsletter) optionalSections.push('Newsletter: ' + data.newsletter);
   if (data.others) optionalSections.push('Others: ' + data.others);
   if (data.topofmind) optionalSections.push('Top of Mind: ' + data.topofmind);
   
-  const userPrompt = `Generate a weekly status report presentation in the "${style.name}" style.
-
-STYLE DIRECTION:
-- Vibe: ${style.vibe}
-- Color palette: ${style.palette.join(', ')}
-- Fonts: ${style.fonts.join(', ')} (use Google Fonts import)
-- Design traits: ${style.traits.join('; ')}
+  const summaryLen = data.summary.length;
+  const progressLines = data.progress.split('\n').filter(l => l.trim()).length;
+  
+  const userPrompt = `Use the reference template's EXACT design (CSS, layout, decorative elements). Replace content with:
 
 USER CONTENT:
-Summary: ${data.summary}
+Summary (${summaryLen} chars): ${data.summary}
 
-Progress Status:
+Progress Status (${progressLines} items):
 ${data.progress}
 
-${optionalSections.length ? optionalSections.join('\n\n') : '(No optional sections)'}
+${optionalSections.length ? optionalSections.join('\n\n') : '(No optional sections — REMOVE those slides entirely)'}
+
+CONTENT ADAPTATION RULES:
+- Summary ${summaryLen < 100 ? '→ SHORT: use hero typography (48-72px), center-aligned, generous whitespace' : summaryLen < 300 ? '→ MEDIUM: use 28-36px, may use 2-column layout' : '→ LONG: use 20-24px, must use columns or cards to organize'}
+- Progress ${progressLines <= 3 ? '→ FEW items: large cards with icons/borders, one per row' : progressLines <= 6 ? '→ MODERATE: medium cards in 2-column grid' : '→ MANY items: compact list or 3-column grid, smaller text'}
+- Each progress item: parse status words (done/completed/shipped→✅green, in progress/ongoing→🔵blue, blocked/stuck→🔴red, planned/upcoming→⚪gray)
+- Empty optional sections: DELETE the slide entirely, don't leave blank slides
 
 Generate the complete standalone HTML now.`;
 
   const systemPrompt = `You are a presentation slide generator. Generate a standalone HTML file with scroll-snap slides for a weekly status report.
 
-${refHTML ? `REFERENCE TEMPLATES (you have ${catTemplates.length} templates in the "${style.name}" category — study ALL of them):
-<references>
+${refHTML ? `DESIGN REFERENCE — Template "${pickedName}":
+<reference>
 ${refHTML}
-</references>
+</reference>
 
-CRITICAL: Study every reference template carefully. Each has distinct layout structure, CSS architecture, decorative elements, and visual patterns. Your output MUST:
-- Match the same level of CSS sophistication (gradients, shadows, transforms, pseudo-elements)
-- Use similar structural complexity (grid layouts, card systems, decorative elements)
-- Randomly combine patterns from different references for variety
-- NEVER produce plain/generic HTML — match the Awwwards-level craft shown above
-- Preserve scroll-snap, keyboard navigation, page counters from the references` : ''}
+YOU MUST REPLICATE THIS TEMPLATE'S DESIGN EXACTLY:
+1. Copy the ENTIRE <style> block from the reference — every CSS rule, variable, gradient, shadow, animation
+2. Keep the same HTML structure: scroll-snap container, slide sections, navigation dots, page counter
+3. Keep all decorative CSS (::before, ::after, gradients, transforms, clip-paths, borders)
+4. ONLY change the text content to match the user's input below
+5. Add/remove slide sections based on which optional fields the user provided
+6. Adapt layout density: short text → bigger type + more whitespace; long text → smaller type + columns/cards
+
+The reference IS the design. Your job is content substitution + intelligent layout adaptation, NOT redesign.` : ''}
 
 REQUIREMENTS:
 - Standalone HTML with embedded CSS (no external deps except Google Fonts)
