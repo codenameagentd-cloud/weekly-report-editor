@@ -615,58 +615,91 @@ async function generateWithAI(data, category) {
   if (!token) throw new Error('Token required for AI generation');
   
   const catTemplates = CATEGORIES[category] || ['noir'];
+  const pickedName = catTemplates[Math.floor(Math.random() * catTemplates.length)];
   
-  const systemPrompt = `You are a content intelligence engine for a weekly status report tool. You analyze user content and return structured JSON — you do NOT generate HTML.
+  // Load the template and split into chrome vs content
+  const templateHTML = await loadTemplate(pickedName);
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(templateHTML, 'text/html');
+  
+  // Extract the full <style> block
+  const styleEl = doc.querySelector('style');
+  const cssText = styleEl ? styleEl.textContent : '';
+  
+  // Extract all CSS class names for the AI to use
+  const classNames = [...new Set((cssText.match(/\.[a-zA-Z_-][a-zA-Z0-9_-]*/g) || []).map(c => c.slice(1)))];
+  
+  // Extract the full HTML of all slides as reference
+  const slides = doc.querySelectorAll('.slide, .content-slide, [data-slide], [data-index]');
+  const slideHTML = [...slides].map(s => s.outerHTML).join('\n');
+  
+  // Extract JS (navigation etc)
+  const scripts = [...doc.querySelectorAll('script')].map(s => s.textContent).join('\n');
 
-Your job:
-1. Pick the best template from the available list based on content characteristics
-2. Polish the summary text (professional tone, concise, executive-level)
-3. Parse progress items with status detection
-4. Generate smart metadata (headline stat, decorative numbers)
-5. Decide layout hints based on content density
+  const optionalSections = [];
+  if (data.newsletter) optionalSections.push({ name: 'Newsletter', content: data.newsletter });
+  if (data.others) optionalSections.push({ name: 'Others', content: data.others });
+  if (data.topofmind) optionalSections.push({ name: 'Top of Mind', content: data.topofmind });
 
-Return ONLY valid JSON, no markdown fences.`;
+  const progressLines = data.progress.split('\n').filter(l => l.trim());
 
-  const userPrompt = `Available templates in "${category}" category: ${JSON.stringify(catTemplates)}
+  const systemPrompt = `You generate slide HTML content for a weekly status report. You will receive:
+1. The CSS stylesheet (your design system — use ONLY these classes)
+2. Reference slide HTML (showing the structure and class patterns)
+3. User content to present
 
-USER INPUT:
-Summary: ${data.summary}
+YOUR TASK: Generate the <body> inner HTML — all slide divs — using the reference CSS classes.
 
-Progress:
+CRITICAL RULES:
+- Use ONLY CSS classes from the provided stylesheet. Never invent new classes.
+- Match the reference HTML structure exactly (same nesting, same class patterns)
+- First slide is always the title slide with data-index="0"
+- Each slide: <div class="slide [slide-type]" data-index="N">
+- First slide gets class "active"
+- ADAPT the number of items to the actual content (don't hardcode 3 progress items)
+- For progress: create one progress-row/card per actual item, with correct status class
+- Short summary → big hero text; Long summary → smaller text, may split into paragraphs
+- Empty optional sections → NO slide for them
+- Include the page counter element
+- data-content attributes on text elements for identification
+
+STATUS DETECTION for progress items:
+- done/completed/shipped/released/launched → use the "done/green" status class from reference
+- in progress/ongoing/developing/working → use the "progress/blue" status class
+- blocked/stuck/waiting/delayed → use the "blocked/red" status class  
+- planned/upcoming/next → use default/gray
+
+OUTPUT: Only the body innerHTML. No <html>, <head>, <body> tags. No markdown fences. No explanation.`;
+
+  const userPrompt = `CSS STYLESHEET:
+\`\`\`css
+${cssText}
+\`\`\`
+
+REFERENCE SLIDE HTML (for structure patterns — adapt content/quantity to user input):
+${slideHTML}
+
+AVAILABLE CSS CLASSES: ${classNames.join(', ')}
+
+---
+
+USER CONTENT:
+
+SUMMARY (${data.summary.length} chars):
+${data.summary}
+
+PROGRESS ITEMS (${progressLines.length} items):
 ${data.progress}
 
-${data.newsletter ? 'Newsletter: ' + data.newsletter : ''}
-${data.others ? 'Others: ' + data.others : ''}
-${data.topofmind ? 'Top of Mind: ' + data.topofmind : ''}
+${optionalSections.length ? optionalSections.map(s => `${s.name.toUpperCase()}:\n${s.content}`).join('\n\n') : 'NO OPTIONAL SECTIONS — do not create slides for Newsletter, Others, or Top of Mind.'}
 
-Return this exact JSON structure:
-{
-  "template": "<pick one from the available templates list>",
-  "summary_polished": "<polished version of summary, same meaning, professional executive tone>",
-  "summary_headline": "<one bold phrase that captures the summary, 3-6 words, for hero display>",
-  "summary_stat_value": "<a number or percentage derived from the content, e.g. '85%' or '3/5'>",
-  "summary_stat_label": "<what the stat measures, e.g. 'Features Shipped' or 'Completion Rate'>",
-  "progress": [
-    {
-      "title": "<item name>",
-      "desc": "<brief status description>",
-      "status": "done|in-progress|blocked|planned"
-    }
-  ],
-  "newsletter_polished": "<polished newsletter text or null if empty>",
-  "newsletter_stat_value": "<derived stat or null>",
-  "newsletter_stat_label": "<stat label or null>",
-  "others_polished": "<polished others text or null>",
-  "topofmind_polished": "<polished top of mind text or null>",
-  "layout_hint": "spacious|balanced|compact"
-}
+---
 
-Rules:
-- template: pick based on content mood (technical→mono-grid/dashboard, narrative→editorial/magazine, bold→noir/cinematic)
-- summary_polished: keep meaning, improve clarity and professionalism
-- stats: derive from actual content (count items, calculate percentages, extract numbers)
-- layout_hint: spacious if <100 words total, compact if >300, balanced otherwise
-- progress status: parse keywords (done/completed/shipped→done, in progress/ongoing/dev→in-progress, blocked/stuck→blocked, planned/upcoming→planned)`;
+Generate ALL slide divs now. Adapt layout to the content:
+- ${progressLines.length} progress items (create exactly ${progressLines.length} rows/cards, NOT 3)
+- ${data.summary.length < 100 ? 'SHORT summary → use hero/large typography' : data.summary.length < 300 ? 'MEDIUM summary → standard layout' : 'LONG summary → smaller text, consider splitting'}
+- ${optionalSections.length} optional sections (${optionalSections.length === 0 ? 'NONE — skip all optional slides' : optionalSections.map(s => s.name).join(', ')})
+- Include page counter showing "01 / ${2 + 1 + optionalSections.length}" format (title + summary + progress${optionalSections.length ? ' + ' + optionalSections.length + ' optional' : ''})`;
 
   const resp = await fetch('https://models.inference.ai.azure.com/chat/completions', {
     method: 'POST',
@@ -680,8 +713,8 @@ Rules:
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      max_tokens: 4000,
-      temperature: 0.5
+      max_tokens: 16000,
+      temperature: 0.6
     })
   });
   
@@ -691,52 +724,26 @@ Rules:
   }
   
   const result = await resp.json();
-  let aiText = result.choices[0].message.content.trim();
+  let bodyHTML = result.choices[0].message.content.trim();
   // Strip markdown fences if present
-  aiText = aiText.replace(/^```json?\n?/i, '').replace(/\n?```$/i, '').trim();
+  bodyHTML = bodyHTML.replace(/^```html?\n?/i, '').replace(/\n?```$/i, '').trim();
   
-  let aiData;
-  try { aiData = JSON.parse(aiText); }
-  catch(e) { throw new Error('AI returned invalid JSON: ' + aiText.substring(0, 200)); }
+  // Reassemble: original head (with our CSS) + AI body content + original JS
+  const headContent = doc.head.innerHTML;
+  const finalHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+${headContent}
+</head>
+<body>
+${bodyHTML}
+<script>
+${scripts}
+</script>
+</body>
+</html>`;
   
-  // Load the AI-picked template
-  const templateName = catTemplates.includes(aiData.template) ? aiData.template : catTemplates[0];
-  const templateHTML = await loadTemplate(templateName);
-  
-  // Build enriched data for fillTemplate
-  const enrichedData = {
-    summary: aiData.summary_polished || data.summary,
-    progress: aiData.progress 
-      ? aiData.progress.map(p => p.title + ': ' + p.desc).join('\n')
-      : data.progress,
-    newsletter: aiData.newsletter_polished || data.newsletter,
-    others: aiData.others_polished || data.others,
-    topofmind: aiData.topofmind_polished || data.topofmind
-  };
-  
-  // Use our existing fillTemplate (100% our CSS, our design)
-  let html = fillTemplate(templateHTML, enrichedData);
-  
-  // Inject AI-generated stats into data-content slots
-  if (aiData.summary_stat_value) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    doc.querySelectorAll('[data-content="summary-stat"]').forEach(el => {
-      el.textContent = aiData.summary_stat_value;
-    });
-    // Also try to set stat label if there's a nearby label element
-    doc.querySelectorAll('[data-content="summary-stat-label"]').forEach(el => {
-      el.textContent = aiData.summary_stat_label || '';
-    });
-    if (aiData.newsletter_stat_value) {
-      doc.querySelectorAll('[data-content="newsletter-stat"]').forEach(el => {
-        el.textContent = aiData.newsletter_stat_value;
-      });
-    }
-    html = '<!DOCTYPE html>' + doc.documentElement.outerHTML;
-  }
-  
-  return { html, templateName, aiData };
+  return { html: finalHTML, templateName: pickedName, aiData: { layout_hint: 'ai-adaptive' } };
 }
 
 async function generate() {
