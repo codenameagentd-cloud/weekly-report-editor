@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>Weekly Status — Warm</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:#f5f0eb;color:#1a1a1a;overflow-x:hidden}
+
+.slide{width:1440px;min-height:900px;position:relative;display:flex;flex-direction:column;padding:48px 60px}
+
+/* Header */
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:auto}
+.brand{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.date-badge{display:flex;align-items:center;gap:8px;font-size:13px;color:#86868b}
+.date-dot{width:8px;height:8px;border-radius:50%;background:#e85d26}
+
+/* Hero */
+.hero{margin-top:auto;margin-bottom:auto}
+.hero-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#86868b;margin-bottom:16px}
+.hero-label .line{width:24px;height:2px;background:#e85d26}
+.hero-title{font-family:'DM Serif Display',serif;font-size:120px;font-weight:400;line-height:.95;letter-spacing:-2px}
+.hero-title .accent{color:#e85d26}
+
+/* Footer */
+.footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto}
+.author{font-size:14px;font-weight:600}
+.nav-hint{display:flex;align-items:center;gap:8px;background:#1a1a1a;color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.nav-key{background:#333;padding:2px 8px;border-radius:4px;font-size:11px}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="header">
+    <div class="brand">Copilot Mac</div>
+    <div class="date-badge"><span class="date-dot"></span>{{date}}</div>
+  </div>
+  <div class="hero">
+    <div class="hero-label"><span class="line"></span>Weekly Update</div>
+    <div class="hero-title">Status<br><span class="accent">Report</span></div>
+  </div>
+  <div class="footer">
+    <div class="author">{{author}}</div>
+    <div class="nav-hint">
+      <span>C2 Pre-Planning</span>
+    </div>
+  </div>
+</div>
+
+<!-- Progress slide -->
+<div class="slide" style="border-top:1px solid #e0dbd5">
+  <div class="header">
+    <div class="brand">Copilot Mac</div>
+    <div class="date-badge"><span class="date-dot"></span>{{date}}</div>
+  </div>
+  <div style="margin-top:80px">
+    <div class="hero-label"><span class="line"></span>Progress Status</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:48px;margin-bottom:40px;letter-spacing:-1px">What We Shipped</div>
+    <div style="display:flex;flex-direction:column;gap:20px;max-width:720px">
+      <div style="display:flex;align-items:center;gap:12px;font-size:16px;font-weight:500">
+        <span style="width:10px;height:10px;border-radius:50%;background:#e85d26;flex-shrink:0"></span>
+        User authentication flow completed
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;font-size:16px;font-weight:500">
+        <span style="width:10px;height:10px;border-radius:50%;background:#e85d26;flex-shrink:0"></span>
+        Dashboard redesign shipped to production
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;font-size:16px;font-weight:500;color:#86868b">
+        <span style="width:10px;height:10px;border-radius:50%;background:#ccc;flex-shrink:0"></span>
+        API integration with partner services
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="author">{{author}}</div>
+  </div>
+</div>
+</body>
+</html>

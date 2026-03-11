@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>Weekly Status — Hype</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:#141414;color:#fff;overflow-x:hidden}
+
+.slide{width:1440px;min-height:900px;position:relative;display:flex;flex-direction:column}
+
+/* Nav */
+.nav{display:flex;justify-content:space-between;align-items:center;padding:36px 60px}
+.nav-brand{font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+.nav-links{display:flex;gap:32px}
+.nav-link{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#999;transition:color .2s}
+.nav-link.active{color:#fff}
+
+/* Body */
+.body{flex:1;display:flex;padding:0 60px 60px}
+
+/* Left — hero text */
+.hero-left{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:40px}
+.sprint-label{font-size:13px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#ff2d55;margin-bottom:12px}
+.hero-title{font-size:120px;font-weight:900;line-height:.88;letter-spacing:-4px;text-transform:uppercase}
+.hero-title .accent{color:#ff2d55}
+.hero-desc{font-size:15px;color:#999;line-height:1.6;max-width:420px;margin-top:24px}
+.footer-row{display:flex;justify-content:space-between;margin-top:auto;padding-top:40px}
+.footer-text{font-size:11px;color:#666;letter-spacing:.08em;text-transform:uppercase}
+
+/* Right — stats card */
+.hero-right{width:440px;display:flex;flex-direction:column;justify-content:center;padding-left:40px}
+.stats-card{background:#1e1e1e;border:1px solid #333;border-radius:16px;padding:40px;display:flex;flex-direction:column}
+.big-stat{text-align:center;margin-bottom:8px}
+.big-num{font-size:96px;font-weight:900;line-height:1;letter-spacing:-3px}
+.big-num .pct{font-size:48px;color:#ff2d55}
+.big-label{font-size:11px;color:#999;letter-spacing:.15em;text-transform:uppercase;text-align:center;margin-bottom:24px}
+.mini-divider{height:1px;background:#333;margin:0 -40px 24px;width:calc(100% + 80px)}
+.stats-trio{display:flex;justify-content:space-around;margin-bottom:28px}
+.mini-stat{text-align:center}
+.mini-val{font-size:36px;font-weight:900;letter-spacing:-1px}
+.mini-label{font-size:10px;color:#999;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.card-items{display:flex;flex-direction:column;gap:16px;margin-top:8px}
+.card-item{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:500}
+.line{width:20px;height:2px;border-radius:1px;flex-shrink:0}
+.line.pink{background:#ff2d55}
+.line.gray{background:#666}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="nav">
+    <div class="nav-brand">Design Team</div>
+    <div class="nav-links">
+      <span class="nav-link active">Overview</span>
+      <span class="nav-link">Progress</span>
+      <span class="nav-link">Blockers</span>
+      <span class="nav-link">Next</span>
+    </div>
+  </div>
+  <div class="body">
+    <div class="hero-left">
+      <div class="sprint-label">Sprint 14 — Week 11</div>
+      <div class="hero-title">Weekly<br><span class="accent">Update</span></div>
+      <div class="hero-desc">Progress report on current sprint milestones. Key features shipped, blockers resolved, and trajectory toward our deadline.</div>
+      <div class="footer-row">
+        <span class="footer-text">{{author}} — {{role}}</span>
+        <span class="footer-text">{{date}}</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="stats-card">
+        <div class="big-stat"><span class="big-num">87<span class="pct">%</span></span></div>
+        <div class="big-label">Sprint Completion</div>
+        <div class="mini-divider"></div>
+        <div class="stats-trio">
+          <div class="mini-stat"><div class="mini-val">12</div><div class="mini-label">Shipped</div></div>
+          <div class="mini-stat"><div class="mini-val">3</div><div class="mini-label">Resolved</div></div>
+          <div class="mini-stat"><div class="mini-val">5</div><div class="mini-label">Days Left</div></div>
+        </div>
+        <div class="card-items">
+          <div class="card-item"><span class="line pink"></span>Auth flow completed</div>
+          <div class="card-item"><span class="line pink"></span>Dashboard shipped</div>
+          <div class="card-item"><span class="line gray"></span>API integration</div>
+          <div class="card-item"><span class="line gray"></span>Performance sprint</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
