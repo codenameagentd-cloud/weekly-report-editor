@@ -773,9 +773,53 @@ document.addEventListener('click', e => {
 });
 `;
 
+
+// Schema validation
+const VALID_BLOCK_TYPES = ['hero', 'stat-grid', 'progress-list', 'highlight', 'bullet-section', 'quote', 'footer'];
+const REQUIRED_FIELDS = {
+  'hero': ['headline'],
+  'stat-grid': ['items'],
+  'progress-list': ['items'],
+  'highlight': ['title'],
+  'bullet-section': ['items'],
+  'quote': ['text'],
+  'footer': ['weekOf']
+};
+
+function validateBlock(block) {
+  if (!block || !VALID_BLOCK_TYPES.includes(block.type)) return null;
+  const required = REQUIRED_FIELDS[block.type] || [];
+  for (const field of required) {
+    if (!block[field] || (Array.isArray(block[field]) && block[field].length === 0)) return null;
+  }
+  return block;
+}
+
+function validateAndSplitSlides(slides) {
+  const result = [];
+  for (const slide of slides) {
+    const validBlocks = (slide.blocks || []).map(validateBlock).filter(Boolean);
+    if (!validBlocks.length) continue;
+    
+    // Check progress-list overflow: >6 items → split into 2 slides
+    const progressBlock = validBlocks.find(b => b.type === 'progress-list');
+    if (progressBlock && progressBlock.items.length > 6) {
+      const mid = Math.ceil(progressBlock.items.length / 2);
+      const first = { ...progressBlock, items: progressBlock.items.slice(0, mid) };
+      const second = { ...progressBlock, items: progressBlock.items.slice(mid) };
+      const otherBlocks = validBlocks.filter(b => b.type !== 'progress-list');
+      result.push({ ...slide, blocks: [...otherBlocks, first] });
+      result.push({ ...slide, slideType: slide.slideType + '-cont', blocks: [second] });
+    } else {
+      result.push({ ...slide, blocks: validBlocks });
+    }
+  }
+  return result;
+}
+
 // Render full deck from AI JSON
 function renderDeck(aiJSON, templateCSS) {
-  const slides = (aiJSON.slides || []);
+  const slides = validateAndSplitSlides(aiJSON.slides || []);
   const total = slides.length;
   const slidesHTML = slides.map((s, i) => renderSlide(s, i, total)).join('\n');
   
