@@ -152,7 +152,10 @@
     <button class="btn-secondary" onclick="preview()">Preview</button>
   </div>
 
-  <div class="output" id="output">
+  <label style="display:flex;align-items:center;gap:8px;margin:12px 0;font-size:14px;color:var(--muted);cursor:pointer">
+      <input type="checkbox" id="genUIToggle" style="width:16px;height:16px"> Use AI to generate layout (experimental — requires token)
+    </label>
+    <div class="output" id="output">
     <h3>Ready</h3>
     <p class="meta" id="outputMeta"></p>
     <div class="output-btns">
@@ -710,7 +713,7 @@ async function generate() {
   if (!data) return;
   const btn = document.getElementById('genBtn');
   const token = document.getElementById('aiKey').value.trim() || localStorage.getItem('wr-gh-token');
-  const useAI = !!token;
+  const useAI = document.getElementById('genUIToggle').checked && !!token;
   
   btn.disabled = true;
   btn.textContent = useAI ? 'AI Generating…' : 'Generating…';
