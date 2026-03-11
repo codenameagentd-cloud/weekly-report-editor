@@ -609,112 +609,273 @@ const STYLE_DNA = {
 }
 ;
 
+
+// ============ BLOCK SCHEMA SYSTEM ============
+
+// Category → template variant mapping
+const VARIANT_MAP = {
+  dark: ['noir', 'cinematic', 'neon', 'mono-grid'],
+  minimal: ['swiss', 'keynote', 'outline', 'classic'],
+  editorial: ['magazine', 'editorial'],
+  structural: ['split', 'dashboard', 'kinetic'],
+  experimental: ['brutalist', 'isometric']
+};
+
+// Block renderers: take block data → HTML fragment
+const BLOCK_RENDERERS = {
+  hero(block, cssClasses) {
+    const eyebrow = block.eyebrow ? `<div class="eyebrow label" style="font-size:14px;text-transform:uppercase;letter-spacing:3px;opacity:0.6;margin-bottom:16px;">${block.eyebrow}</div>` : '';
+    
+    const headlineLen = (block.headline || '').length;
+    let headlineSize = '56px';
+    if (headlineLen > 40) headlineSize = '40px';
+    if (headlineLen > 80) headlineSize = '32px';
+    
+    const sub = block.subheadline ? `<div class="subheadline body-text" style="font-size:20px;opacity:0.7;margin-top:16px;max-width:600px;line-height:1.5;">${block.subheadline}</div>` : '';
+    const meta = (block.meta || []).map(m => `<span style="font-size:13px;opacity:0.5;margin-right:16px;">${m}</span>`).join('');
+    const metaDiv = meta ? `<div style="margin-top:24px;">${meta}</div>` : '';
+    
+    return `<div class="hero-block">
+      ${eyebrow}
+      <h1 style="font-size:${headlineSize};line-height:1.1;letter-spacing:-1px;margin:0;">${block.headline || ''}</h1>
+      ${sub}
+      ${metaDiv}
+    </div>`;
+  },
+  
+  'stat-grid'(block) {
+    const items = block.items || [];
+    if (!items.length) return '';
+    const cols = items.length <= 2 ? items.length : items.length <= 4 ? items.length : 4;
+    const statCards = items.map(item => {
+      const toneColor = item.tone === 'positive' ? '#4ade80' : item.tone === 'negative' ? '#f87171' : item.tone === 'warning' ? '#fbbf24' : 'inherit';
+      return `<div class="stat-card" style="text-align:center;">
+        <div class="stat-value hero-number" style="font-size:48px;font-weight:700;color:${toneColor};line-height:1;">${item.value}</div>
+        <div class="stat-label" style="font-size:13px;text-transform:uppercase;letter-spacing:2px;opacity:0.5;margin-top:8px;">${item.label}</div>
+      </div>`;
+    }).join('');
+    return `<div class="stat-grid-block" style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:32px;margin:24px 0;">
+      ${statCards}
+    </div>`;
+  },
+  
+  'progress-list'(block) {
+    const items = block.items || [];
+    if (!items.length) return '';
+    
+    const statusMap = {
+      done: { color: '#4ade80', bg: 'rgba(74,222,128,0.1)', label: 'Done', icon: '✓' },
+      in_progress: { color: '#60a5fa', bg: 'rgba(96,165,250,0.1)', label: 'In Progress', icon: '→' },
+      blocked: { color: '#f87171', bg: 'rgba(248,113,113,0.1)', label: 'Blocked', icon: '!' },
+      planned: { color: '#a1a1aa', bg: 'rgba(161,161,170,0.1)', label: 'Planned', icon: '○' }
+    };
+    
+    // Adaptive layout based on item count
+    const isCompact = items.length > 3;
+    const isTwoCol = items.length > 6;
+    
+    const itemCards = items.map(item => {
+      const s = statusMap[item.status] || statusMap.planned;
+      const titleSize = isCompact ? '18px' : '24px';
+      const descSize = isCompact ? '14px' : '16px';
+      const padding = isCompact ? '16px 20px' : '24px 32px';
+      
+      return `<div class="progress-row" style="padding:${padding};border-left:3px solid ${s.color};background:${s.bg};border-radius:0 8px 8px 0;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="row-title" style="font-size:${titleSize};font-weight:600;">${item.title}</div>
+          ${item.desc ? `<div class="row-sub" style="font-size:${descSize};opacity:0.6;margin-top:4px;">${item.desc}</div>` : ''}
+        </div>
+        <div class="status" style="font-size:12px;text-transform:uppercase;letter-spacing:2px;color:${s.color};white-space:nowrap;">${s.label}</div>
+      </div>`;
+    }).join('');
+    
+    const gridStyle = isTwoCol 
+      ? 'display:grid;grid-template-columns:1fr 1fr;gap:12px;' 
+      : `display:flex;flex-direction:column;gap:${isCompact ? '8px' : '16px'};`;
+    
+    return `<div class="progress-list-block" style="${gridStyle}">
+      ${itemCards}
+    </div>`;
+  },
+  
+  highlight(block) {
+    return `<div class="highlight-block" style="padding:32px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);">
+      ${block.label ? `<div style="font-size:12px;text-transform:uppercase;letter-spacing:3px;opacity:0.5;margin-bottom:12px;">${block.label}</div>` : ''}
+      <div style="font-size:28px;font-weight:700;line-height:1.2;">${block.title || ''}</div>
+      ${block.body ? `<div style="font-size:16px;opacity:0.7;margin-top:12px;line-height:1.6;">${block.body}</div>` : ''}
+    </div>`;
+  },
+  
+  'bullet-section'(block) {
+    const items = block.items || [];
+    const bullets = items.map(item => 
+      `<li style="padding:8px 0;font-size:18px;line-height:1.5;opacity:0.85;">${item}</li>`
+    ).join('');
+    return `<div class="bullet-section-block">
+      ${block.title ? `<div style="font-size:14px;text-transform:uppercase;letter-spacing:3px;opacity:0.5;margin-bottom:20px;">${block.title}</div>` : ''}
+      <ul style="list-style:none;padding:0;margin:0;">${bullets}</ul>
+    </div>`;
+  },
+  
+  quote(block) {
+    return `<div class="quote-block" style="padding:40px 0;">
+      <div style="font-size:32px;line-height:1.4;font-style:italic;opacity:0.9;">"${block.text || ''}"</div>
+      ${block.attribution ? `<div style="font-size:14px;opacity:0.5;margin-top:16px;">— ${block.attribution}</div>` : ''}
+    </div>`;
+  },
+  
+  footer(block) {
+    const parts = [block.weekOf, block.author, block.note].filter(Boolean);
+    return `<div class="footer-block" style="font-size:13px;opacity:0.4;margin-top:auto;padding-top:24px;">
+      ${parts.join(' · ')}
+    </div>`;
+  }
+};
+
+// Render a single slide from blocks
+function renderSlide(slide, index, total) {
+  const blocksHTML = (slide.blocks || []).map(block => {
+    const renderer = BLOCK_RENDERERS[block.type];
+    if (!renderer) return '';
+    return renderer(block);
+  }).join('\n');
+  
+  return `<div class="slide${index === 0 ? ' active' : ''}" data-index="${index}" style="position:absolute;top:0;left:0;width:100vw;height:100vh;opacity:${index === 0 ? 1 : 0};pointer-events:${index === 0 ? 'auto' : 'none'};transition:opacity 0.3s ease;display:flex;flex-direction:column;justify-content:center;padding:80px;overflow:hidden;">
+    ${blocksHTML}
+    <div class="page-counter" style="position:fixed;bottom:36px;right:48px;font-size:14px;letter-spacing:2px;opacity:0.4;z-index:100;">${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}</div>
+  </div>`;
+}
+
+// Navigation JS (same as templates use)
+const NAV_JS = `
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+function go(n) {
+  if (n < 0 || n >= slides.length) return;
+  slides[current].style.opacity = '0';
+  slides[current].style.pointerEvents = 'none';
+  slides[current].classList.remove('active');
+  current = n;
+  slides[current].style.opacity = '1';
+  slides[current].style.pointerEvents = 'auto';
+  slides[current].classList.add('active');
+  document.querySelectorAll('.page-counter').forEach(el => {
+    el.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+  });
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(current + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(current - 1); }
+});
+document.addEventListener('click', e => {
+  if (e.clientX > window.innerWidth / 2) go(current + 1);
+  else go(current - 1);
+});
+`;
+
+// Render full deck from AI JSON
+function renderDeck(aiJSON, templateCSS) {
+  const slides = (aiJSON.slides || []);
+  const total = slides.length;
+  const slidesHTML = slides.map((s, i) => renderSlide(s, i, total)).join('\n');
+  
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status — ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</title>
+<style>
+${templateCSS}
+
+/* Block system overrides */
+.slide { box-sizing: border-box; }
+.hero-block h1 { margin: 0; }
+</style>
+</head>
+<body>
+${slidesHTML}
+<script>${NAV_JS}</script>
+</body>
+</html>`;
+}
+
+// Main AI function: content → JSON → rendered HTML
 async function generateWithAI(data, category) {
   const token = document.getElementById('aiKey').value.trim() || localStorage.getItem('wr-gh-token');
   const model = document.getElementById('aiModel').value;
   if (!token) throw new Error('Token required for AI generation');
   
+  // Pick a random template from category to use its CSS
   const catTemplates = CATEGORIES[category] || ['noir'];
   const pickedName = catTemplates[Math.floor(Math.random() * catTemplates.length)];
   
-  // Load the template and split into chrome vs content
+  // Load template CSS
   const templateHTML = await loadTemplate(pickedName);
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(templateHTML, 'text/html');
+  const tmpDoc = new DOMParser().parseFromString(templateHTML, 'text/html');
+  const styleEl = tmpDoc.querySelector('style');
+  const templateCSS = styleEl ? styleEl.textContent : '';
   
-  // Extract the full <style> block
-  const styleEl = doc.querySelector('style');
-  const cssText = styleEl ? styleEl.textContent : '';
+  const optionalFields = [];
+  if (data.newsletter) optionalFields.push('Newsletter: ' + data.newsletter);
+  if (data.others) optionalFields.push('Others: ' + data.others);
+  if (data.topofmind) optionalFields.push('Top of Mind: ' + data.topofmind);
   
-  // Extract all CSS class names for the AI to use
-  const classNames = [...new Set((cssText.match(/\.[a-zA-Z_-][a-zA-Z0-9_-]*/g) || []).map(c => c.slice(1)))];
-  
-  // Extract the full HTML of all slides as reference
-  const slides = doc.querySelectorAll('.slide, .content-slide, [data-slide], [data-index]');
-  const slideHTML = [...slides].map(s => s.outerHTML).join('\n');
-  
-  // Extract JS (navigation etc)
-  const scripts = [...doc.querySelectorAll('script')].map(s => s.textContent).join('\n');
-
-  const optionalSections = [];
-  if (data.newsletter) optionalSections.push({ name: 'Newsletter', content: data.newsletter });
-  if (data.others) optionalSections.push({ name: 'Others', content: data.others });
-  if (data.topofmind) optionalSections.push({ name: 'Top of Mind', content: data.topofmind });
-
   const progressLines = data.progress.split('\n').filter(l => l.trim());
+  
+  const systemPrompt = `You are a content analyst for weekly status reports. Output ONLY valid JSON, no markdown fences, no explanation.
 
-  const systemPrompt = `You generate slide HTML content for a weekly status report. You will receive:
-1. The CSS stylesheet (your design system — use ONLY these classes)
-2. Reference slide HTML (showing the structure and class patterns)
-3. User content to present
+You receive user content and return a structured deck JSON that a renderer will turn into slides.
 
-YOUR TASK: Generate the <body> inner HTML — all slide divs — using the reference CSS classes.
+Block types you can use:
+- hero: { type:"hero", eyebrow?:string, headline:string, subheadline?:string, meta?:string[] }
+- stat-grid: { type:"stat-grid", items:[{ value:string, label:string, tone:"positive"|"negative"|"warning"|"neutral" }] } (1-4 items)
+- progress-list: { type:"progress-list", items:[{ title:string, desc?:string, status:"done"|"in_progress"|"blocked"|"planned" }] }
+- highlight: { type:"highlight", label?:string, title:string, body?:string }
+- bullet-section: { type:"bullet-section", title?:string, items:string[] }
+- quote: { type:"quote", text:string, attribution?:string }
+- footer: { type:"footer", weekOf:string, author?:string }
 
-CRITICAL RULES:
-- Use ONLY CSS classes from the provided stylesheet. Never invent new classes.
-- Match the reference HTML structure exactly (same nesting, same class patterns)
-- First slide is always the title slide with data-index="0"
-- Each slide: <div class="slide [slide-type]" data-index="N">
-- First slide gets class "active"
-- ADAPT the number of items to the actual content (don't hardcode 3 progress items)
-- For progress: create one progress-row/card per actual item, with correct status class
-- Short summary → big hero text; Long summary → smaller text, may split into paragraphs
-- Empty optional sections → NO slide for them
-- Include the page counter element
-- data-content attributes on text elements for identification
+Rules:
+- summary < 90 chars → hero with short headline only
+- summary 90-220 chars → hero with headline + subheadline (split smartly)
+- summary > 220 chars → hero headline + bullet-section with key points
+- Derive meaningful stats from content (completion %, item counts, ratios)
+- Detect progress status from keywords: done/completed/shipped→done, in progress/ongoing→in_progress, blocked/stuck→blocked, planned/upcoming→planned
+- Each slide max 3 blocks
+- Empty optional fields → no slide for them`;
 
-STATUS DETECTION for progress items:
-- done/completed/shipped/released/launched → use the "done/green" status class from reference
-- in progress/ongoing/developing/working → use the "progress/blue" status class
-- blocked/stuck/waiting/delayed → use the "blocked/red" status class  
-- planned/upcoming/next → use default/gray
+  const userPrompt = `USER INPUT:
+Summary: ${data.summary}
 
-OUTPUT: Only the body innerHTML. No <html>, <head>, <body> tags. No markdown fences. No explanation.`;
-
-  const userPrompt = `CSS STYLESHEET:
-\`\`\`css
-${cssText}
-\`\`\`
-
-REFERENCE SLIDE HTML (for structure patterns — adapt content/quantity to user input):
-${slideHTML}
-
-AVAILABLE CSS CLASSES: ${classNames.join(', ')}
-
----
-
-USER CONTENT:
-
-SUMMARY (${data.summary.length} chars):
-${data.summary}
-
-PROGRESS ITEMS (${progressLines.length} items):
+Progress (${progressLines.length} items):
 ${data.progress}
 
-${optionalSections.length ? optionalSections.map(s => `${s.name.toUpperCase()}:\n${s.content}`).join('\n\n') : 'NO OPTIONAL SECTIONS — do not create slides for Newsletter, Others, or Top of Mind.'}
+${optionalFields.length ? optionalFields.join('\n\n') : 'No optional sections.'}
 
----
-
-Generate ALL slide divs now. Adapt layout to the content:
-- ${progressLines.length} progress items (create exactly ${progressLines.length} rows/cards, NOT 3)
-- ${data.summary.length < 100 ? 'SHORT summary → use hero/large typography' : data.summary.length < 300 ? 'MEDIUM summary → standard layout' : 'LONG summary → smaller text, consider splitting'}
-- ${optionalSections.length} optional sections (${optionalSections.length === 0 ? 'NONE — skip all optional slides' : optionalSections.map(s => s.name).join(', ')})
-- Include page counter showing "01 / ${2 + 1 + optionalSections.length}" format (title + summary + progress${optionalSections.length ? ' + ' + optionalSections.length + ' optional' : ''})`;
+OUTPUT THIS JSON:
+{
+  "templateVariant": "${pickedName}",
+  "deckTone": "executive",
+  "slides": [
+    { "slideType": "title", "blocks": [{"type":"hero","eyebrow":"Weekly Status","headline":"<derive from summary>","meta":["${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}"]}] },
+    { "slideType": "summary", "blocks": [<hero + optional stat-grid + footer>] },
+    { "slideType": "progress", "blocks": [<hero with section title + progress-list>] },
+    <optional newsletter/others/topofmind slides if content provided>
+  ]
+}`;
 
   const resp = await fetch('https://models.inference.ai.azure.com/chat/completions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    },
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
     body: JSON.stringify({
       model: model,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      max_tokens: 16000,
-      temperature: 0.6
+      max_tokens: 4000,
+      temperature: 0.4
     })
   });
   
@@ -724,26 +885,17 @@ Generate ALL slide divs now. Adapt layout to the content:
   }
   
   const result = await resp.json();
-  let bodyHTML = result.choices[0].message.content.trim();
-  // Strip markdown fences if present
-  bodyHTML = bodyHTML.replace(/^```html?\n?/i, '').replace(/\n?```$/i, '').trim();
+  let aiText = result.choices[0].message.content.trim();
+  aiText = aiText.replace(/^```json?\n?/i, '').replace(/\n?```$/i, '').trim();
   
-  // Reassemble: original head (with our CSS) + AI body content + original JS
-  const headContent = doc.head.innerHTML;
-  const finalHTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-${headContent}
-</head>
-<body>
-${bodyHTML}
-<script>
-${scripts}
-</script>
-</body>
-</html>`;
+  let aiJSON;
+  try { aiJSON = JSON.parse(aiText); }
+  catch(e) { throw new Error('AI returned invalid JSON: ' + aiText.substring(0, 300)); }
   
-  return { html: finalHTML, templateName: pickedName, aiData: { layout_hint: 'ai-adaptive' } };
+  // Render the deck using our block system + template CSS
+  const html = renderDeck(aiJSON, templateCSS);
+  
+  return { html, templateName: pickedName, aiData: aiJSON };
 }
 
 async function generate() {
