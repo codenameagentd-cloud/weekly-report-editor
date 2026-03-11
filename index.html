@@ -614,85 +614,59 @@ async function generateWithAI(data, category) {
   const model = document.getElementById('aiModel').value;
   if (!token) throw new Error('Token required for AI generation');
   
-  const style = STYLE_DNA[category];
-  
-  // Load ONE random template from this category as the design reference
   const catTemplates = CATEGORIES[category] || ['noir'];
-  const pickedName = catTemplates[Math.floor(Math.random() * catTemplates.length)];
-  let refHTML = '';
-  try {
-    refHTML = await loadTemplate(pickedName);
-  } catch(e) { console.warn('Could not load reference template'); }
-  const optionalSections = [];
-  if (data.newsletter) optionalSections.push('Newsletter: ' + data.newsletter);
-  if (data.others) optionalSections.push('Others: ' + data.others);
-  if (data.topofmind) optionalSections.push('Top of Mind: ' + data.topofmind);
   
-  const summaryLen = data.summary.length;
-  const progressLines = data.progress.split('\n').filter(l => l.trim()).length;
-  
-  const userPrompt = `Use the reference template's EXACT design (CSS, layout, decorative elements). Replace content with:
+  const systemPrompt = `You are a content intelligence engine for a weekly status report tool. You analyze user content and return structured JSON — you do NOT generate HTML.
 
-USER CONTENT:
-Summary (${summaryLen} chars): ${data.summary}
+Your job:
+1. Pick the best template from the available list based on content characteristics
+2. Polish the summary text (professional tone, concise, executive-level)
+3. Parse progress items with status detection
+4. Generate smart metadata (headline stat, decorative numbers)
+5. Decide layout hints based on content density
 
-Progress Status (${progressLines} items):
+Return ONLY valid JSON, no markdown fences.`;
+
+  const userPrompt = `Available templates in "${category}" category: ${JSON.stringify(catTemplates)}
+
+USER INPUT:
+Summary: ${data.summary}
+
+Progress:
 ${data.progress}
 
-${optionalSections.length ? optionalSections.join('\n\n') : '(No optional sections — REMOVE those slides entirely)'}
+${data.newsletter ? 'Newsletter: ' + data.newsletter : ''}
+${data.others ? 'Others: ' + data.others : ''}
+${data.topofmind ? 'Top of Mind: ' + data.topofmind : ''}
 
-CONTENT ADAPTATION RULES:
-- Summary ${summaryLen < 100 ? '→ SHORT: use hero typography (48-72px), center-aligned, generous whitespace' : summaryLen < 300 ? '→ MEDIUM: use 28-36px, may use 2-column layout' : '→ LONG: use 20-24px, must use columns or cards to organize'}
-- Progress ${progressLines <= 3 ? '→ FEW items: large cards with icons/borders, one per row' : progressLines <= 6 ? '→ MODERATE: medium cards in 2-column grid' : '→ MANY items: compact list or 3-column grid, smaller text'}
-- Each progress item: parse status words (done/completed/shipped→✅green, in progress/ongoing→🔵blue, blocked/stuck→🔴red, planned/upcoming→⚪gray)
-- Empty optional sections: DELETE the slide entirely, don't leave blank slides
+Return this exact JSON structure:
+{
+  "template": "<pick one from the available templates list>",
+  "summary_polished": "<polished version of summary, same meaning, professional executive tone>",
+  "summary_headline": "<one bold phrase that captures the summary, 3-6 words, for hero display>",
+  "summary_stat_value": "<a number or percentage derived from the content, e.g. '85%' or '3/5'>",
+  "summary_stat_label": "<what the stat measures, e.g. 'Features Shipped' or 'Completion Rate'>",
+  "progress": [
+    {
+      "title": "<item name>",
+      "desc": "<brief status description>",
+      "status": "done|in-progress|blocked|planned"
+    }
+  ],
+  "newsletter_polished": "<polished newsletter text or null if empty>",
+  "newsletter_stat_value": "<derived stat or null>",
+  "newsletter_stat_label": "<stat label or null>",
+  "others_polished": "<polished others text or null>",
+  "topofmind_polished": "<polished top of mind text or null>",
+  "layout_hint": "spacious|balanced|compact"
+}
 
-Generate the complete standalone HTML now.`;
-
-  const systemPrompt = `You are a presentation slide generator. Generate a standalone HTML file with scroll-snap slides for a weekly status report.
-
-${refHTML ? `DESIGN REFERENCE — Template "${pickedName}":
-<reference>
-${refHTML}
-</reference>
-
-YOU MUST REPLICATE THIS TEMPLATE'S DESIGN EXACTLY:
-1. Copy the ENTIRE <style> block from the reference — every CSS rule, variable, gradient, shadow, animation
-2. Keep the same HTML structure: scroll-snap container, slide sections, navigation dots, page counter
-3. Keep all decorative CSS (::before, ::after, gradients, transforms, clip-paths, borders)
-4. ONLY change the text content to match the user's input below
-5. Add/remove slide sections based on which optional fields the user provided
-6. Adapt layout density: short text → bigger type + more whitespace; long text → smaller type + columns/cards
-
-The reference IS the design. Your job is content substitution + intelligent layout adaptation, NOT redesign.` : ''}
-
-REQUIREMENTS:
-- Standalone HTML with embedded CSS (no external deps except Google Fonts)
-- scroll-snap-type: y mandatory for vertical slide navigation
-- Each section = one full-viewport slide (100vh)
-- Keyboard navigation (ArrowDown/ArrowUp/Space) with smooth scrolling
-- Page counter overlay showing current/total (bottom-right)
-- Responsive (desktop + mobile)
-- McKinsey-style: headline IS the conclusion
-- Body text >= 24px, headlines 36-60pt
-- 8pt grid spacing
-
-SLIDES (in order):
-1. Title — "Weekly Status Update" + week date
-2. Summary — user's text with visual treatment
-3. Progress Status — each item as card with status icon
-4. [ONLY if provided] Newsletter
-5. [ONLY if provided] Others
-6. [ONLY if provided] Top of Mind
-
-CONTENT RULES:
-- ALL text must come from user input. NEVER invent content.
-- Parse progress items for status: done/released/completed→green, in progress/ongoing/dev→blue, blocked/stuck→red
-- If statuses are parseable, show completion % as decorative stat
-- Short text = big hero type; long text = smaller, may use columns
-- Few items = large cards; many items = compact list
-
-OUTPUT: Only the complete HTML. No markdown fences, no explanation.`;
+Rules:
+- template: pick based on content mood (technical→mono-grid/dashboard, narrative→editorial/magazine, bold→noir/cinematic)
+- summary_polished: keep meaning, improve clarity and professionalism
+- stats: derive from actual content (count items, calculate percentages, extract numbers)
+- layout_hint: spacious if <100 words total, compact if >300, balanced otherwise
+- progress status: parse keywords (done/completed/shipped→done, in progress/ongoing/dev→in-progress, blocked/stuck→blocked, planned/upcoming→planned)`;
 
   const resp = await fetch('https://models.inference.ai.azure.com/chat/completions', {
     method: 'POST',
@@ -706,8 +680,8 @@ OUTPUT: Only the complete HTML. No markdown fences, no explanation.`;
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      max_tokens: 32000,
-      temperature: 0.7
+      max_tokens: 4000,
+      temperature: 0.5
     })
   });
   
@@ -716,20 +690,54 @@ OUTPUT: Only the complete HTML. No markdown fences, no explanation.`;
     throw new Error('AI API error: ' + resp.status + ' ' + err.substring(0, 200));
   }
   
-  const json = await resp.json();
-  let html = json.choices[0].message.content;
-  
+  const result = await resp.json();
+  let aiText = result.choices[0].message.content.trim();
   // Strip markdown fences if present
-  html = html.replace(/^```html?\n?/i, '').replace(/\n?```$/i, '').trim();
+  aiText = aiText.replace(/^```json?\n?/i, '').replace(/\n?```$/i, '').trim();
   
-  // Validate it's actual HTML
-  if (!html.includes('<html') && !html.includes('<!DOCTYPE')) {
-    throw new Error('AI did not return valid HTML');
+  let aiData;
+  try { aiData = JSON.parse(aiText); }
+  catch(e) { throw new Error('AI returned invalid JSON: ' + aiText.substring(0, 200)); }
+  
+  // Load the AI-picked template
+  const templateName = catTemplates.includes(aiData.template) ? aiData.template : catTemplates[0];
+  const templateHTML = await loadTemplate(templateName);
+  
+  // Build enriched data for fillTemplate
+  const enrichedData = {
+    summary: aiData.summary_polished || data.summary,
+    progress: aiData.progress 
+      ? aiData.progress.map(p => p.title + ': ' + p.desc).join('\n')
+      : data.progress,
+    newsletter: aiData.newsletter_polished || data.newsletter,
+    others: aiData.others_polished || data.others,
+    topofmind: aiData.topofmind_polished || data.topofmind
+  };
+  
+  // Use our existing fillTemplate (100% our CSS, our design)
+  let html = fillTemplate(templateHTML, enrichedData);
+  
+  // Inject AI-generated stats into data-content slots
+  if (aiData.summary_stat_value) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    doc.querySelectorAll('[data-content="summary-stat"]').forEach(el => {
+      el.textContent = aiData.summary_stat_value;
+    });
+    // Also try to set stat label if there's a nearby label element
+    doc.querySelectorAll('[data-content="summary-stat-label"]').forEach(el => {
+      el.textContent = aiData.summary_stat_label || '';
+    });
+    if (aiData.newsletter_stat_value) {
+      doc.querySelectorAll('[data-content="newsletter-stat"]').forEach(el => {
+        el.textContent = aiData.newsletter_stat_value;
+      });
+    }
+    html = '<!DOCTYPE html>' + doc.documentElement.outerHTML;
   }
   
-  return html;
+  return { html, templateName, aiData };
 }
-
 
 async function generate() {
   const data = validate();
@@ -744,11 +752,12 @@ async function generate() {
   try {
     if (useAI) {
       // GenUI mode: AI generates the entire HTML
-      generatedHTML = await generateWithAI(data, selectedCategory);
+      const aiResult = await generateWithAI(data, selectedCategory);
+      generatedHTML = aiResult.html;
       lastTemplateName = 'AI-generated';
       document.getElementById('output').classList.add('active');
-      document.getElementById('outputMeta').textContent = 'AI Generated (' + selectedCategory + ' style)';
-      showToast('AI generated ' + selectedCategory + ' slides');
+      document.getElementById('outputMeta').textContent = 'AI Generated · ' + aiResult.templateName + ' (' + selectedCategory + ') · ' + (aiResult.aiData.layout_hint || 'balanced');
+      showToast('AI generated · template: ' + aiResult.templateName);
     } else {
       // Fallback: template fill mode
       const templates = CATEGORIES[selectedCategory];
