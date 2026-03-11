@@ -8,124 +8,254 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;background:#f4efe9;color:#1a1a1a;overflow-x:hidden}
-
-.slide{width:1440px;height:900px;position:relative;display:flex;flex-direction:column;padding:48px 64px}
+.slide{width:1440px;height:900px;position:relative;display:flex;flex-direction:column;padding:48px 64px;page-break-after:always}
 
 /* Top bar */
 .top{display:flex;justify-content:space-between;align-items:center}
-.brand{font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#1a1a1a}
-.top-right{display:flex;align-items:center;gap:10px}
-.dot-orange{width:8px;height:8px;border-radius:50%;background:#e85d26}
-.top-date{font-size:13px;color:#999}
+.brand{font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+.top-r{display:flex;align-items:center;gap:10px}
+.dot-o{width:8px;height:8px;border-radius:50%;background:#e85d26}
+.top-d{font-size:13px;color:#999}
 
-/* Center hero */
-.hero{flex:1;display:flex;flex-direction:column;justify-content:center}
-.hero-tag{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-.hero-line{width:28px;height:2px;background:#e85d26}
-.hero-tag-text{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#999}
-.hero-title{font-family:'Playfair Display',Georgia,serif;font-size:128px;font-weight:800;line-height:.92;letter-spacing:-3px;color:#1a1a1a}
-.hero-title .accent{color:#e85d26}
+/* Section tag */
+.stag{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sline{width:28px;height:2px;background:#e85d26}
+.stag-t{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#999}
 
-/* Bottom */
-.bottom{display:flex;justify-content:space-between;align-items:flex-end}
-.author{font-size:14px;font-weight:600;color:#1a1a1a}
-.author-role{font-size:13px;font-weight:400;color:#999;margin-top:2px}
+/* Typography */
+.serif{font-family:'Playfair Display',Georgia,serif}
+.h1{font-size:128px;font-weight:800;line-height:.92;letter-spacing:-3px}
+.h2{font-size:56px;font-weight:800;line-height:1;letter-spacing:-1px;margin-bottom:24px}
+.h3{font-size:36px;font-weight:700;line-height:1.1;letter-spacing:-0.5px;margin-bottom:20px}
+.accent{color:#e85d26}
+.body{font-size:15px;line-height:1.7;color:#666;max-width:720px}
+.btm{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto}
+.author{font-size:14px;font-weight:600}
+.role{font-size:13px;color:#999;margin-top:2px}
 .pill{display:inline-flex;align-items:center;gap:8px;background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:10px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.pg{font-size:12px;color:#bbb;letter-spacing:.05em}
+
+/* Lists */
+.list{display:flex;flex-direction:column;gap:16px}
+.li{display:flex;align-items:center;gap:14px;font-size:16px;font-weight:500}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.d-o{background:#e85d26}
+.d-gn{background:#5a9a6e}
+.d-rd{background:#c0392b}
+.d-gy{background:#ccc}
+.muted{color:#999}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1}
+.card{background:#ebe6df;border-radius:16px;padding:32px;display:flex;flex-direction:column}
+.card-t{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#e85d26;margin-bottom:8px}
+.card-v{font-size:40px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+.card-b{font-size:14px;color:#888;line-height:1.6}
+
+/* Progress bars */
+.prow{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.plbl{font-size:14px;font-weight:600;width:180px}
+.pbar{flex:1;height:8px;background:#e0dbd4;border-radius:4px;overflow:hidden}
+.pfill{height:100%;border-radius:4px;background:#e85d26}
+.ppct{font-size:13px;font-weight:600;color:#999;width:48px;text-align:right}
+
+/* Quote */
+.quote{font-size:24px;font-weight:500;line-height:1.5;border-left:3px solid #e85d26;padding-left:24px;margin:20px 0;max-width:640px;color:#444}
+
+/* HR */
+.hr{height:1px;background:#e0dbd4;margin:20px 0}
+
+/* Center layout */
+.center{flex:1;display:flex;flex-direction:column;justify-content:center}
+
+/* Numbers row */
+.nums{display:flex;gap:80px;margin-top:24px}
+.num-v{font-size:96px;font-weight:800;line-height:1;letter-spacing:-3px}
+.num-l{font-size:13px;color:#999;margin-top:8px;letter-spacing:.05em}
 </style>
 </head>
 <body>
-<!-- Cover slide -->
+
+<!-- 01 Cover -->
 <div class="slide">
-  <div class="top">
-    <div class="brand">Copilot Mac</div>
-    <div class="top-right">
-      <span class="dot-orange"></span>
-      <span class="top-date">{{date}}</span>
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div class="center">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Weekly Update</span></div>
+    <div class="h1 serif">Status<br><span class="accent">Report</span></div>
+  </div>
+  <div class="btm"><div><div class="author">{{author}}</div><div class="role">{{role}}</div></div><div class="pill">C2 Pre-Planning</div></div>
+</div>
+
+<!-- 02 Summary -->
+<div class="slide">
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div class="center">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Summary</span></div>
+    <div class="h2 serif">Strong momentum across<br>all <span class="accent">workstreams</span></div>
+    <div class="body" style="margin-bottom:24px">The team shipped authentication and dashboard redesign while resolving three critical blockers impeding velocity.</div>
+    <div class="hr"></div>
+    <div class="list">
+      <div class="li"><span class="dot d-gn"></span>Authentication — shipped to production</div>
+      <div class="li"><span class="dot d-gn"></span>Dashboard redesign — live for all users</div>
+      <div class="li"><span class="dot d-o"></span>API integration — 70% complete</div>
+      <div class="li muted"><span class="dot d-gy"></span>Performance sprint — next week</div>
     </div>
   </div>
-  <div class="hero">
-    <div class="hero-tag">
-      <span class="hero-line"></span>
-      <span class="hero-tag-text">Weekly Update</span>
-    </div>
-    <div class="hero-title">Status<br><span class="accent">Report</span></div>
+  <div class="btm"><div class="author">{{author}}</div><div class="pg">02 / 12</div></div>
+</div>
+
+<!-- 03 Key Metrics -->
+<div class="slide">
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div style="margin-top:32px">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Key Metrics</span></div>
   </div>
-  <div class="bottom">
-    <div>
-      <div class="author">{{author}}</div>
-      <div class="author-role">{{role}}</div>
+  <div class="nums serif">
+    <div><div class="num-v">87<span class="accent">%</span></div><div class="num-l">Sprint Completion</div></div>
+    <div><div class="num-v">12</div><div class="num-l">Features Shipped</div></div>
+    <div><div class="num-v">3</div><div class="num-l">Blockers Resolved</div></div>
+    <div><div class="num-v">5</div><div class="num-l">Days Remaining</div></div>
+  </div>
+  <div class="btm"><div class="author">{{author}}</div><div class="pg">03 / 12</div></div>
+</div>
+
+<!-- 04 Progress I -->
+<div class="slide">
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div class="center">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Progress</span></div>
+    <div class="h3 serif">Feature Delivery</div>
+    <div style="margin-bottom:24px">
+      <div class="prow"><div class="plbl">Authentication</div><div class="pbar"><div class="pfill" style="width:100%"></div></div><div class="ppct">100%</div></div>
+      <div class="prow"><div class="plbl">Dashboard v2</div><div class="pbar"><div class="pfill" style="width:100%"></div></div><div class="ppct">100%</div></div>
+      <div class="prow"><div class="plbl">API Integration</div><div class="pbar"><div class="pfill" style="width:70%"></div></div><div class="ppct">70%</div></div>
+      <div class="prow"><div class="plbl">Performance</div><div class="pbar"><div class="pfill" style="width:20%;background:#c0a060"></div></div><div class="ppct">20%</div></div>
+      <div class="prow"><div class="plbl">Accessibility</div><div class="pbar"><div class="pfill" style="width:45%"></div></div><div class="ppct">45%</div></div>
     </div>
-    <div class="pill">C2 Pre-Planning</div>
+    <div class="body">Auth and Dashboard shipped ahead of schedule, enabling earlier API integration start.</div>
+  </div>
+  <div class="btm"><div class="author">{{author}}</div><div class="pg">04 / 12</div></div>
+</div>
+
+<!-- 05 Progress II -->
+<div class="slide">
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div class="center">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Progress — Deep Dive</span></div>
+    <div class="h3 serif">API Integration</div>
+    <div class="body" style="margin-bottom:24px">Partner API integration progressing steadily with endpoint mapping, auth exchange, and initial sync testing.</div>
+    <div class="list">
+      <div class="li"><span class="dot d-gn"></span>Endpoint mapping — 24 endpoints documented</div>
+      <div class="li"><span class="dot d-gn"></span>OAuth token exchange — tested and working</div>
+      <div class="li"><span class="dot d-o"></span>Data sync — batch processing functional</div>
+      <div class="li muted"><span class="dot d-gy"></span>Real-time webhooks — pending partner</div>
+      <div class="li muted"><span class="dot d-gy"></span>Error handling — next sprint</div>
+    </div>
+  </div>
+  <div class="btm"><div class="author">{{author}}</div><div class="pg">05 / 12</div></div>
+</div>
+
+<!-- 06 Blockers -->
+<div class="slide">
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div class="center">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Blockers &amp; Risks</span></div>
+    <div class="list" style="gap:28px">
+      <div><div class="li" style="margin-bottom:6px"><span class="dot d-rd"></span><strong>Partner API rate limits</strong></div><div class="body" style="margin-left:24px">100 req/min limit. Requested increase pending. Workaround: batch with backoff.</div></div>
+      <div><div class="li" style="margin-bottom:6px"><span class="dot d-o"></span><strong>Design review bottleneck</strong></div><div class="body" style="margin-left:24px">3 PRs awaiting review. Expected clearance by Wednesday.</div></div>
+      <div><div class="li" style="margin-bottom:6px"><span class="dot d-gn"></span><strong style="color:#999">Auth dependency (resolved)</strong></div><div class="body" style="margin-left:24px">Cross-team dependency cleared. No longer blocking.</div></div>
+    </div>
+  </div>
+  <div class="btm"><div class="author">{{author}}</div><div class="pg">06 / 12</div></div>
+</div>
+
+<!-- 07 Newsletter -->
+<div class="slide">
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div class="center">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Newsletter</span></div>
+    <div class="h3 serif">Team Updates</div>
+    <div class="quote serif">"The best interface is no interface — until someone needs to file a bug report."</div>
+    <div class="body">New design systems engineer onboarded. First contributions expected next sprint. Quarterly accessibility audit completed with strong results.</div>
+  </div>
+  <div class="btm"><div class="author">{{author}}</div><div class="pg">07 / 12</div></div>
+</div>
+
+<!-- 08 Design -->
+<div class="slide">
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div style="margin-top:32px">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Design Direction</span></div>
+    <div class="h3 serif">Evolving the <span class="accent">component library</span></div>
+  </div>
+  <div class="cards" style="margin-top:16px">
+    <div class="card"><div class="card-t">Spacing</div><div class="card-b">Migrated to 8pt grid. 40 components updated.</div></div>
+    <div class="card"><div class="card-t">Color</div><div class="card-b">Semantic token layer complete. Dark mode parity at 95%.</div></div>
+    <div class="card"><div class="card-t">Motion</div><div class="card-b">Guidelines drafted. Eng review next week.</div></div>
+    <div class="card"><div class="card-t">Typography</div><div class="card-b">Font scale rationalized. 4 weights, 6 sizes.</div></div>
+  </div>
+  <div class="btm"><div class="author">{{author}}</div><div class="pg">08 / 12</div></div>
+</div>
+
+<!-- 09 Technical -->
+<div class="slide">
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div class="center">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Technical</span></div>
+    <div class="list" style="gap:28px">
+      <div><div class="li" style="margin-bottom:6px"><span class="dot d-o"></span><strong>Lighthouse: 94 → 97</strong></div><div class="body" style="margin-left:24px">Image lazy loading + font-display swap.</div></div>
+      <div><div class="li" style="margin-bottom:6px"><span class="dot d-o"></span><strong>Bundle −18%</strong></div><div class="body" style="margin-left:24px">Tree-shaking unused design system components.</div></div>
+      <div><div class="li" style="margin-bottom:6px"><span class="dot d-o"></span><strong>CI: 12min → 7min</strong></div><div class="body" style="margin-left:24px">Parallelized tests + build caching.</div></div>
+    </div>
+  </div>
+  <div class="btm"><div class="author">{{author}}</div><div class="pg">09 / 12</div></div>
+</div>
+
+<!-- 10 Others -->
+<div class="slide">
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div class="center">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Others</span></div>
+    <div class="list" style="gap:18px">
+      <div class="li"><span class="dot d-o"></span>Team offsite March 28 — agenda TBD</div>
+      <div class="li"><span class="dot d-o"></span>OKR review — draft ready</div>
+      <div class="li"><span class="dot d-o"></span>Documentation — 8 new wiki pages</div>
+      <div class="li muted"><span class="dot d-gy"></span>Vendor renewal — legal review</div>
+    </div>
+  </div>
+  <div class="btm"><div class="author">{{author}}</div><div class="pg">10 / 12</div></div>
+</div>
+
+<!-- 11 Top of Mind -->
+<div class="slide">
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div class="center">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Top of Mind</span></div>
+    <div class="h2 serif">How do we scale<br>without losing <span class="accent">craft</span>?</div>
+    <div class="body">Proposing automated lint for tokens + human review for interactions. Keep velocity high, protect the details that matter.</div>
+  </div>
+  <div class="btm"><div class="author">{{author}}</div><div class="pg">11 / 12</div></div>
+</div>
+
+<!-- 12 Next Steps -->
+<div class="slide">
+  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dot-o"></span><span class="top-d">{{date}}</span></div></div>
+  <div class="center">
+    <div class="stag"><span class="sline"></span><span class="stag-t">Next Steps</span></div>
+    <div class="h3 serif">Coming up next week</div>
+    <div class="list" style="gap:16px">
+      <div class="li"><span class="dot d-o"></span>Complete API integration — 100% endpoints</div>
+      <div class="li"><span class="dot d-o"></span>Performance optimization sprint</div>
+      <div class="li"><span class="dot d-o"></span>Finalize motion guidelines</div>
+      <div class="li"><span class="dot d-o"></span>Webhook integration kickoff</div>
+      <div class="li"><span class="dot d-o"></span>OKR review presentation</div>
+    </div>
+  </div>
+  <div class="btm">
+    <div><div class="author">{{author}}</div><div class="role">{{role}}</div></div>
+    <div class="pill">Thank you</div>
   </div>
 </div>
 
-<!-- Progress slide -->
-<div class="slide" style="border-top:1px solid #e0dbd4">
-  <div class="top">
-    <div class="brand">Copilot Mac</div>
-    <div class="top-right">
-      <span class="dot-orange"></span>
-      <span class="top-date">{{date}}</span>
-    </div>
-  </div>
-  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-    <div class="hero-tag" style="margin-bottom:16px">
-      <span class="hero-line"></span>
-      <span class="hero-tag-text">Progress</span>
-    </div>
-    <div style="font-family:'Playfair Display',serif;font-size:56px;font-weight:800;letter-spacing:-1px;margin-bottom:48px">What We Shipped</div>
-    <div style="display:flex;flex-direction:column;gap:24px;max-width:720px">
-      <div style="display:flex;align-items:center;gap:14px;font-size:16px;font-weight:500">
-        <span style="width:10px;height:10px;border-radius:50%;background:#e85d26;flex-shrink:0"></span>
-        User authentication flow completed
-      </div>
-      <div style="display:flex;align-items:center;gap:14px;font-size:16px;font-weight:500">
-        <span style="width:10px;height:10px;border-radius:50%;background:#e85d26;flex-shrink:0"></span>
-        Dashboard redesign shipped to production
-      </div>
-      <div style="display:flex;align-items:center;gap:14px;font-size:16px;font-weight:500;color:#999">
-        <span style="width:10px;height:10px;border-radius:50%;background:#ccc;flex-shrink:0"></span>
-        API integration with partner services — in progress
-      </div>
-    </div>
-  </div>
-  <div class="bottom">
-    <div class="author">{{author}}</div>
-  </div>
-</div>
-
-<!-- Numbers slide -->
-<div class="slide" style="border-top:1px solid #e0dbd4">
-  <div class="top">
-    <div class="brand">Copilot Mac</div>
-    <div class="top-right">
-      <span class="dot-orange"></span>
-      <span class="top-date">{{date}}</span>
-    </div>
-  </div>
-  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-    <div class="hero-tag" style="margin-bottom:16px">
-      <span class="hero-line"></span>
-      <span class="hero-tag-text">By The Numbers</span>
-    </div>
-    <div style="display:flex;gap:80px;margin-top:24px">
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:96px;font-weight:800;line-height:1;letter-spacing:-3px">87<span style="color:#e85d26">%</span></div>
-        <div style="font-size:13px;color:#999;margin-top:8px;letter-spacing:.05em">Sprint Completion</div>
-      </div>
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:96px;font-weight:800;line-height:1;letter-spacing:-3px">12</div>
-        <div style="font-size:13px;color:#999;margin-top:8px;letter-spacing:.05em">Features Shipped</div>
-      </div>
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:96px;font-weight:800;line-height:1;letter-spacing:-3px">5</div>
-        <div style="font-size:13px;color:#999;margin-top:8px;letter-spacing:.05em">Days Remaining</div>
-      </div>
-    </div>
-  </div>
-  <div class="bottom">
-    <div class="author">{{author}}</div>
-  </div>
-</div>
 </body>
 </html>
