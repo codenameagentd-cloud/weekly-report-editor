@@ -5,156 +5,102 @@
 <meta name="viewport" content="width=1440">
 <title>Weekly Status — Apple</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1d1d1f;overflow-x:hidden}
+body{font-family:-apple-system,'SF Pro Display','Inter',system-ui,sans-serif;background:#fff;color:#1d1d1f;overflow-x:hidden}
 
-.slide{width:1440px;min-height:900px;position:relative;display:flex}
+.slide{width:1440px;height:900px;position:relative;display:flex}
 
-/* Sidebar */
-.sidebar{width:160px;padding:48px 0 48px 48px;display:flex;flex-direction:column;gap:12px}
-.sidebar .nav-item{font-size:13px;color:#86868b;cursor:pointer;transition:color .2s}
+/* Left sidebar */
+.sidebar{width:200px;padding:56px 0 56px 56px;display:flex;flex-direction:column;gap:6px;border-right:1px solid #f0f0f0}
+.sidebar .label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#86868b;margin-bottom:12px}
+.sidebar .nav-item{font-size:14px;font-weight:500;color:#86868b;padding:8px 0;cursor:pointer;transition:color .15s}
 .sidebar .nav-item.active{color:#0071e3;font-weight:600}
+.sidebar .nav-item .num{font-size:12px;color:#c0c0c0;margin-right:8px;font-weight:400}
+.sidebar .nav-item.active .num{color:#0071e3}
 
-/* Main */
-.main{flex:1;padding:48px 60px 48px 40px;display:flex;flex-direction:column}
+/* Main content */
+.main{flex:1;padding:56px 64px;display:flex;flex-direction:column}
 
-/* Header row */
-.header-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.page-num{font-size:13px;color:#86868b;letter-spacing:.02em}
-.meta{text-align:right;font-size:13px;color:#86868b;line-height:1.6}
+/* Top bar */
+.top-bar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px}
+.page-indicator{font-size:12px;font-weight:600;color:#86868b;letter-spacing:.05em}
+.meta-block{text-align:right}
+.meta-name{font-size:14px;font-weight:600;color:#1d1d1f}
+.meta-role{font-size:13px;color:#86868b;margin-top:2px}
+.meta-date{font-size:13px;color:#86868b;margin-top:2px}
 
-.title{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:48px}
+/* Section label */
+.section-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1d1d1f;margin-bottom:56px}
 
-/* Hero stat */
-.hero-stat{margin-bottom:8px}
-.hero-number{font-size:160px;font-weight:700;line-height:.9;letter-spacing:-6px}
-.hero-number .accent{color:#0071e3}
-.hero-label{font-size:15px;color:#86868b;margin-top:12px;letter-spacing:.02em}
+/* Hero number */
+.hero-block{margin-bottom:12px}
+.hero-number{font-size:172px;font-weight:700;line-height:.85;letter-spacing:-8px;color:#1d1d1f}
+.hero-number .unit{color:#0071e3}
+.hero-caption{font-size:14px;font-weight:500;color:#86868b;margin-top:16px;letter-spacing:.02em}
 
 /* Stats row */
-.stats-row{display:flex;gap:60px;margin:48px 0;padding-top:12px}
-.stat{display:flex;flex-direction:column}
-.stat-value{font-size:72px;font-weight:700;line-height:1;letter-spacing:-2px}
-.stat-label{font-size:11px;color:#86868b;text-transform:uppercase;letter-spacing:.1em;margin-top:8px}
+.stats-row{display:flex;gap:72px;margin:48px 0;padding-top:0}
+.stat-item{}
+.stat-val{font-size:56px;font-weight:700;line-height:1;letter-spacing:-2px;color:#1d1d1f}
+.stat-label{font-size:10px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:.12em;margin-top:8px}
 
 /* Divider */
-.divider{width:100%;height:1px;background:linear-gradient(90deg,#d2d2d7 0%,#d2d2d7 60%,transparent 100%);margin:12px 0 36px}
+.hr{height:1px;background:#e8e8e8;margin:0 0 28px}
 
-/* Items */
-.items{display:flex;flex-direction:column;gap:16px}
-.item{display:flex;align-items:center;gap:12px;font-size:15px;font-weight:500}
-.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+/* List */
+.list{display:flex;flex-direction:column;gap:14px}
+.list-item{display:flex;align-items:center;gap:12px;font-size:15px;font-weight:500;color:#1d1d1f}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .dot.blue{background:#0071e3}
-.dot.gray{background:#86868b}
-.dot.light{background:#d2d2d7}
+.dot.green{background:#34c759}
+.dot.gray{background:#d1d1d6}
+.list-item.muted{color:#86868b}
 </style>
 </head>
 <body>
-<div class="slide" id="slide-overview">
+<div class="slide">
   <div class="sidebar">
-    <div class="nav-item active" data-section="overview">01 Overview</div>
-    <div class="nav-item" data-section="progress">02 Progress</div>
-    <div class="nav-item" data-section="blockers">03 Blockers</div>
-    <div class="nav-item" data-section="next">04 Next Steps</div>
+    <div class="label">Navigation</div>
+    <div class="nav-item active"><span class="num">01</span>Overview</div>
+    <div class="nav-item"><span class="num">02</span>Progress</div>
+    <div class="nav-item"><span class="num">03</span>Blockers</div>
+    <div class="nav-item"><span class="num">04</span>Next Steps</div>
   </div>
   <div class="main">
-    <div class="header-row">
-      <span class="page-num">01 / 04</span>
-      <div class="meta">
-        <div style="font-weight:600;color:#1d1d1f">{{author}}</div>
-        <div>{{role}}</div>
-        <div>{{date}}</div>
+    <div class="top-bar">
+      <div class="page-indicator">01 / 04</div>
+      <div class="meta-block">
+        <div class="meta-name">{{author}}</div>
+        <div class="meta-role">{{role}}</div>
+        <div class="meta-date">{{date}}</div>
       </div>
     </div>
-    <div class="title">WEEKLY STATUS UPDATE</div>
-    <div class="hero-stat">
-      <div class="hero-number">87<span class="accent">%</span></div>
-      <div class="hero-label">Sprint Completion Rate</div>
+    <div class="section-title">WEEKLY STATUS UPDATE</div>
+    <div class="hero-block">
+      <div class="hero-number">87<span class="unit">%</span></div>
+      <div class="hero-caption">Sprint Completion Rate</div>
     </div>
     <div class="stats-row">
-      <div class="stat"><span class="stat-value">12</span><span class="stat-label">Features Shipped</span></div>
-      <div class="stat"><span class="stat-value">3</span><span class="stat-label">Blockers Resolved</span></div>
-      <div class="stat"><span class="stat-value">5</span><span class="stat-label">Days to Deadline</span></div>
-    </div>
-    <div class="divider"></div>
-    <div class="items">
-      <div class="item"><span class="dot blue"></span>User authentication flow completed</div>
-      <div class="item"><span class="dot blue"></span>Dashboard redesign shipped to production</div>
-      <div class="item"><span class="dot gray"></span>API integration with partner services</div>
-      <div class="item"><span class="dot light"></span>Performance optimization sprint</div>
-    </div>
-  </div>
-</div>
-
-<!-- Progress slide -->
-<div class="slide" id="slide-progress" style="border-top:1px solid #f5f5f7">
-  <div class="sidebar">
-    <div class="nav-item" data-section="overview">01 Overview</div>
-    <div class="nav-item active" data-section="progress">02 Progress</div>
-    <div class="nav-item" data-section="blockers">03 Blockers</div>
-    <div class="nav-item" data-section="next">04 Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="header-row">
-      <span class="page-num">02 / 04</span>
-      <div class="meta">
-        <div style="font-weight:600;color:#1d1d1f">{{author}}</div>
-        <div>{{role}}</div>
-        <div>{{date}}</div>
+      <div class="stat-item">
+        <div class="stat-val">12</div>
+        <div class="stat-label">Features Shipped</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">3</div>
+        <div class="stat-label">Blockers Resolved</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">5</div>
+        <div class="stat-label">Days to Deadline</div>
       </div>
     </div>
-    <div class="title">PROGRESS STATUS</div>
-    <div class="items" style="gap:24px">
-      <div class="item"><span class="dot blue"></span><div><strong>{{progress_placeholder}}</strong></div></div>
-    </div>
-  </div>
-</div>
-
-<!-- Blockers slide -->
-<div class="slide" id="slide-blockers" style="border-top:1px solid #f5f5f7">
-  <div class="sidebar">
-    <div class="nav-item" data-section="overview">01 Overview</div>
-    <div class="nav-item" data-section="progress">02 Progress</div>
-    <div class="nav-item active" data-section="blockers">03 Blockers</div>
-    <div class="nav-item" data-section="next">04 Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="header-row">
-      <span class="page-num">03 / 04</span>
-      <div class="meta">
-        <div style="font-weight:600;color:#1d1d1f">{{author}}</div>
-        <div>{{role}}</div>
-        <div>{{date}}</div>
-      </div>
-    </div>
-    <div class="title">BLOCKERS &amp; RISKS</div>
-    <div class="items" style="gap:24px">
-      <div class="item"><span class="dot" style="background:#ff3b30"></span><div><strong>{{others_placeholder}}</strong></div></div>
-    </div>
-  </div>
-</div>
-
-<!-- Next Steps slide -->
-<div class="slide" id="slide-next" style="border-top:1px solid #f5f5f7">
-  <div class="sidebar">
-    <div class="nav-item" data-section="overview">01 Overview</div>
-    <div class="nav-item" data-section="progress">02 Progress</div>
-    <div class="nav-item" data-section="blockers">03 Blockers</div>
-    <div class="nav-item active" data-section="next">04 Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="header-row">
-      <span class="page-num">04 / 04</span>
-      <div class="meta">
-        <div style="font-weight:600;color:#1d1d1f">{{author}}</div>
-        <div>{{role}}</div>
-        <div>{{date}}</div>
-      </div>
-    </div>
-    <div class="title">NEXT STEPS</div>
-    <div class="items" style="gap:24px">
-      <div class="item"><span class="dot blue"></span><div><strong>{{topofmind_placeholder}}</strong></div></div>
+    <div class="hr"></div>
+    <div class="list">
+      <div class="list-item"><span class="dot green"></span>User authentication flow completed</div>
+      <div class="list-item"><span class="dot blue"></span>Dashboard redesign shipped to production</div>
+      <div class="list-item muted"><span class="dot gray"></span>API integration with partner services</div>
+      <div class="list-item muted"><span class="dot gray"></span>Performance optimization sprint</div>
     </div>
   </div>
 </div>

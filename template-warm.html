@@ -5,75 +5,125 @@
 <meta name="viewport" content="width=1440">
 <title>Weekly Status — Warm</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',system-ui,sans-serif;background:#f5f0eb;color:#1a1a1a;overflow-x:hidden}
+body{font-family:'Inter',system-ui,sans-serif;background:#f4efe9;color:#1a1a1a;overflow-x:hidden}
 
-.slide{width:1440px;min-height:900px;position:relative;display:flex;flex-direction:column;padding:48px 60px}
+.slide{width:1440px;height:900px;position:relative;display:flex;flex-direction:column;padding:48px 64px}
 
-/* Header */
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:auto}
-.brand{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-.date-badge{display:flex;align-items:center;gap:8px;font-size:13px;color:#86868b}
-.date-dot{width:8px;height:8px;border-radius:50%;background:#e85d26}
+/* Top bar */
+.top{display:flex;justify-content:space-between;align-items:center}
+.brand{font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#1a1a1a}
+.top-right{display:flex;align-items:center;gap:10px}
+.dot-orange{width:8px;height:8px;border-radius:50%;background:#e85d26}
+.top-date{font-size:13px;color:#999}
 
-/* Hero */
-.hero{margin-top:auto;margin-bottom:auto}
-.hero-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#86868b;margin-bottom:16px}
-.hero-label .line{width:24px;height:2px;background:#e85d26}
-.hero-title{font-family:'DM Serif Display',serif;font-size:120px;font-weight:400;line-height:.95;letter-spacing:-2px}
+/* Center hero */
+.hero{flex:1;display:flex;flex-direction:column;justify-content:center}
+.hero-tag{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.hero-line{width:28px;height:2px;background:#e85d26}
+.hero-tag-text{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#999}
+.hero-title{font-family:'Playfair Display',Georgia,serif;font-size:128px;font-weight:800;line-height:.92;letter-spacing:-3px;color:#1a1a1a}
 .hero-title .accent{color:#e85d26}
 
-/* Footer */
-.footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto}
-.author{font-size:14px;font-weight:600}
-.nav-hint{display:flex;align-items:center;gap:8px;background:#1a1a1a;color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
-.nav-key{background:#333;padding:2px 8px;border-radius:4px;font-size:11px}
+/* Bottom */
+.bottom{display:flex;justify-content:space-between;align-items:flex-end}
+.author{font-size:14px;font-weight:600;color:#1a1a1a}
+.author-role{font-size:13px;font-weight:400;color:#999;margin-top:2px}
+.pill{display:inline-flex;align-items:center;gap:8px;background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:10px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
 </style>
 </head>
 <body>
+<!-- Cover slide -->
 <div class="slide">
-  <div class="header">
+  <div class="top">
     <div class="brand">Copilot Mac</div>
-    <div class="date-badge"><span class="date-dot"></span>{{date}}</div>
+    <div class="top-right">
+      <span class="dot-orange"></span>
+      <span class="top-date">{{date}}</span>
+    </div>
   </div>
   <div class="hero">
-    <div class="hero-label"><span class="line"></span>Weekly Update</div>
+    <div class="hero-tag">
+      <span class="hero-line"></span>
+      <span class="hero-tag-text">Weekly Update</span>
+    </div>
     <div class="hero-title">Status<br><span class="accent">Report</span></div>
   </div>
-  <div class="footer">
-    <div class="author">{{author}}</div>
-    <div class="nav-hint">
-      <span>C2 Pre-Planning</span>
+  <div class="bottom">
+    <div>
+      <div class="author">{{author}}</div>
+      <div class="author-role">{{role}}</div>
     </div>
+    <div class="pill">C2 Pre-Planning</div>
   </div>
 </div>
 
 <!-- Progress slide -->
-<div class="slide" style="border-top:1px solid #e0dbd5">
-  <div class="header">
+<div class="slide" style="border-top:1px solid #e0dbd4">
+  <div class="top">
     <div class="brand">Copilot Mac</div>
-    <div class="date-badge"><span class="date-dot"></span>{{date}}</div>
+    <div class="top-right">
+      <span class="dot-orange"></span>
+      <span class="top-date">{{date}}</span>
+    </div>
   </div>
-  <div style="margin-top:80px">
-    <div class="hero-label"><span class="line"></span>Progress Status</div>
-    <div style="font-family:'DM Serif Display',serif;font-size:48px;margin-bottom:40px;letter-spacing:-1px">What We Shipped</div>
-    <div style="display:flex;flex-direction:column;gap:20px;max-width:720px">
-      <div style="display:flex;align-items:center;gap:12px;font-size:16px;font-weight:500">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="hero-tag" style="margin-bottom:16px">
+      <span class="hero-line"></span>
+      <span class="hero-tag-text">Progress</span>
+    </div>
+    <div style="font-family:'Playfair Display',serif;font-size:56px;font-weight:800;letter-spacing:-1px;margin-bottom:48px">What We Shipped</div>
+    <div style="display:flex;flex-direction:column;gap:24px;max-width:720px">
+      <div style="display:flex;align-items:center;gap:14px;font-size:16px;font-weight:500">
         <span style="width:10px;height:10px;border-radius:50%;background:#e85d26;flex-shrink:0"></span>
         User authentication flow completed
       </div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:16px;font-weight:500">
+      <div style="display:flex;align-items:center;gap:14px;font-size:16px;font-weight:500">
         <span style="width:10px;height:10px;border-radius:50%;background:#e85d26;flex-shrink:0"></span>
         Dashboard redesign shipped to production
       </div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:16px;font-weight:500;color:#86868b">
+      <div style="display:flex;align-items:center;gap:14px;font-size:16px;font-weight:500;color:#999">
         <span style="width:10px;height:10px;border-radius:50%;background:#ccc;flex-shrink:0"></span>
-        API integration with partner services
+        API integration with partner services — in progress
       </div>
     </div>
   </div>
-  <div class="footer">
+  <div class="bottom">
+    <div class="author">{{author}}</div>
+  </div>
+</div>
+
+<!-- Numbers slide -->
+<div class="slide" style="border-top:1px solid #e0dbd4">
+  <div class="top">
+    <div class="brand">Copilot Mac</div>
+    <div class="top-right">
+      <span class="dot-orange"></span>
+      <span class="top-date">{{date}}</span>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="hero-tag" style="margin-bottom:16px">
+      <span class="hero-line"></span>
+      <span class="hero-tag-text">By The Numbers</span>
+    </div>
+    <div style="display:flex;gap:80px;margin-top:24px">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:96px;font-weight:800;line-height:1;letter-spacing:-3px">87<span style="color:#e85d26">%</span></div>
+        <div style="font-size:13px;color:#999;margin-top:8px;letter-spacing:.05em">Sprint Completion</div>
+      </div>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:96px;font-weight:800;line-height:1;letter-spacing:-3px">12</div>
+        <div style="font-size:13px;color:#999;margin-top:8px;letter-spacing:.05em">Features Shipped</div>
+      </div>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:96px;font-weight:800;line-height:1;letter-spacing:-3px">5</div>
+        <div style="font-size:13px;color:#999;margin-top:8px;letter-spacing:.05em">Days Remaining</div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom">
     <div class="author">{{author}}</div>
   </div>
 </div>

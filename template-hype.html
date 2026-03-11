@@ -7,98 +7,91 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',system-ui,sans-serif;background:#141414;color:#fff;overflow-x:hidden}
+body{font-family:'Inter',system-ui,sans-serif;background:#0e0e0e;color:#fff;overflow-x:hidden}
 
-.slide{width:1440px;height:900px;position:relative;display:flex;flex-direction:column}
+.slide{width:1440px;height:900px;position:relative;display:flex;flex-direction:column;overflow:hidden}
 
-/* Background watermark */
-.slide::before{
-  content:'STATUS';
-  position:absolute;
-  top:50%;left:20%;
-  transform:translate(-50%,-50%);
-  font-family:'Bebas Neue',sans-serif;
-  font-size:320px;
-  color:rgba(255,255,255,.03);
-  letter-spacing:20px;
+/* Subtle grain */
+.slide::after{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
   pointer-events:none;
-  white-space:nowrap;
 }
 
-/* Nav */
-.nav{display:flex;justify-content:space-between;align-items:center;padding:36px 60px;position:relative;z-index:1}
-.nav-brand{font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
-.nav-links{display:flex;gap:32px}
-.nav-link{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#666;transition:color .2s}
+/* Top nav */
+.nav{display:flex;justify-content:space-between;align-items:center;padding:32px 56px;position:relative;z-index:1}
+.nav-left{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#fff}
+.nav-right{display:flex;gap:28px}
+.nav-link{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#555}
 .nav-link.active{color:#fff}
 
-/* Body */
-.body{flex:1;display:flex;padding:0 60px 48px;position:relative;z-index:1}
+/* Content */
+.content{flex:1;display:flex;padding:0 56px 48px;position:relative;z-index:1;align-items:stretch}
 
-/* Left — hero text */
-.hero-left{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:0}
-.sprint-label{font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#ff2d55;margin-bottom:16px}
-.hero-title{font-family:'Bebas Neue',sans-serif;font-size:180px;line-height:.85;letter-spacing:2px;text-transform:uppercase}
-.hero-title .accent{color:#ff2d55}
-.hero-desc{font-size:15px;color:#888;line-height:1.7;max-width:440px;margin-top:28px}
-.footer-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto;padding-top:48px}
-.footer-text{font-size:11px;color:#555;letter-spacing:.1em;text-transform:uppercase}
+/* Left */
+.left{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-right:60px}
+.tag{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#ff2d55;margin-bottom:20px}
+.big-text{font-family:'Bebas Neue',Impact,sans-serif;font-size:200px;line-height:.82;letter-spacing:3px;text-transform:uppercase;color:#fff}
+.big-text .pink{color:#ff2d55}
+.sub{font-size:14px;color:#777;line-height:1.7;max-width:400px;margin-top:24px}
+.bottom{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px}
+.bottom-text{font-size:10px;color:#444;letter-spacing:.12em;text-transform:uppercase}
 
-/* Right — stats card */
-.hero-right{width:420px;display:flex;flex-direction:column;justify-content:center;padding-left:40px}
-.stats-card{background:#1c1c1c;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:44px 40px;display:flex;flex-direction:column}
-.big-stat{text-align:center;margin-bottom:4px}
-.big-num{font-family:'Bebas Neue',sans-serif;font-size:120px;line-height:1;letter-spacing:2px}
-.big-num .pct{font-size:60px;color:#ff2d55}
-.big-label{font-size:11px;color:#888;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-bottom:28px}
-.mini-divider{height:1px;background:rgba(255,255,255,.08);margin:0 0 28px}
-.stats-trio{display:flex;justify-content:space-around;margin-bottom:32px}
-.mini-stat{text-align:center}
-.mini-val{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:1px;line-height:1}
-.mini-label{font-size:10px;color:#888;letter-spacing:.15em;text-transform:uppercase;margin-top:6px}
-.card-items{display:flex;flex-direction:column;gap:20px}
-.card-item{display:flex;align-items:center;gap:16px;font-size:14px;font-weight:500}
-.line{width:24px;height:2px;border-radius:1px;flex-shrink:0}
-.line.pink{background:#ff2d55}
-.line.gray{background:#444}
+/* Right card */
+.right{width:400px;display:flex;align-items:center}
+.card{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:48px 40px;backdrop-filter:blur(20px)}
+.card-hero{text-align:center;margin-bottom:8px}
+.card-num{font-family:'Bebas Neue',Impact,sans-serif;font-size:112px;line-height:1;letter-spacing:2px}
+.card-num .pk{font-size:56px;color:#ff2d55}
+.card-label{font-size:10px;color:#777;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-bottom:32px}
+.card-hr{height:1px;background:rgba(255,255,255,.07);margin-bottom:28px}
+.trio{display:flex;justify-content:space-between;margin-bottom:32px}
+.trio-item{text-align:center}
+.trio-val{font-family:'Bebas Neue',Impact,sans-serif;font-size:44px;line-height:1;letter-spacing:1px}
+.trio-label{font-size:9px;color:#777;letter-spacing:.18em;text-transform:uppercase;margin-top:6px}
+.items{display:flex;flex-direction:column;gap:18px}
+.item{display:flex;align-items:center;gap:14px;font-size:14px;font-weight:500}
+.bar{width:20px;height:2px;border-radius:1px;flex-shrink:0}
+.bar.pk{background:#ff2d55}
+.bar.dk{background:#333}
 </style>
 </head>
 <body>
 <div class="slide">
   <div class="nav">
-    <div class="nav-brand">Design Team</div>
-    <div class="nav-links">
+    <div class="nav-left">Design Team</div>
+    <div class="nav-right">
       <span class="nav-link active">Overview</span>
       <span class="nav-link">Progress</span>
       <span class="nav-link">Blockers</span>
       <span class="nav-link">Next</span>
     </div>
   </div>
-  <div class="body">
-    <div class="hero-left">
-      <div class="sprint-label">Sprint 14 — Week 11</div>
-      <div class="hero-title">Weekly<br><span class="accent">Update</span></div>
-      <div class="hero-desc">Progress report on current sprint milestones. Key features shipped, blockers resolved, and trajectory toward our deadline.</div>
-      <div class="footer-row">
-        <span class="footer-text">{{author}} — {{role}}</span>
-        <span class="footer-text">{{date}}</span>
+  <div class="content">
+    <div class="left">
+      <div class="tag">Sprint 14 — Week 11</div>
+      <div class="big-text">Weekly<br><span class="pink">Update</span></div>
+      <div class="sub">Progress report on current sprint milestones. Key features shipped, blockers resolved, and trajectory toward deadline.</div>
+      <div class="bottom">
+        <span class="bottom-text">{{author}} · {{role}}</span>
+        <span class="bottom-text">{{date}}</span>
       </div>
     </div>
-    <div class="hero-right">
-      <div class="stats-card">
-        <div class="big-stat"><span class="big-num">87<span class="pct">%</span></span></div>
-        <div class="big-label">Sprint Completion</div>
-        <div class="mini-divider"></div>
-        <div class="stats-trio">
-          <div class="mini-stat"><div class="mini-val">12</div><div class="mini-label">Shipped</div></div>
-          <div class="mini-stat"><div class="mini-val">3</div><div class="mini-label">Resolved</div></div>
-          <div class="mini-stat"><div class="mini-val">5</div><div class="mini-label">Days Left</div></div>
+    <div class="right">
+      <div class="card">
+        <div class="card-hero"><span class="card-num">87<span class="pk">%</span></span></div>
+        <div class="card-label">Sprint Completion</div>
+        <div class="card-hr"></div>
+        <div class="trio">
+          <div class="trio-item"><div class="trio-val">12</div><div class="trio-label">Shipped</div></div>
+          <div class="trio-item"><div class="trio-val">3</div><div class="trio-label">Resolved</div></div>
+          <div class="trio-item"><div class="trio-val">5</div><div class="trio-label">Days Left</div></div>
         </div>
-        <div class="card-items">
-          <div class="card-item"><span class="line pink"></span>Auth flow completed</div>
-          <div class="card-item"><span class="line pink"></span>Dashboard shipped</div>
-          <div class="card-item"><span class="line gray"></span>API integration</div>
-          <div class="card-item"><span class="line gray"></span>Performance sprint</div>
+        <div class="items">
+          <div class="item"><span class="bar pk"></span>Auth flow completed</div>
+          <div class="item"><span class="bar pk"></span>Dashboard shipped</div>
+          <div class="item"><span class="bar dk"></span>API integration</div>
+          <div class="item"><span class="bar dk"></span>Performance sprint</div>
         </div>
       </div>
     </div>
