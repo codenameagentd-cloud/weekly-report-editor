@@ -152,10 +152,7 @@
     <button class="btn-secondary" onclick="preview()">Preview</button>
   </div>
 
-  <label style="display:flex;align-items:center;gap:8px;margin:12px 0;font-size:14px;color:var(--muted);cursor:pointer">
-      <input type="checkbox" id="genUIToggle" style="width:16px;height:16px"> Use AI to generate layout (experimental — requires token)
-    </label>
-    <div class="output" id="output">
+  <div class="output" id="output">
     <h3>Ready</h3>
     <p class="meta" id="outputMeta"></p>
     <div class="output-btns">
@@ -618,6 +615,15 @@ async function generateWithAI(data, category) {
   if (!token) throw new Error('Token required for AI generation');
   
   const style = STYLE_DNA[category];
+  
+  // Load a reference template so AI matches our visual quality
+  const refMap = {dark:'noir',minimal:'swiss',editorial:'magazine',structural:'dashboard',experimental:'brutalist'};
+  let refHTML = '';
+  try {
+    const tpl = await loadTemplate(refMap[category] || 'noir');
+    // Truncate to key CSS+structure, skip repetitive slide content
+    refHTML = tpl.substring(0, Math.min(tpl.length, 12000));
+  } catch(e) { console.warn('Could not load reference template'); }
   const optionalSections = [];
   if (data.newsletter) optionalSections.push('Newsletter: ' + data.newsletter);
   if (data.others) optionalSections.push('Others: ' + data.others);
@@ -642,6 +648,13 @@ ${optionalSections.length ? optionalSections.join('\n\n') : '(No optional sectio
 Generate the complete standalone HTML now.`;
 
   const systemPrompt = `You are a presentation slide generator. Generate a standalone HTML file with scroll-snap slides for a weekly status report.
+
+${refHTML ? `REFERENCE TEMPLATE (match this visual quality, CSS patterns, and structural complexity):
+<reference>
+${refHTML}
+</reference>
+
+Study the reference carefully: its CSS architecture, color usage, typography scale, decorative elements, card layouts, spacing system. Your output must match this level of design craft. Do NOT simplify. Preserve the visual richness.` : ''}
 
 REQUIREMENTS:
 - Standalone HTML with embedded CSS (no external deps except Google Fonts)
@@ -683,7 +696,7 @@ OUTPUT: Only the complete HTML. No markdown fences, no explanation.`;
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      max_tokens: 16000,
+      max_tokens: 32000,
       temperature: 0.7
     })
   });
@@ -713,7 +726,7 @@ async function generate() {
   if (!data) return;
   const btn = document.getElementById('genBtn');
   const token = document.getElementById('aiKey').value.trim() || localStorage.getItem('wr-gh-token');
-  const useAI = document.getElementById('genUIToggle').checked && !!token;
+  const useAI = !!token;
   
   btn.disabled = true;
   btn.textContent = useAI ? 'AI Generating…' : 'Generating…';
