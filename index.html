@@ -616,14 +616,18 @@ async function generateWithAI(data, category) {
   
   const style = STYLE_DNA[category];
   
-  // Load a reference template so AI matches our visual quality
-  const refMap = {dark:'noir',minimal:'swiss',editorial:'magazine',structural:'dashboard',experimental:'brutalist'};
+  // Load ALL templates in this category as references
+  const catTemplates = CATEGORIES[category] || ['noir'];
   let refHTML = '';
   try {
-    const tpl = await loadTemplate(refMap[category] || 'noir');
-    // Truncate to key CSS+structure, skip repetitive slide content
-    refHTML = tpl.substring(0, Math.min(tpl.length, 12000));
-  } catch(e) { console.warn('Could not load reference template'); }
+    const loaded = await Promise.all(catTemplates.map(async name => {
+      try { return {name, html: await loadTemplate(name)}; }
+      catch(e) { return null; }
+    }));
+    const valid = loaded.filter(Boolean);
+    // Include all templates, labeled
+    refHTML = valid.map(t => `=== TEMPLATE: ${t.name} ===\n${t.html}`).join('\n\n');
+  } catch(e) { console.warn('Could not load reference templates'); }
   const optionalSections = [];
   if (data.newsletter) optionalSections.push('Newsletter: ' + data.newsletter);
   if (data.others) optionalSections.push('Others: ' + data.others);
@@ -649,12 +653,17 @@ Generate the complete standalone HTML now.`;
 
   const systemPrompt = `You are a presentation slide generator. Generate a standalone HTML file with scroll-snap slides for a weekly status report.
 
-${refHTML ? `REFERENCE TEMPLATE (match this visual quality, CSS patterns, and structural complexity):
-<reference>
+${refHTML ? `REFERENCE TEMPLATES (you have ${catTemplates.length} templates in the "${style.name}" category — study ALL of them):
+<references>
 ${refHTML}
-</reference>
+</references>
 
-Study the reference carefully: its CSS architecture, color usage, typography scale, decorative elements, card layouts, spacing system. Your output must match this level of design craft. Do NOT simplify. Preserve the visual richness.` : ''}
+CRITICAL: Study every reference template carefully. Each has distinct layout structure, CSS architecture, decorative elements, and visual patterns. Your output MUST:
+- Match the same level of CSS sophistication (gradients, shadows, transforms, pseudo-elements)
+- Use similar structural complexity (grid layouts, card systems, decorative elements)
+- Randomly combine patterns from different references for variety
+- NEVER produce plain/generic HTML — match the Awwwards-level craft shown above
+- Preserve scroll-snap, keyboard navigation, page counters from the references` : ''}
 
 REQUIREMENTS:
 - Standalone HTML with embedded CSS (no external deps except Google Fonts)
