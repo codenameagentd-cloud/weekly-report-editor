@@ -476,7 +476,9 @@ function buildProgressSlide(items, cat) {
 function buildContentSlide(eyebrow, heading, text, cat) {
   const esc = escapeHTML;
   const paras = esc(text).split('\n').filter(p => p.trim());
-  const parasHTML = paras.map(p => `<p class="para">${p}</p>`).join('');
+  const isShort = paras.length <= 2 || text.length < 200;
+  const paraFontSize = isShort ? 'font-size:20px;line-height:1.8' : 'font-size:16px;line-height:1.7';
+  const parasHTML = paras.map(p => `<p class="para" style="${paraFontSize}">${p}</p>`).join('');
   const blockquoteFirst = paras.length > 0 ? paras[0] : '';
   const restParas = paras.slice(1).map(p => `<p class="para">${p}</p>`).join('');
 
