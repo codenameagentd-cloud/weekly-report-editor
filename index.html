@@ -273,6 +273,7 @@ function buildRenderedSlides(data, category) {
 
 function buildCoverSlide(summary, dateStr, cat, itemCount) {
   const esc = escapeHTML(summary);
+  const now = new Date();
   const covers = {
     dark: `<div class="slide slide-cover" data-slide="{IDX}">
       <div class="slide-inner">
