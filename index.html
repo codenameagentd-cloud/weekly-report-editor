@@ -351,20 +351,113 @@ function getWeekNumber() {
 }
 
 function buildProgressSlide(items, cat) {
-  const colors = ['#16A34A','#F97316','#3B82F6','#8B5CF6','#EC4899','#EAB308','#06B6D4','#F43F5E'];
-  const cardsHTML = items.map((item, i) => `
-    <div class="card">
-      <div class="card-indicator" style="background:${colors[i % colors.length]}"></div>
-      <div class="card-label">${escapeHTML(item.title)}</div>
-      <div class="body-text">${escapeHTML(item.desc)}</div>
-    </div>`).join('');
+  const statusIcon = (desc) => {
+    const d = desc.toLowerCase();
+    if (d.includes('✅') || d.includes('shipped') || d.includes('done') || d.includes('completed')) return {icon:'✓', color:'#16A34A', label:'Done'};
+    if (d.includes('🟡') || d.includes('blocked') || d.includes('stuck')) return {icon:'!', color:'#EAB308', label:'Blocked'};
+    if (d.includes('🔵') || d.includes('progress') || d.includes('ongoing')) return {icon:'→', color:'#3B82F6', label:'In Progress'};
+    return {icon:'•', color:'#8B5CF6', label:'Planned'};
+  };
 
+  const layouts = {
+    dark: () => {
+      const cards = items.map(item => {
+        const st = statusIcon(item.title + ' ' + item.desc);
+        return `<div style="background:var(--card);border-radius:12px;padding:28px 32px;border-left:4px solid ${st.color}">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div style="width:28px;height:28px;border-radius:50%;background:${st.color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">${st.icon}</div>
+            <span style="font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:${st.color}">${st.label}</span>
+          </div>
+          <div style="font-family:'Inter',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px">${escapeHTML(item.title)}</div>
+          <div style="font-size:15px;color:var(--muted);line-height:1.6">${escapeHTML(item.desc)}</div>
+        </div>`;
+      }).join('');
+      return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;flex:1;align-content:center">${cards}</div>`;
+    },
+
+    minimal: () => {
+      const rows = items.map(item => {
+        const st = statusIcon(item.title + ' ' + item.desc);
+        return `<div style="display:flex;align-items:baseline;gap:20px;padding:20px 0;border-bottom:1px solid var(--border)">
+          <div style="min-width:90px;display:flex;align-items:center;gap:8px">
+            <div style="width:10px;height:10px;border-radius:50%;background:${st.color}"></div>
+            <span style="font-size:13px;font-weight:600;color:${st.color}">${st.label}</span>
+          </div>
+          <div style="flex:1">
+            <div style="font-family:'Inter',sans-serif;font-size:18px;font-weight:700;margin-bottom:4px">${escapeHTML(item.title)}</div>
+            <div style="font-size:15px;color:var(--muted);line-height:1.5">${escapeHTML(item.desc)}</div>
+          </div>
+        </div>`;
+      }).join('');
+      return `<div style="flex:1;display:flex;flex-direction:column;justify-content:center">${rows}</div>`;
+    },
+
+    editorial: () => {
+      const rows = items.map((item, i) => {
+        const st = statusIcon(item.title + ' ' + item.desc);
+        return `<div style="display:grid;grid-template-columns:48px 1fr;gap:24px;padding:24px 0;${i < items.length-1 ? 'border-bottom:1px solid var(--border)' : ''}">
+          <div style="font-family:Georgia,serif;font-size:36px;font-weight:700;color:var(--accent);line-height:1">${String(i+1).padStart(2,'0')}</div>
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+              <span style="font-family:'Inter',sans-serif;font-size:18px;font-weight:700">${escapeHTML(item.title)}</span>
+              <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;background:${st.color}20;color:${st.color}">${st.label}</span>
+            </div>
+            <div style="font-size:15px;color:var(--muted);line-height:1.6;font-family:Georgia,serif;font-style:italic">${escapeHTML(item.desc)}</div>
+          </div>
+        </div>`;
+      }).join('');
+      return `<div style="flex:1;display:flex;flex-direction:column;justify-content:center;max-width:800px">${rows}</div>`;
+    },
+
+    structural: () => {
+      const done = items.filter(i => statusIcon(i.title+' '+i.desc).label === 'Done').length;
+      const total = items.length;
+      const pct = Math.round((done / total) * 100);
+      const cards = items.map(item => {
+        const st = statusIcon(item.title + ' ' + item.desc);
+        return `<div style="background:var(--card);border-radius:10px;padding:24px;border:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span style="font-family:'Inter',sans-serif;font-size:16px;font-weight:700">${escapeHTML(item.title)}</span>
+            <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;background:${st.color}15;color:${st.color};border:1px solid ${st.color}30">${st.label}</span>
+          </div>
+          <div style="font-size:14px;color:var(--muted);line-height:1.5">${escapeHTML(item.desc)}</div>
+        </div>`;
+      }).join('');
+      return `<div style="display:grid;grid-template-columns:200px 1fr;gap:40px;flex:1;align-items:center">
+        <div style="text-align:center">
+          <div style="font-family:'Inter',sans-serif;font-size:64px;font-weight:900;color:var(--accent)">${pct}%</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:8px">${done}/${total} completed</div>
+          <div style="margin-top:16px;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:var(--accent);border-radius:3px"></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">${cards}</div>
+      </div>`;
+    },
+
+    experimental: () => {
+      const rows = items.map((item, i) => {
+        const st = statusIcon(item.title + ' ' + item.desc);
+        return `<div style="display:flex;gap:24px;align-items:flex-start;padding:20px 0;${i < items.length-1 ? 'border-bottom:2px solid var(--text)' : ''}">
+          <div style="font-size:48px;font-weight:900;line-height:1;font-family:'Inter',sans-serif;color:var(--accent);min-width:60px">${String(i+1).padStart(2,'0')}</div>
+          <div>
+            <div style="font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">${escapeHTML(item.title)}</div>
+            <div style="font-size:14px;color:var(--muted);line-height:1.5">${escapeHTML(item.desc)}</div>
+          </div>
+          <div style="margin-left:auto;font-size:11px;font-weight:700;padding:4px 12px;border:2px solid ${st.color};color:${st.color};text-transform:uppercase;letter-spacing:1px;white-space:nowrap">${st.label}</div>
+        </div>`;
+      }).join('');
+      return `<div style="flex:1;display:flex;flex-direction:column;justify-content:center">${rows}</div>`;
+    }
+  };
+
+  const builder = layouts[cat] || layouts.minimal;
   return `<div class="slide" data-slide="{IDX}">
     <div class="slide-inner">
       <div class="top-bar"><div class="brand">WEEKLY STATUS</div><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
       <div class="eyebrow">Progress Status</div>
-      <h2>What We Shipped</h2>
-      <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(${items.length > 4 ? '240px' : '280px'},1fr))">${cardsHTML}</div>
+      <h2 style="${cat === 'editorial' ? 'font-family:Georgia,serif;font-style:italic;' : ''}">What We Shipped</h2>
+      ${builder()}
       <div class="footer"><span>Confidential</span><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
     </div>
   </div>`;
