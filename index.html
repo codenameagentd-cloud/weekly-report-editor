@@ -343,6 +343,19 @@ function fillTemplate(html, data) {
     if (slide) slide.remove();
   }
 
+  // Others: no dedicated template section, so repurpose newsletter or topofmind slide
+  // If 'others' has content but no dedicated section, append it to an existing optional slide
+  // or create a simple text slide
+  if (data.others) {
+    const othersSection = doc.querySelector('[data-section="others"]');
+    if (othersSection) {
+      // Some templates might have it
+      const othersContent = othersSection.querySelector('[data-content="others"]');
+      if (othersContent) othersContent.textContent = data.others;
+    }
+    // If no dedicated section exists, the block schema / AI path handles this better
+  }
+
   // Renumber data-slide attributes
   doc.querySelectorAll('[data-slide]').forEach((s, i) => s.setAttribute('data-slide', i));
   // Also renumber data-index attributes
