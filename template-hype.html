@@ -7,41 +7,41 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;background:#0e0e0e;color:#fff}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;background:#141414;color:#fff}
 
 .slide{position:absolute;top:0;left:0;width:100vw;height:100vh;opacity:0;pointer-events:none;transition:opacity .6s ease;display:flex;flex-direction:column}
 .slide.active{opacity:1;pointer-events:auto}
 
-.nav{display:flex;justify-content:space-between;align-items:center;padding:28px 48px;flex-shrink:0}
-.nav-l{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
-.nav-r{display:flex;gap:24px}
-.nl{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#555;cursor:pointer}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:36px 60px;flex-shrink:0}
+.nav-l{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.nav-r{display:flex;gap:32px}
+.nl{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#555;cursor:pointer}
 .nl.a{color:#fff}
 
-.bod{flex:1;padding:0 48px 40px;display:flex;flex-direction:column;overflow:hidden}
+.bod{flex:1;padding:0 60px 48px;display:flex;flex-direction:column;overflow:hidden}
 
-.tag{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#ff2d55;margin-bottom:16px;flex-shrink:0}
+.tag{font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#ff2d55;margin-bottom:16px;flex-shrink:0}
 .big{font-family:'Bebas Neue',Impact,sans-serif;font-size:180px;line-height:.82;letter-spacing:3px;text-transform:uppercase}
 .big .pk{color:#ff2d55}
 .med{font-family:'Bebas Neue',sans-serif;font-size:64px;line-height:.9;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px}
-.sub{font-size:14px;color:#777;line-height:1.7;max-width:440px}
+.sub{font-size:15px;color:#888;line-height:1.7;max-width:440px}
 .btm{display:flex;justify-content:space-between;margin-top:auto;padding-top:24px;flex-shrink:0}
-.btm-t{font-size:10px;color:#444;letter-spacing:.12em;text-transform:uppercase}
+.btm-t{font-size:11px;color:#555;letter-spacing:.1em;text-transform:uppercase}
 .body-text{font-size:14px;color:#888;line-height:1.7;max-width:600px}
 
-.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:40px;backdrop-filter:blur(20px)}
-.card-num{font-family:'Bebas Neue',sans-serif;font-size:112px;line-height:1;letter-spacing:2px;text-align:center}
-.card-num .pk{font-size:56px;color:#ff2d55}
-.card-lbl{font-size:10px;color:#777;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin:4px 0 24px}
-.card-hr{height:1px;background:rgba(255,255,255,.07);margin-bottom:24px}
+.card{background:#1c1c1c;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:44px 40px}
+.card-num{font-family:'Bebas Neue',sans-serif;font-size:120px;line-height:1;letter-spacing:2px;text-align:center}
+.card-num .pk{font-size:60px;color:#ff2d55}
+.card-lbl{font-size:11px;color:#888;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin:4px 0 24px}
+.card-hr{height:1px;background:rgba(255,255,255,.08);margin-bottom:24px}
 .trio{display:flex;justify-content:space-between;margin-bottom:24px}
 .trio-i{text-align:center}
-.trio-v{font-family:'Bebas Neue',sans-serif;font-size:44px;line-height:1;letter-spacing:1px}
-.trio-l{font-size:9px;color:#777;letter-spacing:.18em;text-transform:uppercase;margin-top:6px}
+.trio-v{font-family:'Bebas Neue',sans-serif;font-size:48px;line-height:1;letter-spacing:1px}
+.trio-l{font-size:10px;color:#888;letter-spacing:.15em;text-transform:uppercase;margin-top:6px}
 
-.items{display:flex;flex-direction:column;gap:14px}
+.items{display:flex;flex-direction:column;gap:20px}
 .it{display:flex;align-items:center;gap:14px;font-size:14px;font-weight:500}
-.bar{width:20px;height:2px;border-radius:1px;flex-shrink:0}
+.bar{width:24px;height:2px;border-radius:1px;flex-shrink:0}
 .bar.pk{background:#ff2d55}.bar.dk{background:#333}.bar.gn{background:#34c759}.bar.og{background:#ff9500}.bar.rd{background:#ff3b30}
 .muted{color:#555}
 
@@ -71,15 +71,15 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
 <!-- 01 Cover -->
 <div class="slide active" data-index="0">
   <div class="nav"><div class="nav-l">Design Team</div><div class="nav-r"><span class="nl a">Overview</span><span class="nl">Progress</span><span class="nl">Blockers</span><span class="nl">Next</span></div></div>
-  <div class="bod" style="flex-direction:row;align-items:stretch">
-    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-right:48px">
+  <div class="bod" style="flex-direction:row">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:0">
       <div class="tag">Sprint 14 — Week 11</div>
       <div class="big">Weekly<br><span class="pk">Update</span></div>
-      <div class="sub" style="margin-top:20px">Progress report on current sprint milestones. Key features shipped, blockers resolved, and trajectory toward deadline.</div>
-      <div class="btm"><span class="btm-t">{{author}} · {{role}}</span><span class="btm-t">{{date}}</span></div>
+      <div class="sub" style="margin-top:28px">Progress report on current sprint milestones. Key features shipped, blockers resolved, and trajectory toward our deadline.</div>
+      <div class="btm" style="padding-top:48px"><span class="btm-t">{{author}} — {{role}}</span><span class="btm-t">{{date}}</span></div>
     </div>
-    <div style="width:380px;display:flex;align-items:center">
-      <div class="card" style="width:100%">
+    <div style="width:420px;display:flex;flex-direction:column;justify-content:center;padding-left:40px">
+      <div class="card">
         <div class="card-num">87<span class="pk">%</span></div>
         <div class="card-lbl">Sprint Completion</div>
         <div class="card-hr"></div>
