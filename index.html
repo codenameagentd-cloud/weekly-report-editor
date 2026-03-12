@@ -455,7 +455,7 @@ ${slidesHTML}
 <div class="nav-dots">
 ${dotsHTML}
 </div>
-<script>
+${'<scr'+'ipt>'}
 let c=0;const ss=document.querySelectorAll('.slide'),dd=document.querySelectorAll('.nav-dot');
 function go(n){if(n<0||n>=ss.length)return;ss[c].classList.remove('active');if(dd[c])dd[c].classList.remove('active');c=n;ss[c].classList.add('active');if(dd[c])dd[c].classList.add('active')}
 go(0);
@@ -463,7 +463,7 @@ document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.
 let tx=0;document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX});
 document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)go(c+(dx<0?1:-1))});
 dd.forEach((d,i)=>d.addEventListener('click',()=>go(i)));
-</script>
+${'</scr'+'ipt>'}
 </body>
 </html>`;
 }
