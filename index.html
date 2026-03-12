@@ -295,6 +295,22 @@ function fillTemplate(html, data) {
 
   // Summary
   set('summary', data.summary);
+  
+  // Content-driven font scaling for summary
+  const summaryEls = doc.querySelectorAll('[data-content="summary"]');
+  summaryEls.forEach(el => {
+    const len = data.summary.length;
+    if (len < 50) {
+      el.style.fontSize = '48px';
+      el.style.lineHeight = '1.15';
+      el.style.fontWeight = '700';
+    } else if (len < 120) {
+      el.style.fontSize = '32px';
+      el.style.lineHeight = '1.25';
+      el.style.fontWeight = '600';
+    }
+    // Longer text keeps template default
+  });
 
   // Progress items
   const items = parseProgressItems(data.progress);
