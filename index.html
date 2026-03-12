@@ -474,20 +474,80 @@ function buildProgressSlide(items, cat) {
 }
 
 function buildContentSlide(eyebrow, heading, text, cat) {
-  const paras = escapeHTML(text).split('\n').filter(p => p.trim());
-  const bodyHTML = paras.length > 1
-    ? paras.map(p => `<p class="para">${p}</p>`).join('')
-    : `<div class="body-text" style="font-size:${text.length < 100 ? '24px' : '18px'};max-width:720px">${paras[0] || ''}</div>`;
+  const esc = escapeHTML;
+  const paras = esc(text).split('\n').filter(p => p.trim());
+  const parasHTML = paras.map(p => `<p class="para">${p}</p>`).join('');
+  const blockquoteFirst = paras.length > 0 ? paras[0] : '';
+  const restParas = paras.slice(1).map(p => `<p class="para">${p}</p>`).join('');
 
-  return `<div class="slide" data-slide="{IDX}">
-    <div class="slide-inner">
-      <div class="top-bar"><div class="brand">WEEKLY STATUS</div><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
-      <div class="eyebrow">${escapeHTML(eyebrow)}</div>
-      <h2>${escapeHTML(heading)}</h2>
-      <div class="content-block">${bodyHTML}</div>
-      <div class="footer"><span>Confidential</span><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
-    </div>
-  </div>`;
+  const layouts = {
+    dark: `<div class="slide" data-slide="{IDX}">
+      <div class="slide-inner">
+        <div class="top-bar"><div class="brand">WEEKLY STATUS</div><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
+        <div class="eyebrow">${esc(eyebrow)}</div>
+        <h2 style="font-size:clamp(32px,4vw,52px);letter-spacing:-1.5px">${esc(heading)}</h2>
+        <div class="content-block" style="display:grid;grid-template-columns:4px 1fr;gap:24px;align-items:start;margin-top:16px">
+          <div style="background:var(--accent);border-radius:2px;height:100%;min-height:40px"></div>
+          <div>${parasHTML}</div>
+        </div>
+        <div class="footer"><span>Confidential</span><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
+      </div>
+    </div>`,
+
+    minimal: `<div class="slide" data-slide="{IDX}">
+      <div class="slide-inner">
+        <div class="top-bar"><div class="brand">WEEKLY STATUS</div><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;max-width:800px">
+          <div class="eyebrow">${esc(eyebrow)}</div>
+          <h2 style="font-size:clamp(28px,3.5vw,48px);letter-spacing:-1px;margin-bottom:32px">${esc(heading)}</h2>
+          <div class="content-block">${parasHTML}</div>
+        </div>
+        <div class="footer"><span>Confidential</span><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
+      </div>
+    </div>`,
+
+    editorial: `<div class="slide" data-slide="{IDX}">
+      <div class="slide-inner">
+        <div class="top-bar"><div class="brand" style="font-family:Georgia,serif;font-style:italic;letter-spacing:0;text-transform:none;font-size:16px">Weekly Status</div><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
+        <div style="flex:1;display:grid;grid-template-columns:1fr 2fr;gap:64px;align-items:start;padding-top:24px">
+          <div>
+            <div class="eyebrow" style="font-family:Georgia,serif;letter-spacing:1px">${esc(eyebrow)}</div>
+            <h2 style="font-family:Georgia,serif;font-size:clamp(28px,3vw,40px);font-weight:700;font-style:italic;letter-spacing:-0.5px;line-height:1.2">${esc(heading)}</h2>
+          </div>
+          <div class="content-block" style="padding-top:8px">${parasHTML}</div>
+        </div>
+        <div class="footer"><span>Confidential</span><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
+      </div>
+    </div>`,
+
+    structural: `<div class="slide" data-slide="{IDX}">
+      <div class="slide-inner">
+        <div class="top-bar"><div class="brand">WEEKLY STATUS</div><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
+        <div class="eyebrow">${esc(eyebrow)}</div>
+        <h2 style="font-size:clamp(28px,3vw,44px);letter-spacing:-1px;margin-bottom:24px">${esc(heading)}</h2>
+        <div class="content-block">
+          <div style="background:var(--card);border-radius:16px;padding:32px 36px;border:1px solid var(--border)">
+            ${parasHTML}
+          </div>
+        </div>
+        <div class="footer"><span>Confidential</span><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
+      </div>
+    </div>`,
+
+    experimental: `<div class="slide" data-slide="{IDX}">
+      <div class="slide-inner">
+        <div class="top-bar"><div class="brand" style="font-size:12px;letter-spacing:4px">WKLY//STATUS</div><span class="page-num" style="font-weight:800">{IDX_PLUS} / {TOTAL}</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+          <div style="font-size:11px;font-weight:700;letter-spacing:6px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;border-bottom:2px solid var(--accent);display:inline-block;padding-bottom:4px;width:fit-content">${esc(eyebrow).toUpperCase()}</div>
+          <h2 style="font-size:clamp(32px,5vw,64px);font-weight:900;letter-spacing:-3px;text-transform:uppercase;line-height:0.95;margin-bottom:32px">${esc(heading)}</h2>
+          <div class="content-block" style="max-width:720px">${parasHTML}</div>
+        </div>
+        <div class="footer"><span>Confidential</span><span class="page-num">{IDX_PLUS} / {TOTAL}</span></div>
+      </div>
+    </div>`
+  };
+
+  return layouts[cat] || layouts.minimal;
 }
 
 function buildStandaloneHTML(slidesHTML, category, totalSlides) {
