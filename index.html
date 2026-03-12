@@ -490,7 +490,7 @@ function buildContentSlide(eyebrow, heading, text, cat) {
           <div class="eyebrow">${esc(eyebrow)}</div>
           <h2 style="font-size:clamp(32px,4vw,52px);letter-spacing:-1.5px">${esc(heading)}</h2>
           <div class="content-block" style="display:grid;grid-template-columns:4px 1fr;gap:24px;align-items:start;margin-top:16px">
-            <div style="background:var(--accent);border-radius:2px;height:100%;min-height:40px"></div>
+            <div style="background:var(--accent);border-radius:2px;min-height:40px;align-self:stretch"></div>
             <div>${parasHTML}</div>
           </div>
         </div>
@@ -617,7 +617,7 @@ h2{font-family:'Inter',sans-serif;font-size:clamp(28px,3vw,44px);font-weight:900
 .card-indicator{width:4px;height:32px;border-radius:2px;position:absolute;left:0;top:28px}
 .card-label{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;padding-left:12px}
 .card .body-text{padding-left:12px;font-size:15px}
-.content-block{flex:1;display:flex;flex-direction:column;justify-content:center}
+.content-block{display:flex;flex-direction:column;justify-content:center}
 .footer{margin-top:auto;padding-top:24px;display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-weight:500}
 .nav-dots{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:100}
 .nav-dot{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .3s}
