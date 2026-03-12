@@ -570,7 +570,7 @@ function buildStandaloneHTML(slidesHTML, category, totalSlides) {
   let slideIdx = 0;
   slidesHTML = slidesHTML.replace(/data-slide="\{IDX\}"/g, () => `data-slide="${slideIdx++}"`);
   // Replace {IDX_PLUS} per slide: split on slide boundary, assign same number to all {IDX_PLUS} within each slide
-  const slideParts = slidesHTML.split(/(?=<div class="slide[ "])/);
+  const slideParts = slidesHTML.split(/(?=<div class="slide(?![\\w-]))/);
   let pageNum = 0;
   slidesHTML = slideParts.map((part) => {
     if (!part.startsWith('<div class="slide')) return part;
