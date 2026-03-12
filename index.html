@@ -560,9 +560,17 @@ function buildStandaloneHTML(slidesHTML, category, totalSlides) {
   };
   const s = STYLES[category] || STYLES.minimal;
 
-  // Fix {IDX_PLUS} placeholders
-  let idx = 0;
-  slidesHTML = slidesHTML.replace(/\{IDX_PLUS\}/g, () => String(++idx));
+  // Fix {IDX_PLUS} placeholders — per slide, not global counter
+  let slideIdx = 0;
+  slidesHTML = slidesHTML.replace(/data-slide="\{IDX\}"/g, () => `data-slide="${slideIdx++}"`);
+  // Now replace {IDX_PLUS} per slide block
+  const slideBlocks = slidesHTML.split(/<div class="slide/);
+  let pageNum = 0;
+  slidesHTML = slideBlocks.map((block, i) => {
+    if (i === 0) return block; // before first slide
+    pageNum++;
+    return '<div class="slide' + block.replace(/\{IDX_PLUS\}/g, String(pageNum));
+  }).join('');
 
   const dotsHTML = Array.from({length: totalSlides}, (_, i) =>
     `<div class="nav-dot${i===0?' active':''}" data-slide="${i}"></div>`
