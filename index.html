@@ -250,7 +250,7 @@ function buildRenderedSlides(data, category) {
   let slides = [];
 
   // === COVER SLIDE (hero) — different per category ===
-  slides.push(buildCoverSlide(data.summary, dateStr, category, items.length));
+  slides.push(buildCoverSlide(data.summary, dateStr, category, items.length, [data.summary, data.progress, data.newsletter, data.others, data.topofmind].filter(Boolean).length));
 
   // === PROGRESS SLIDE ===
   if (items.length > 0) {
