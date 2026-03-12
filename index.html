@@ -443,7 +443,7 @@ function buildSlides(data, styleName) {
 
     let inner = '';
     inner += topBarHTML(pageNum);
-    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center">';
+    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:10vh">';
     inner += eyebrowHTML(sec.title);
 
     // Section heading
@@ -491,7 +491,7 @@ function buildSlides(data, styleName) {
   function buildProgressSlide(sec, pageNum) {
     let inner = '';
     inner += topBarHTML(pageNum);
-    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center">';
+    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:10vh">';
     inner += eyebrowHTML(sec.title);
     inner += '<h2 style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(32px,3.5vw,44px);font-weight:' + headlineWeight + ';line-height:1.1;letter-spacing:-1px;margin-bottom:24px;color:' + text + '">' + escH(sec.title) + '</h2>';
     inner += progressCardsHTML(sec.content);
