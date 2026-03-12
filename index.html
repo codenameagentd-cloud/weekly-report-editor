@@ -271,7 +271,7 @@ function buildRenderedSlides(data, category) {
   return buildStandaloneHTML(slidesHTML, category, total);
 }
 
-function buildCoverSlide(summary, dateStr, cat, itemCount) {
+function buildCoverSlide(summary, dateStr, cat, itemCount, sectionCount) {
   const esc = escapeHTML(summary);
   const now = new Date();
   const covers = {
