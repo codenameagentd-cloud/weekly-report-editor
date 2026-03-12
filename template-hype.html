@@ -77,37 +77,43 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
   from { opacity: 0; transform: translateX(-20px); }
   to { opacity: 1; transform: translateX(0); }
 }
-.slide .tag, .slide .big, .slide .med, .slide .sub, .slide .body-text, .slide .items, .slide .grid, .slide .card, .slide .gc, .slide .quote, .slide .pr, .slide .it, .slide .btm {
+.slide > .bod > .tag,
+.slide > .bod > .flex1 > .med,
+.slide > .bod > .flex1 > .body-text,
+.slide > .bod > .flex1 > .items,
+.slide > .bod > .flex1 > .grid,
+.slide > .bod > .flex1 > .quote,
+.slide > .bod > .btm {
   opacity: 0;
 }
-.slide.active .tag {
+.slide.active > .bod > .tag {
   animation: hypeSlideRight 0.35s cubic-bezier(0.4,0,0.2,1) both;
   animation-delay: 0s;
 }
-.slide.active .big, .slide.active .med {
+.slide.active > .bod > .flex1 > .med, .slide.active > .bod > .flex1 > .big {
   animation: hypeFadeUp 0.6s cubic-bezier(0.23,1,0.32,1) both;
   animation-delay: 0.08s;
 }
-.slide.active .sub, .slide.active .body-text {
+.slide.active > .bod > .flex1 > .body-text, .slide.active .sub {
   animation: hypeFadeIn 0.4s ease both;
   animation-delay: 0.2s;
 }
-.slide.active .items {
+.slide.active > .bod > .flex1 > .items {
   animation: hypeFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
   animation-delay: 0.2s;
 }
-.slide.active .grid {
+.slide.active > .bod > .flex1 > .grid {
   animation: hypeFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
   animation-delay: 0.15s;
 }
-.slide.active .gc {
+.slide.active > .bod > .flex1 > .grid > .gc {
   animation: hypeFadeUp 0.4s cubic-bezier(0.23,1,0.32,1) both;
 }
 .slide.active .gc:nth-child(1) { animation-delay: 0.1s; }
 .slide.active .gc:nth-child(2) { animation-delay: 0.18s; }
 .slide.active .gc:nth-child(3) { animation-delay: 0.26s; }
 .slide.active .gc:nth-child(4) { animation-delay: 0.34s; }
-.slide.active .card {
+.slide.active > .bod > .flex1 > .card {
   animation: hypeFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
   animation-delay: 0.15s;
 }
@@ -119,11 +125,11 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
 .slide.active .pr:nth-child(3) { animation-delay: 0.22s; }
 .slide.active .pr:nth-child(4) { animation-delay: 0.28s; }
 .slide.active .pr:nth-child(5) { animation-delay: 0.34s; }
-.slide.active .quote {
+.slide.active > .bod > .flex1 > .quote {
   animation: hypeFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
   animation-delay: 0.15s;
 }
-.slide.active .btm {
+.slide.active > .bod > .btm {
   animation: hypeFadeIn 0.3s ease both;
   animation-delay: 0.35s;
 }
@@ -135,15 +141,15 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
 <!-- 01 Cover -->
 <div class="slide active" data-index="0">
   <div class="nav"><div class="nav-l">Design Team</div><div class="nav-r"><span class="nl a">Overview</span><span class="nl">Progress</span><span class="nl">Blockers</span><span class="nl">Next</span></div></div>
-  <div class="bod" style="flex-direction:row;align-items:stretch">
-    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-right:48px">
+  <div class="bod" style="flex-direction:row;align-items:center;gap:48px">
+    <div style="flex:1;display:flex;flex-direction:column">
       <div class="tag">Weekly Status Update</div>
       <div class="big">Weekly<br><span class="pk">Update</span></div>
       <div class="sub" style="margin-top:20px">Progress report on current sprint milestones. Key features shipped, blockers resolved, and trajectory toward deadline.</div>
-      <div class="btm"><span class="btm-t">{{author}} · {{role}}</span><span class="btm-t">{{date}}</span></div>
+      <div class="btm" style="margin-top:40px"><span class="btm-t">{{author}} · {{role}}</span><span class="btm-t">{{date}}</span></div>
     </div>
-    <div style="width:380px;display:flex;align-items:center">
-      <div class="card" style="width:100%">
+    <div style="width:400px;flex-shrink:0">
+      <div class="card">
         <div class="card-num">87<span class="pk">%</span></div>
         <div class="card-lbl">Sprint Completion</div>
         <div class="card-hr"></div>
