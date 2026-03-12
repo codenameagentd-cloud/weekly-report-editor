@@ -305,7 +305,7 @@ function buildCoverSlide(summary, dateStr, cat, itemCount, sectionCount) {
         <div class="top-bar"><div class="brand" style="font-family:Georgia,serif;letter-spacing:0.5px;text-transform:none;font-style:italic">Weekly Status</div><div class="date-badge">${dateStr}</div></div>
         <div style="flex:1;display:flex;flex-direction:column;justify-content:center;max-width:65%">
           <div style="font-size:13px;font-weight:600;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:20px">STATUS UPDATE</div>
-          <h1 style="font-family:Georgia,serif;font-size:clamp(40px,5.5vw,72px);font-weight:700;line-height:1.15;letter-spacing:-0.5px;font-style:italic">${esc}</h1>
+          <h1 style="font-family:Georgia,serif;font-size:${esc.length > 120 ? 'clamp(28px,3.5vw,44px)' : esc.length > 80 ? 'clamp(32px,4vw,52px)' : 'clamp(40px,5.5vw,72px)'};font-weight:700;line-height:1.15;letter-spacing:-0.5px;font-style:italic">${esc}</h1>
           <div style="margin-top:32px;width:80px;height:1px;background:var(--accent)"></div>
         </div>
         <div class="footer"><span>Confidential</span><span class="page-num">1 / {TOTAL}</span></div>
