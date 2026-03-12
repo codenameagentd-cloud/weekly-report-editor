@@ -344,7 +344,7 @@ function buildCoverSlide(summary, dateStr, cat, itemCount) {
         <div class="top-bar"><div class="brand" style="font-size:12px;letter-spacing:4px">WKLY//STATUS</div><div class="date-badge">${dateStr}</div></div>
         <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
           <div style="font-size:11px;font-weight:700;letter-spacing:6px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;border-bottom:2px solid var(--accent);display:inline-block;padding-bottom:4px;width:fit-content">UPDATE</div>
-          <h1 style="font-size:clamp(36px,7vw,88px);font-weight:900;letter-spacing:-4px;line-height:0.9;text-transform:uppercase;overflow-wrap:break-word">${esc}</h1>
+          <h1 style="font-size:clamp(28px,${esc.length > 120 ? "4.5vw" : esc.length > 80 ? "5.5vw" : "7vw"},${esc.length > 120 ? "56px" : esc.length > 80 ? "68px" : "88px"});font-weight:900;letter-spacing:-3px;line-height:0.92;text-transform:uppercase;overflow-wrap:break-word">${esc}</h1>
           <div style="margin-top:32px;font-size:13px;font-weight:600;color:var(--muted);letter-spacing:3px">WEEK ${String(getWeekNumber()).padStart(2,'0')} — ${now.getFullYear()}</div>
         </div>
         <div class="footer"><span>Confidential</span><span class="page-num">1 / {TOTAL}</span></div>
