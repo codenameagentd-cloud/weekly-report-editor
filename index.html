@@ -569,13 +569,13 @@ function buildStandaloneHTML(slidesHTML, category, totalSlides) {
   // Fix {IDX_PLUS} placeholders — per slide, not global counter
   let slideIdx = 0;
   slidesHTML = slidesHTML.replace(/data-slide="\{IDX\}"/g, () => `data-slide="${slideIdx++}"`);
-  // Now replace {IDX_PLUS} per slide block
-  const slideBlocks = slidesHTML.split(/<div class="slide/);
+  // Replace {IDX_PLUS} per slide: split on slide boundary, assign same number to all {IDX_PLUS} within each slide
+  const slideParts = slidesHTML.split(/(?=<div class="slide[ "])/);
   let pageNum = 0;
-  slidesHTML = slideBlocks.map((block, i) => {
-    if (i === 0) return block; // before first slide
+  slidesHTML = slideParts.map((part) => {
+    if (!part.startsWith('<div class="slide')) return part;
     pageNum++;
-    return '<div class="slide' + block.replace(/\{IDX_PLUS\}/g, String(pageNum));
+    return part.replace(/\{IDX_PLUS\}/g, String(pageNum));
   }).join('');
 
   const dotsHTML = Array.from({length: totalSlides}, (_, i) =>
