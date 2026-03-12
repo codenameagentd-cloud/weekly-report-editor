@@ -2,480 +2,173 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1440">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Weekly Status — Apple</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:#fff;color:#1d1d1f;overflow-x:hidden}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',-apple-system,system-ui,sans-serif;background:#fff;color:#1d1d1f}
 
-.slide{width:1440px;height:900px;position:relative;display:flex;page-break-after:always}
+/* Slide system */
+.slide{position:absolute;top:0;left:0;width:100vw;height:100vh;opacity:0;pointer-events:none;transition:opacity .6s ease;display:flex}
+.slide.active{opacity:1;pointer-events:auto}
 
 /* Sidebar */
-.sidebar{width:200px;padding:56px 0 56px 56px;display:flex;flex-direction:column;gap:4px;border-right:1px solid #f0f0f0}
-.sidebar .label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#86868b;margin-bottom:16px}
-.nav-item{font-size:13px;font-weight:500;color:#c0c0c0;padding:6px 0;transition:color .15s}
-.nav-item.active{color:#0071e3;font-weight:600}
-.nav-item .num{font-size:11px;margin-right:6px}
+.sidebar{width:200px;padding:48px 0 48px 48px;display:flex;flex-direction:column;gap:4px;border-right:1px solid #f0f0f0;flex-shrink:0}
+.sidebar .lbl{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#86868b;margin-bottom:14px}
+.ni{font-size:13px;font-weight:500;color:#c0c0c0;padding:5px 0;cursor:pointer;transition:color .15s}
+.ni.a{color:#0071e3;font-weight:600}
+.ni .n{font-size:11px;margin-right:6px}
 
 /* Main */
-.main{flex:1;padding:56px 64px;display:flex;flex-direction:column}
+.main{flex:1;padding:48px 56px;display:flex;flex-direction:column;overflow:hidden}
 
-/* Top bar */
-.top-bar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:36px}
-.page-ind{font-size:12px;font-weight:600;color:#86868b}
+/* Top */
+.top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;flex-shrink:0}
+.pg{font-size:12px;font-weight:600;color:#86868b}
 .meta{text-align:right;font-size:13px;color:#86868b;line-height:1.5}
-.meta .name{font-weight:600;color:#1d1d1f}
+.meta .nm{font-weight:600;color:#1d1d1f}
 
 /* Section title */
-.sec-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1d1d1f;margin-bottom:48px}
+.st{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1d1d1f;margin-bottom:40px;flex-shrink:0}
 
 /* Hero number */
-.hero-num{font-size:172px;font-weight:700;line-height:.85;letter-spacing:-8px}
+.hero-num{font-size:160px;font-weight:700;line-height:.85;letter-spacing:-7px}
 .hero-num .u{color:#0071e3}
-.hero-cap{font-size:14px;font-weight:500;color:#86868b;margin-top:14px}
+.hero-cap{font-size:14px;font-weight:500;color:#86868b;margin-top:12px}
 
-/* Stats row */
-.stats{display:flex;gap:64px;margin:40px 0}
-.st-val{font-size:56px;font-weight:700;line-height:1;letter-spacing:-2px}
-.st-lbl{font-size:10px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:.1em;margin-top:8px}
+/* Stats */
+.stats{display:flex;gap:56px;margin:36px 0;flex-shrink:0}
+.sv{font-size:52px;font-weight:700;line-height:1;letter-spacing:-2px}
+.sl{font-size:10px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
 
-/* HR */
-.hr{height:1px;background:#e8e8e8;margin:0 0 24px}
-
-/* List */
-.list{display:flex;flex-direction:column;gap:14px}
-.li{display:flex;align-items:center;gap:12px;font-size:15px;font-weight:500}
+.hr{height:1px;background:#e8e8e8;margin:16px 0;flex-shrink:0}
+.list{display:flex;flex-direction:column;gap:12px}
+.li{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:500}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.blue{background:#0071e3}
-.green{background:#34c759}
-.orange{background:#ff9500}
-.red{background:#ff3b30}
-.gray{background:#d1d1d6}
+.blue{background:#0071e3}.green{background:#34c759}.orange{background:#ff9500}.red{background:#ff3b30}.gray{background:#d1d1d6}
 .muted{color:#86868b}
 
-/* Heading */
-.h2{font-size:48px;font-weight:700;letter-spacing:-2px;line-height:1.1;margin-bottom:32px}
-.h3{font-size:28px;font-weight:700;letter-spacing:-1px;margin-bottom:20px}
-.body{font-size:15px;line-height:1.7;color:#555;max-width:720px}
+.h2{font-size:44px;font-weight:700;letter-spacing:-1.5px;line-height:1.15;margin-bottom:24px}
+.h3{font-size:28px;font-weight:700;letter-spacing:-0.5px;margin-bottom:16px}
+.body{font-size:15px;line-height:1.7;color:#555;max-width:680px}
 
-/* Card grid */
-.cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1}
-.card{background:#f5f5f7;border-radius:16px;padding:32px;display:flex;flex-direction:column}
-.card-title{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
-.card-body{font-size:14px;line-height:1.6;color:#555;flex:1}
-.card-num{font-size:36px;font-weight:700;letter-spacing:-1px;margin-bottom:4px}
+/* Cards */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-height:0}
+.card{background:#f5f5f7;border-radius:14px;padding:28px;display:flex;flex-direction:column}
+.ct{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;color:#86868b}
+.cv{font-size:36px;font-weight:700;letter-spacing:-1px;margin-bottom:4px}
+.cb{font-size:13px;line-height:1.6;color:#555}
 
-/* Quote */
-.quote{font-size:24px;font-weight:500;line-height:1.5;letter-spacing:-0.5px;border-left:3px solid #0071e3;padding-left:24px;margin:20px 0;max-width:640px}
+/* Progress bars */
+.pr{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.pl{font-size:14px;font-weight:600;width:160px}
+.pb{flex:1;height:7px;background:#e8e8e8;border-radius:4px;overflow:hidden}
+.pf{height:100%;border-radius:4px;background:#0071e3}
+.pp{font-size:13px;font-weight:600;color:#86868b;width:44px;text-align:right}
 
-/* Progress bar */
-.prog-row{display:flex;align-items:center;gap:16px;margin-bottom:20px}
-.prog-label{font-size:14px;font-weight:600;width:180px}
-.prog-bar{flex:1;height:8px;background:#e8e8e8;border-radius:4px;overflow:hidden}
-.prog-fill{height:100%;border-radius:4px;background:#0071e3}
-.prog-pct{font-size:13px;font-weight:600;color:#86868b;width:48px;text-align:right}
+.quote{font-size:22px;font-weight:500;line-height:1.5;border-left:3px solid #0071e3;padding-left:20px;margin:16px 0;max-width:600px}
 
-/* Big cover */
-.cover-center{flex:1;display:flex;flex-direction:column;justify-content:center}
+.flex1{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.end{margin-top:auto;flex-shrink:0}
+
+/* Page dots */
+.dots{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:100}
+.pd{width:8px;height:8px;border-radius:50%;background:#d1d1d6;cursor:pointer;transition:background .3s}
+.pd.a{background:#0071e3}
 </style>
 </head>
 <body>
 
+<!-- PAGE DOTS -->
+<div class="dots" id="dots"></div>
+
+<!-- Helper: builds sidebar for each slide -->
+
 <!-- 01 Cover -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item active"><span class="num">01</span>Cover</div>
-    <div class="nav-item"><span class="num">02</span>Summary</div>
-    <div class="nav-item"><span class="num">03</span>Metrics</div>
-    <div class="nav-item"><span class="num">04</span>Progress</div>
-    <div class="nav-item"><span class="num">05</span>Progress II</div>
-    <div class="nav-item"><span class="num">06</span>Blockers</div>
-    <div class="nav-item"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item"><span class="num">08</span>Design</div>
-    <div class="nav-item"><span class="num">09</span>Technical</div>
-    <div class="nav-item"><span class="num">10</span>Others</div>
-    <div class="nav-item"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">01 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="cover-center">
-      <div class="sec-title">WEEKLY STATUS UPDATE</div>
-      <div class="hero-num">87<span class="u">%</span></div>
-      <div class="hero-cap">Sprint Completion Rate</div>
-      <div class="stats">
-        <div><div class="st-val">12</div><div class="st-lbl">Features Shipped</div></div>
-        <div><div class="st-val">3</div><div class="st-lbl">Blockers Resolved</div></div>
-        <div><div class="st-val">5</div><div class="st-lbl">Days to Deadline</div></div>
-      </div>
-    </div>
-  </div>
+<div class="slide active" data-index="0">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni a"><span class="n">01</span>Cover</div><div class="ni"><span class="n">02</span>Summary</div><div class="ni"><span class="n">03</span>Metrics</div><div class="ni"><span class="n">04</span>Progress</div><div class="ni"><span class="n">05</span>Progress II</div><div class="ni"><span class="n">06</span>Blockers</div><div class="ni"><span class="n">07</span>Newsletter</div><div class="ni"><span class="n">08</span>Design</div><div class="ni"><span class="n">09</span>Technical</div><div class="ni"><span class="n">10</span>Others</div><div class="ni"><span class="n">11</span>Top of Mind</div><div class="ni"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">01 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">WEEKLY STATUS UPDATE</div><div class="flex1"><div class="hero-num">87<span class="u">%</span></div><div class="hero-cap">Sprint Completion Rate</div><div class="stats"><div><div class="sv">12</div><div class="sl">Features Shipped</div></div><div><div class="sv">3</div><div class="sl">Blockers Resolved</div></div><div><div class="sv">5</div><div class="sl">Days to Deadline</div></div></div></div></div>
 </div>
 
 <!-- 02 Summary -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item"><span class="num">01</span>Cover</div>
-    <div class="nav-item active"><span class="num">02</span>Summary</div>
-    <div class="nav-item"><span class="num">03</span>Metrics</div>
-    <div class="nav-item"><span class="num">04</span>Progress</div>
-    <div class="nav-item"><span class="num">05</span>Progress II</div>
-    <div class="nav-item"><span class="num">06</span>Blockers</div>
-    <div class="nav-item"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item"><span class="num">08</span>Design</div>
-    <div class="nav-item"><span class="num">09</span>Technical</div>
-    <div class="nav-item"><span class="num">10</span>Others</div>
-    <div class="nav-item"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">02 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="sec-title">SUMMARY</div>
-    <div class="h2">Strong momentum across<br>all workstreams</div>
-    <div class="body" style="margin-bottom:32px">This week saw significant progress on our core deliverables. The team successfully shipped the authentication flow and dashboard redesign while resolving three critical blockers that had been impeding velocity.</div>
-    <div class="hr"></div>
-    <div class="list">
-      <div class="li"><span class="dot green"></span>Authentication flow — shipped to production</div>
-      <div class="li"><span class="dot green"></span>Dashboard redesign — live for all users</div>
-      <div class="li"><span class="dot blue"></span>API integration — on track, 70% complete</div>
-      <div class="li muted"><span class="dot gray"></span>Performance sprint — scheduled next week</div>
-    </div>
-  </div>
+<div class="slide" data-index="1">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni"><span class="n">01</span>Cover</div><div class="ni a"><span class="n">02</span>Summary</div><div class="ni"><span class="n">03</span>Metrics</div><div class="ni"><span class="n">04</span>Progress</div><div class="ni"><span class="n">05</span>Progress II</div><div class="ni"><span class="n">06</span>Blockers</div><div class="ni"><span class="n">07</span>Newsletter</div><div class="ni"><span class="n">08</span>Design</div><div class="ni"><span class="n">09</span>Technical</div><div class="ni"><span class="n">10</span>Others</div><div class="ni"><span class="n">11</span>Top of Mind</div><div class="ni"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">02 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">SUMMARY</div><div class="flex1"><div class="h2">Strong momentum across<br>all workstreams</div><div class="body" style="margin-bottom:24px">This week saw significant progress on core deliverables. The team shipped authentication and dashboard redesign while resolving three critical blockers.</div><div class="hr"></div><div class="list"><div class="li"><span class="dot green"></span>Authentication flow — shipped to production</div><div class="li"><span class="dot green"></span>Dashboard redesign — live for all users</div><div class="li"><span class="dot blue"></span>API integration — on track, 70% complete</div><div class="li muted"><span class="dot gray"></span>Performance sprint — scheduled next week</div></div></div></div>
 </div>
 
 <!-- 03 Key Metrics -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item"><span class="num">01</span>Cover</div>
-    <div class="nav-item"><span class="num">02</span>Summary</div>
-    <div class="nav-item active"><span class="num">03</span>Metrics</div>
-    <div class="nav-item"><span class="num">04</span>Progress</div>
-    <div class="nav-item"><span class="num">05</span>Progress II</div>
-    <div class="nav-item"><span class="num">06</span>Blockers</div>
-    <div class="nav-item"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item"><span class="num">08</span>Design</div>
-    <div class="nav-item"><span class="num">09</span>Technical</div>
-    <div class="nav-item"><span class="num">10</span>Others</div>
-    <div class="nav-item"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">03 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="sec-title">KEY METRICS</div>
-    <div class="cards">
-      <div class="card"><div class="card-num">87%</div><div class="card-title">Sprint Completion</div><div class="card-body">Up from 72% last week. On track to hit 95% by sprint end.</div></div>
-      <div class="card"><div class="card-num">12</div><div class="card-title">Features Shipped</div><div class="card-body">Highest weekly output this quarter. Includes 4 customer-facing improvements.</div></div>
-      <div class="card"><div class="card-num">3</div><div class="card-title">Blockers Resolved</div><div class="card-body">Cleared cross-team dependency on auth service and two infra issues.</div></div>
-      <div class="card"><div class="card-num">5</div><div class="card-title">Days to Deadline</div><div class="card-body">C2 milestone on track. No scope changes expected.</div></div>
-    </div>
-  </div>
+<div class="slide" data-index="2">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni"><span class="n">01</span>Cover</div><div class="ni"><span class="n">02</span>Summary</div><div class="ni a"><span class="n">03</span>Metrics</div><div class="ni"><span class="n">04</span>Progress</div><div class="ni"><span class="n">05</span>Progress II</div><div class="ni"><span class="n">06</span>Blockers</div><div class="ni"><span class="n">07</span>Newsletter</div><div class="ni"><span class="n">08</span>Design</div><div class="ni"><span class="n">09</span>Technical</div><div class="ni"><span class="n">10</span>Others</div><div class="ni"><span class="n">11</span>Top of Mind</div><div class="ni"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">03 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">KEY METRICS</div><div class="cards"><div class="card"><div class="cv">87%</div><div class="ct">Sprint Completion</div><div class="cb">Up from 72% last week. On track to hit 95% by sprint end.</div></div><div class="card"><div class="cv">12</div><div class="ct">Features Shipped</div><div class="cb">Highest weekly output this quarter. 4 customer-facing improvements.</div></div><div class="card"><div class="cv">3</div><div class="ct">Blockers Resolved</div><div class="cb">Cleared cross-team dependency and two infra issues.</div></div><div class="card"><div class="cv">5</div><div class="ct">Days to Deadline</div><div class="cb">C2 milestone on track. No scope changes expected.</div></div></div></div>
 </div>
 
 <!-- 04 Progress I -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item"><span class="num">01</span>Cover</div>
-    <div class="nav-item"><span class="num">02</span>Summary</div>
-    <div class="nav-item"><span class="num">03</span>Metrics</div>
-    <div class="nav-item active"><span class="num">04</span>Progress</div>
-    <div class="nav-item"><span class="num">05</span>Progress II</div>
-    <div class="nav-item"><span class="num">06</span>Blockers</div>
-    <div class="nav-item"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item"><span class="num">08</span>Design</div>
-    <div class="nav-item"><span class="num">09</span>Technical</div>
-    <div class="nav-item"><span class="num">10</span>Others</div>
-    <div class="nav-item"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">04 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="sec-title">PROGRESS STATUS</div>
-    <div class="h3">Feature Delivery</div>
-    <div style="margin-bottom:32px">
-      <div class="prog-row"><div class="prog-label">Authentication</div><div class="prog-bar"><div class="prog-fill" style="width:100%"></div></div><div class="prog-pct">100%</div></div>
-      <div class="prog-row"><div class="prog-label">Dashboard v2</div><div class="prog-bar"><div class="prog-fill" style="width:100%"></div></div><div class="prog-pct">100%</div></div>
-      <div class="prog-row"><div class="prog-label">API Integration</div><div class="prog-bar"><div class="prog-fill" style="width:70%"></div></div><div class="prog-pct">70%</div></div>
-      <div class="prog-row"><div class="prog-label">Performance</div><div class="prog-bar"><div class="prog-fill" style="width:20%;background:#ff9500"></div></div><div class="prog-pct">20%</div></div>
-      <div class="prog-row"><div class="prog-label">Accessibility</div><div class="prog-bar"><div class="prog-fill" style="width:45%"></div></div><div class="prog-pct">45%</div></div>
-    </div>
-    <div class="hr"></div>
-    <div class="body">Authentication and Dashboard were the primary focus areas. Both shipped ahead of schedule, enabling us to start API integration earlier than planned.</div>
-  </div>
+<div class="slide" data-index="3">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni"><span class="n">01</span>Cover</div><div class="ni"><span class="n">02</span>Summary</div><div class="ni"><span class="n">03</span>Metrics</div><div class="ni a"><span class="n">04</span>Progress</div><div class="ni"><span class="n">05</span>Progress II</div><div class="ni"><span class="n">06</span>Blockers</div><div class="ni"><span class="n">07</span>Newsletter</div><div class="ni"><span class="n">08</span>Design</div><div class="ni"><span class="n">09</span>Technical</div><div class="ni"><span class="n">10</span>Others</div><div class="ni"><span class="n">11</span>Top of Mind</div><div class="ni"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">04 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">PROGRESS STATUS</div><div class="flex1"><div class="h3">Feature Delivery</div><div style="margin-bottom:20px"><div class="pr"><div class="pl">Authentication</div><div class="pb"><div class="pf" style="width:100%"></div></div><div class="pp">100%</div></div><div class="pr"><div class="pl">Dashboard v2</div><div class="pb"><div class="pf" style="width:100%"></div></div><div class="pp">100%</div></div><div class="pr"><div class="pl">API Integration</div><div class="pb"><div class="pf" style="width:70%"></div></div><div class="pp">70%</div></div><div class="pr"><div class="pl">Performance</div><div class="pb"><div class="pf" style="width:20%;background:#ff9500"></div></div><div class="pp">20%</div></div><div class="pr"><div class="pl">Accessibility</div><div class="pb"><div class="pf" style="width:45%"></div></div><div class="pp">45%</div></div></div><div class="hr"></div><div class="body">Authentication and Dashboard shipped ahead of schedule, enabling earlier API integration start.</div></div></div>
 </div>
 
 <!-- 05 Progress II -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item"><span class="num">01</span>Cover</div>
-    <div class="nav-item"><span class="num">02</span>Summary</div>
-    <div class="nav-item"><span class="num">03</span>Metrics</div>
-    <div class="nav-item"><span class="num">04</span>Progress</div>
-    <div class="nav-item active"><span class="num">05</span>Progress II</div>
-    <div class="nav-item"><span class="num">06</span>Blockers</div>
-    <div class="nav-item"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item"><span class="num">08</span>Design</div>
-    <div class="nav-item"><span class="num">09</span>Technical</div>
-    <div class="nav-item"><span class="num">10</span>Others</div>
-    <div class="nav-item"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">05 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="sec-title">PROGRESS — DEEP DIVE</div>
-    <div class="h3">API Integration Details</div>
-    <div class="body" style="margin-bottom:24px">The partner API integration has been progressing steadily. Key milestones this week include endpoint mapping, auth token exchange, and initial data sync testing.</div>
-    <div class="list" style="gap:18px">
-      <div class="li"><span class="dot green"></span>Endpoint mapping complete — 24 endpoints documented</div>
-      <div class="li"><span class="dot green"></span>OAuth token exchange — tested and working</div>
-      <div class="li"><span class="dot blue"></span>Data sync — initial batch processing functional</div>
-      <div class="li muted"><span class="dot gray"></span>Real-time webhooks — pending partner support</div>
-      <div class="li muted"><span class="dot gray"></span>Error handling &amp; retry logic — next sprint</div>
-    </div>
-  </div>
+<div class="slide" data-index="4">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni"><span class="n">01</span>Cover</div><div class="ni"><span class="n">02</span>Summary</div><div class="ni"><span class="n">03</span>Metrics</div><div class="ni"><span class="n">04</span>Progress</div><div class="ni a"><span class="n">05</span>Progress II</div><div class="ni"><span class="n">06</span>Blockers</div><div class="ni"><span class="n">07</span>Newsletter</div><div class="ni"><span class="n">08</span>Design</div><div class="ni"><span class="n">09</span>Technical</div><div class="ni"><span class="n">10</span>Others</div><div class="ni"><span class="n">11</span>Top of Mind</div><div class="ni"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">05 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">PROGRESS — DEEP DIVE</div><div class="flex1"><div class="h3">API Integration Details</div><div class="body" style="margin-bottom:20px">Partner API integration progressing steadily. Key milestones this week.</div><div class="list" style="gap:16px"><div class="li"><span class="dot green"></span>Endpoint mapping complete — 24 endpoints</div><div class="li"><span class="dot green"></span>OAuth token exchange — tested and working</div><div class="li"><span class="dot blue"></span>Data sync — batch processing functional</div><div class="li muted"><span class="dot gray"></span>Real-time webhooks — pending partner support</div><div class="li muted"><span class="dot gray"></span>Error handling &amp; retry — next sprint</div></div></div></div>
 </div>
 
 <!-- 06 Blockers -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item"><span class="num">01</span>Cover</div>
-    <div class="nav-item"><span class="num">02</span>Summary</div>
-    <div class="nav-item"><span class="num">03</span>Metrics</div>
-    <div class="nav-item"><span class="num">04</span>Progress</div>
-    <div class="nav-item"><span class="num">05</span>Progress II</div>
-    <div class="nav-item active"><span class="num">06</span>Blockers</div>
-    <div class="nav-item"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item"><span class="num">08</span>Design</div>
-    <div class="nav-item"><span class="num">09</span>Technical</div>
-    <div class="nav-item"><span class="num">10</span>Others</div>
-    <div class="nav-item"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">06 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="sec-title">BLOCKERS &amp; RISKS</div>
-    <div class="list" style="gap:24px">
-      <div><div class="li" style="margin-bottom:6px"><span class="dot red"></span><strong>Partner API rate limits</strong></div><div class="body" style="margin-left:20px">Current limits restrict sync to 100 req/min. Requested increase pending review. Workaround: batch processing with backoff.</div></div>
-      <div><div class="li" style="margin-bottom:6px"><span class="dot orange"></span><strong>Design review bottleneck</strong></div><div class="body" style="margin-left:20px">3 PRs awaiting design review. Expected clearance by Wednesday.</div></div>
-      <div><div class="li" style="margin-bottom:6px"><span class="dot green"></span><strong style="color:#86868b">Auth service dependency (resolved)</strong></div><div class="body" style="margin-left:20px">Cross-team dependency cleared on Monday. No longer blocking.</div></div>
-    </div>
-  </div>
+<div class="slide" data-index="5">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni"><span class="n">01</span>Cover</div><div class="ni"><span class="n">02</span>Summary</div><div class="ni"><span class="n">03</span>Metrics</div><div class="ni"><span class="n">04</span>Progress</div><div class="ni"><span class="n">05</span>Progress II</div><div class="ni a"><span class="n">06</span>Blockers</div><div class="ni"><span class="n">07</span>Newsletter</div><div class="ni"><span class="n">08</span>Design</div><div class="ni"><span class="n">09</span>Technical</div><div class="ni"><span class="n">10</span>Others</div><div class="ni"><span class="n">11</span>Top of Mind</div><div class="ni"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">06 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">BLOCKERS &amp; RISKS</div><div class="flex1"><div class="list" style="gap:24px"><div><div class="li" style="margin-bottom:4px"><span class="dot red"></span><strong>Partner API rate limits</strong></div><div class="body" style="margin-left:18px">100 req/min. Requested increase pending. Workaround: batch with backoff.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot orange"></span><strong>Design review bottleneck</strong></div><div class="body" style="margin-left:18px">3 PRs awaiting review. Clearance expected Wednesday.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot green"></span><strong style="color:#86868b">Auth dependency (resolved)</strong></div><div class="body" style="margin-left:18px">Cross-team dependency cleared Monday.</div></div></div></div></div>
 </div>
 
 <!-- 07 Newsletter -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item"><span class="num">01</span>Cover</div>
-    <div class="nav-item"><span class="num">02</span>Summary</div>
-    <div class="nav-item"><span class="num">03</span>Metrics</div>
-    <div class="nav-item"><span class="num">04</span>Progress</div>
-    <div class="nav-item"><span class="num">05</span>Progress II</div>
-    <div class="nav-item"><span class="num">06</span>Blockers</div>
-    <div class="nav-item active"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item"><span class="num">08</span>Design</div>
-    <div class="nav-item"><span class="num">09</span>Technical</div>
-    <div class="nav-item"><span class="num">10</span>Others</div>
-    <div class="nav-item"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">07 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="sec-title">NEWSLETTER</div>
-    <div class="h3">Team Updates</div>
-    <div class="quote">"The best interface is no interface — until someone needs to file a bug report."</div>
-    <div class="body">This week the team welcomed a new design systems engineer. Onboarding is progressing well, with first contributions expected next sprint. We also completed our quarterly accessibility audit with strong results.</div>
-  </div>
+<div class="slide" data-index="6">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni"><span class="n">01</span>Cover</div><div class="ni"><span class="n">02</span>Summary</div><div class="ni"><span class="n">03</span>Metrics</div><div class="ni"><span class="n">04</span>Progress</div><div class="ni"><span class="n">05</span>Progress II</div><div class="ni"><span class="n">06</span>Blockers</div><div class="ni a"><span class="n">07</span>Newsletter</div><div class="ni"><span class="n">08</span>Design</div><div class="ni"><span class="n">09</span>Technical</div><div class="ni"><span class="n">10</span>Others</div><div class="ni"><span class="n">11</span>Top of Mind</div><div class="ni"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">07 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">NEWSLETTER</div><div class="flex1"><div class="h3">Team Updates</div><div class="quote">"The best interface is no interface — until someone needs to file a bug report."</div><div class="body">New design systems engineer onboarded. First contributions expected next sprint. Quarterly accessibility audit completed with strong results.</div></div></div>
 </div>
 
 <!-- 08 Design -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item"><span class="num">01</span>Cover</div>
-    <div class="nav-item"><span class="num">02</span>Summary</div>
-    <div class="nav-item"><span class="num">03</span>Metrics</div>
-    <div class="nav-item"><span class="num">04</span>Progress</div>
-    <div class="nav-item"><span class="num">05</span>Progress II</div>
-    <div class="nav-item"><span class="num">06</span>Blockers</div>
-    <div class="nav-item"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item active"><span class="num">08</span>Design</div>
-    <div class="nav-item"><span class="num">09</span>Technical</div>
-    <div class="nav-item"><span class="num">10</span>Others</div>
-    <div class="nav-item"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">08 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="sec-title">DESIGN DIRECTION</div>
-    <div class="h3">Evolving the component library</div>
-    <div class="body" style="margin-bottom:24px">Moving toward a more systematic approach to our design tokens. Key focus areas include spacing consistency, color semantic layers, and motion guidelines.</div>
-    <div class="cards" style="grid-template-columns:1fr 1fr 1fr">
-      <div class="card"><div class="card-title">Spacing</div><div class="card-body">Migrated to 8pt grid system. 40 components updated.</div></div>
-      <div class="card"><div class="card-title">Color</div><div class="card-body">Semantic token layer complete. Dark mode parity at 95%.</div></div>
-      <div class="card"><div class="card-title">Motion</div><div class="card-body">Drafted motion guidelines. Reviewing with eng next week.</div></div>
-    </div>
-  </div>
+<div class="slide" data-index="7">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni"><span class="n">01</span>Cover</div><div class="ni"><span class="n">02</span>Summary</div><div class="ni"><span class="n">03</span>Metrics</div><div class="ni"><span class="n">04</span>Progress</div><div class="ni"><span class="n">05</span>Progress II</div><div class="ni"><span class="n">06</span>Blockers</div><div class="ni"><span class="n">07</span>Newsletter</div><div class="ni a"><span class="n">08</span>Design</div><div class="ni"><span class="n">09</span>Technical</div><div class="ni"><span class="n">10</span>Others</div><div class="ni"><span class="n">11</span>Top of Mind</div><div class="ni"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">08 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">DESIGN DIRECTION</div><div class="flex1"><div class="h3">Evolving the component library</div><div class="body" style="margin-bottom:20px">Systematic approach to design tokens: spacing, color semantics, and motion.</div><div class="cards" style="grid-template-columns:1fr 1fr 1fr"><div class="card"><div class="ct">Spacing</div><div class="cb">8pt grid. 40 components updated.</div></div><div class="card"><div class="ct">Color</div><div class="cb">Semantic tokens. Dark mode at 95%.</div></div><div class="card"><div class="ct">Motion</div><div class="cb">Guidelines drafted. Eng review next week.</div></div></div></div></div>
 </div>
 
 <!-- 09 Technical -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item"><span class="num">01</span>Cover</div>
-    <div class="nav-item"><span class="num">02</span>Summary</div>
-    <div class="nav-item"><span class="num">03</span>Metrics</div>
-    <div class="nav-item"><span class="num">04</span>Progress</div>
-    <div class="nav-item"><span class="num">05</span>Progress II</div>
-    <div class="nav-item"><span class="num">06</span>Blockers</div>
-    <div class="nav-item"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item"><span class="num">08</span>Design</div>
-    <div class="nav-item active"><span class="num">09</span>Technical</div>
-    <div class="nav-item"><span class="num">10</span>Others</div>
-    <div class="nav-item"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">09 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="sec-title">TECHNICAL HIGHLIGHTS</div>
-    <div class="list" style="gap:20px">
-      <div><div class="li" style="margin-bottom:4px"><span class="dot blue"></span><strong>Lighthouse score: 94 → 97</strong></div><div class="body" style="margin-left:20px">Optimized LCP through image lazy loading and font-display swap.</div></div>
-      <div><div class="li" style="margin-bottom:4px"><span class="dot blue"></span><strong>Bundle size reduced 18%</strong></div><div class="body" style="margin-left:20px">Tree-shaking unused components from the design system package.</div></div>
-      <div><div class="li" style="margin-bottom:4px"><span class="dot blue"></span><strong>CI pipeline: 12min → 7min</strong></div><div class="body" style="margin-left:20px">Parallelized test suites and added build caching.</div></div>
-    </div>
-  </div>
+<div class="slide" data-index="8">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni"><span class="n">01</span>Cover</div><div class="ni"><span class="n">02</span>Summary</div><div class="ni"><span class="n">03</span>Metrics</div><div class="ni"><span class="n">04</span>Progress</div><div class="ni"><span class="n">05</span>Progress II</div><div class="ni"><span class="n">06</span>Blockers</div><div class="ni"><span class="n">07</span>Newsletter</div><div class="ni"><span class="n">08</span>Design</div><div class="ni a"><span class="n">09</span>Technical</div><div class="ni"><span class="n">10</span>Others</div><div class="ni"><span class="n">11</span>Top of Mind</div><div class="ni"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">09 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">TECHNICAL HIGHLIGHTS</div><div class="flex1"><div class="list" style="gap:24px"><div><div class="li" style="margin-bottom:4px"><span class="dot blue"></span><strong>Lighthouse: 94 → 97</strong></div><div class="body" style="margin-left:18px">Image lazy loading + font-display swap.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot blue"></span><strong>Bundle size −18%</strong></div><div class="body" style="margin-left:18px">Tree-shaking unused design system components.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot blue"></span><strong>CI: 12min → 7min</strong></div><div class="body" style="margin-left:18px">Parallelized tests + build caching.</div></div></div></div></div>
 </div>
 
 <!-- 10 Others -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item"><span class="num">01</span>Cover</div>
-    <div class="nav-item"><span class="num">02</span>Summary</div>
-    <div class="nav-item"><span class="num">03</span>Metrics</div>
-    <div class="nav-item"><span class="num">04</span>Progress</div>
-    <div class="nav-item"><span class="num">05</span>Progress II</div>
-    <div class="nav-item"><span class="num">06</span>Blockers</div>
-    <div class="nav-item"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item"><span class="num">08</span>Design</div>
-    <div class="nav-item"><span class="num">09</span>Technical</div>
-    <div class="nav-item active"><span class="num">10</span>Others</div>
-    <div class="nav-item"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">10 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="sec-title">OTHERS</div>
-    <div class="list" style="gap:20px">
-      <div class="li"><span class="dot blue"></span>Team offsite planned for March 28 — agenda TBD</div>
-      <div class="li"><span class="dot blue"></span>Quarterly OKR review scheduled — draft ready for review</div>
-      <div class="li"><span class="dot blue"></span>Documentation sprint — 8 new pages added to internal wiki</div>
-      <div class="li muted"><span class="dot gray"></span>Vendor contract renewal — legal review in progress</div>
-    </div>
-  </div>
+<div class="slide" data-index="9">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni"><span class="n">01</span>Cover</div><div class="ni"><span class="n">02</span>Summary</div><div class="ni"><span class="n">03</span>Metrics</div><div class="ni"><span class="n">04</span>Progress</div><div class="ni"><span class="n">05</span>Progress II</div><div class="ni"><span class="n">06</span>Blockers</div><div class="ni"><span class="n">07</span>Newsletter</div><div class="ni"><span class="n">08</span>Design</div><div class="ni"><span class="n">09</span>Technical</div><div class="ni a"><span class="n">10</span>Others</div><div class="ni"><span class="n">11</span>Top of Mind</div><div class="ni"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">10 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">OTHERS</div><div class="flex1"><div class="list" style="gap:16px"><div class="li"><span class="dot blue"></span>Team offsite March 28 — agenda TBD</div><div class="li"><span class="dot blue"></span>OKR review — draft ready</div><div class="li"><span class="dot blue"></span>Documentation — 8 new wiki pages</div><div class="li muted"><span class="dot gray"></span>Vendor renewal — legal review in progress</div></div></div></div>
 </div>
 
 <!-- 11 Top of Mind -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item"><span class="num">01</span>Cover</div>
-    <div class="nav-item"><span class="num">02</span>Summary</div>
-    <div class="nav-item"><span class="num">03</span>Metrics</div>
-    <div class="nav-item"><span class="num">04</span>Progress</div>
-    <div class="nav-item"><span class="num">05</span>Progress II</div>
-    <div class="nav-item"><span class="num">06</span>Blockers</div>
-    <div class="nav-item"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item"><span class="num">08</span>Design</div>
-    <div class="nav-item"><span class="num">09</span>Technical</div>
-    <div class="nav-item"><span class="num">10</span>Others</div>
-    <div class="nav-item active"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">11 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="sec-title">TOP OF MIND</div>
-    <div class="h2">How do we scale<br>without losing craft?</div>
-    <div class="body">As we onboard more contributors, maintaining design quality becomes critical. Proposing a lightweight review framework: automated lint for tokens + human review for interaction patterns. Goal: keep velocity high while protecting the details that matter.</div>
-  </div>
+<div class="slide" data-index="10">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni"><span class="n">01</span>Cover</div><div class="ni"><span class="n">02</span>Summary</div><div class="ni"><span class="n">03</span>Metrics</div><div class="ni"><span class="n">04</span>Progress</div><div class="ni"><span class="n">05</span>Progress II</div><div class="ni"><span class="n">06</span>Blockers</div><div class="ni"><span class="n">07</span>Newsletter</div><div class="ni"><span class="n">08</span>Design</div><div class="ni"><span class="n">09</span>Technical</div><div class="ni"><span class="n">10</span>Others</div><div class="ni a"><span class="n">11</span>Top of Mind</div><div class="ni"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">11 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">TOP OF MIND</div><div class="flex1"><div class="h2">How do we scale<br>without losing craft?</div><div class="body">Proposing automated lint for tokens + human review for interaction patterns. Keep velocity high while protecting the details that matter.</div></div></div>
 </div>
 
 <!-- 12 Next Steps -->
-<div class="slide">
-  <div class="sidebar">
-    <div class="label">Navigation</div>
-    <div class="nav-item"><span class="num">01</span>Cover</div>
-    <div class="nav-item"><span class="num">02</span>Summary</div>
-    <div class="nav-item"><span class="num">03</span>Metrics</div>
-    <div class="nav-item"><span class="num">04</span>Progress</div>
-    <div class="nav-item"><span class="num">05</span>Progress II</div>
-    <div class="nav-item"><span class="num">06</span>Blockers</div>
-    <div class="nav-item"><span class="num">07</span>Newsletter</div>
-    <div class="nav-item"><span class="num">08</span>Design</div>
-    <div class="nav-item"><span class="num">09</span>Technical</div>
-    <div class="nav-item"><span class="num">10</span>Others</div>
-    <div class="nav-item"><span class="num">11</span>Top of Mind</div>
-    <div class="nav-item active"><span class="num">12</span>Next Steps</div>
-  </div>
-  <div class="main">
-    <div class="top-bar">
-      <div class="page-ind">12 / 12</div>
-      <div class="meta"><div class="name">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div>
-    </div>
-    <div class="sec-title">NEXT STEPS</div>
-    <div class="h3">Coming up next week</div>
-    <div class="list" style="gap:18px">
-      <div class="li"><span class="dot blue"></span>Complete API integration — target 100% endpoints</div>
-      <div class="li"><span class="dot blue"></span>Begin performance optimization sprint</div>
-      <div class="li"><span class="dot blue"></span>Finalize motion design guidelines</div>
-      <div class="li"><span class="dot blue"></span>Partner webhook integration kickoff</div>
-      <div class="li"><span class="dot blue"></span>Quarterly OKR review presentation</div>
-    </div>
-    <div style="margin-top:auto;padding-top:48px">
-      <div class="hr"></div>
-      <div style="font-size:13px;color:#86868b;text-align:center">Thank you · Questions?</div>
-    </div>
-  </div>
+<div class="slide" data-index="11">
+  <div class="sidebar"><div class="lbl">Navigation</div><div class="ni"><span class="n">01</span>Cover</div><div class="ni"><span class="n">02</span>Summary</div><div class="ni"><span class="n">03</span>Metrics</div><div class="ni"><span class="n">04</span>Progress</div><div class="ni"><span class="n">05</span>Progress II</div><div class="ni"><span class="n">06</span>Blockers</div><div class="ni"><span class="n">07</span>Newsletter</div><div class="ni"><span class="n">08</span>Design</div><div class="ni"><span class="n">09</span>Technical</div><div class="ni"><span class="n">10</span>Others</div><div class="ni"><span class="n">11</span>Top of Mind</div><div class="ni a"><span class="n">12</span>Next Steps</div></div>
+  <div class="main"><div class="top"><div class="pg">12 / 12</div><div class="meta"><div class="nm">{{author}}</div><div>{{role}}</div><div>{{date}}</div></div></div><div class="st">NEXT STEPS</div><div class="flex1"><div class="h3">Coming up next week</div><div class="list" style="gap:14px"><div class="li"><span class="dot blue"></span>Complete API integration — 100% endpoints</div><div class="li"><span class="dot blue"></span>Begin performance optimization sprint</div><div class="li"><span class="dot blue"></span>Finalize motion design guidelines</div><div class="li"><span class="dot blue"></span>Partner webhook integration kickoff</div><div class="li"><span class="dot blue"></span>OKR review presentation</div></div></div><div class="end"><div class="hr"></div><div style="font-size:13px;color:#86868b;text-align:center">Thank you · Questions?</div></div></div>
 </div>
 
+<script>
+(function(){
+  var slides=document.querySelectorAll('.slide'),total=slides.length,cur=0,busy=false;
+  var dotsC=document.getElementById('dots');
+  for(var i=0;i<total;i++){var d=document.createElement('div');d.className='pd'+(i===0?' a':'');d.dataset.i=i;dotsC.appendChild(d)}
+  var dots=dotsC.querySelectorAll('.pd');
+  function go(n){if(n<0||n>=total||n===cur||busy)return;busy=true;slides[cur].classList.remove('active');dots[cur].classList.remove('a');cur=n;slides[cur].classList.add('active');dots[cur].classList.add('a');setTimeout(function(){busy=false},600)}
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();go(cur+1)}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();go(cur-1)}});
+  dots.forEach(function(d){d.addEventListener('click',function(){go(+d.dataset.i)})});
+  // Sidebar nav
+  document.querySelectorAll('.ni').forEach(function(el){el.addEventListener('click',function(){var idx=[].indexOf.call(el.parentNode.children,el)-1;go(idx)})});
+})();
+</script>
 </body>
 </html>
