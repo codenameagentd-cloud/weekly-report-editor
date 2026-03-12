@@ -63,6 +63,70 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
 .dots{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:100}
 .pd{width:8px;height:8px;border-radius:50%;background:#333;cursor:pointer;transition:background .3s}
 .pd.a{background:#ff2d55}
+
+/* Animations */
+@keyframes hypeFadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes hypeFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes hypeSlideRight {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.slide .tag, .slide .big, .slide .med, .slide .sub, .slide .body-text, .slide .items, .slide .grid, .slide .card, .slide .gc, .slide .quote, .slide .pr, .slide .it, .slide .btm {
+  opacity: 0;
+}
+.slide.active .tag {
+  animation: hypeSlideRight 0.35s cubic-bezier(0.4,0,0.2,1) both;
+  animation-delay: 0s;
+}
+.slide.active .big, .slide.active .med {
+  animation: hypeFadeUp 0.6s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.08s;
+}
+.slide.active .sub, .slide.active .body-text {
+  animation: hypeFadeIn 0.4s ease both;
+  animation-delay: 0.2s;
+}
+.slide.active .items {
+  animation: hypeFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.2s;
+}
+.slide.active .grid {
+  animation: hypeFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.15s;
+}
+.slide.active .gc {
+  animation: hypeFadeUp 0.4s cubic-bezier(0.23,1,0.32,1) both;
+}
+.slide.active .gc:nth-child(1) { animation-delay: 0.1s; }
+.slide.active .gc:nth-child(2) { animation-delay: 0.18s; }
+.slide.active .gc:nth-child(3) { animation-delay: 0.26s; }
+.slide.active .gc:nth-child(4) { animation-delay: 0.34s; }
+.slide.active .card {
+  animation: hypeFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.15s;
+}
+.slide.active .pr {
+  animation: hypeSlideRight 0.35s cubic-bezier(0.4,0,0.2,1) both;
+}
+.slide.active .pr:nth-child(1) { animation-delay: 0.1s; }
+.slide.active .pr:nth-child(2) { animation-delay: 0.16s; }
+.slide.active .pr:nth-child(3) { animation-delay: 0.22s; }
+.slide.active .pr:nth-child(4) { animation-delay: 0.28s; }
+.slide.active .pr:nth-child(5) { animation-delay: 0.34s; }
+.slide.active .quote {
+  animation: hypeFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.15s;
+}
+.slide.active .btm {
+  animation: hypeFadeIn 0.3s ease both;
+  animation-delay: 0.35s;
+}
 </style>
 </head>
 <body>
@@ -73,7 +137,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
   <div class="nav"><div class="nav-l">Design Team</div><div class="nav-r"><span class="nl a">Overview</span><span class="nl">Progress</span><span class="nl">Blockers</span><span class="nl">Next</span></div></div>
   <div class="bod" style="flex-direction:row;align-items:stretch">
     <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-right:48px">
-      <div class="tag">Sprint 14 — Week 11</div>
+      <div class="tag">Weekly Status Update</div>
       <div class="big">Weekly<br><span class="pk">Update</span></div>
       <div class="sub" style="margin-top:20px">Progress report on current sprint milestones. Key features shipped, blockers resolved, and trajectory toward deadline.</div>
       <div class="btm"><span class="btm-t">{{author}} · {{role}}</span><span class="btm-t">{{date}}</span></div>
@@ -162,7 +226,9 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
   var dc=document.getElementById('dots');
   for(var i=0;i<total;i++){var d=document.createElement('div');d.className='pd'+(i===0?' a':'');d.dataset.i=i;dc.appendChild(d)}
   var dots=dc.querySelectorAll('.pd');
-  function go(n){if(n<0||n>=total||n===cur||busy)return;busy=true;slides[cur].classList.remove('active');dots[cur].classList.remove('a');cur=n;slides[cur].classList.add('active');dots[cur].classList.add('a');setTimeout(function(){busy=false},600)}
+  
+  function reset(s){var els=s.querySelectorAll('.tag,.big,.med,.sub,.body-text,.items,.grid,.card,.gc,.quote,.pr,.it,.btm');for(var i=0;i<els.length;i++){els[i].style.animation='none';els[i].offsetHeight;els[i].style.animation=''}}
+  function go(n){if(n<0||n>=total||n===cur||busy)return;busy=true;slides[cur].classList.remove('active');reset(slides[cur]);dots[cur].classList.remove('a');cur=n;slides[cur].classList.add('active');dots[cur].classList.add('a');setTimeout(function(){busy=false},600)}
   document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();go(cur+1)}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();go(cur-1)}});
   dots.forEach(function(d){d.addEventListener('click',function(){go(+d.dataset.i)})});
 })();

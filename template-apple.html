@@ -76,6 +76,74 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',-apple-syst
 .dots{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:100}
 .pd{width:8px;height:8px;border-radius:50%;background:#d1d1d6;cursor:pointer;transition:background .3s}
 .pd.a{background:#0071e3}
+
+/* Animations */
+@keyframes appleFadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes appleFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.slide .st, .slide .h2, .slide .h3, .slide .body, .slide .list, .slide .cards, .slide .hero-num, .slide .hero-cap, .slide .stats, .slide .quote, .slide .pr, .slide .li, .slide .card, .slide .end {
+  opacity: 0;
+}
+.slide.active .st {
+  animation: appleFadeIn 0.4s ease both;
+  animation-delay: 0s;
+}
+.slide.active .hero-num {
+  animation: appleFadeUp 0.6s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.1s;
+}
+.slide.active .hero-cap {
+  animation: appleFadeIn 0.4s ease both;
+  animation-delay: 0.3s;
+}
+.slide.active .stats {
+  animation: appleFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.25s;
+}
+.slide.active .h2, .slide.active .h3 {
+  animation: appleFadeUp 0.6s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.1s;
+}
+.slide.active .body {
+  animation: appleFadeIn 0.5s ease both;
+  animation-delay: 0.2s;
+}
+.slide.active .list {
+  animation: appleFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.25s;
+}
+.slide.active .cards {
+  animation: appleFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.15s;
+}
+.slide.active .card {
+  animation: appleFadeUp 0.4s cubic-bezier(0.23,1,0.32,1) both;
+}
+.slide.active .card:nth-child(1) { animation-delay: 0.1s; }
+.slide.active .card:nth-child(2) { animation-delay: 0.18s; }
+.slide.active .card:nth-child(3) { animation-delay: 0.26s; }
+.slide.active .card:nth-child(4) { animation-delay: 0.34s; }
+.slide.active .pr {
+  animation: appleFadeUp 0.4s cubic-bezier(0.23,1,0.32,1) both;
+}
+.slide.active .pr:nth-child(1) { animation-delay: 0.1s; }
+.slide.active .pr:nth-child(2) { animation-delay: 0.16s; }
+.slide.active .pr:nth-child(3) { animation-delay: 0.22s; }
+.slide.active .pr:nth-child(4) { animation-delay: 0.28s; }
+.slide.active .pr:nth-child(5) { animation-delay: 0.34s; }
+.slide.active .quote {
+  animation: appleFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.15s;
+}
+.slide.active .end {
+  animation: appleFadeIn 0.4s ease both;
+  animation-delay: 0.4s;
+}
 </style>
 </head>
 <body>
@@ -163,7 +231,9 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',-apple-syst
   var dotsC=document.getElementById('dots');
   for(var i=0;i<total;i++){var d=document.createElement('div');d.className='pd'+(i===0?' a':'');d.dataset.i=i;dotsC.appendChild(d)}
   var dots=dotsC.querySelectorAll('.pd');
-  function go(n){if(n<0||n>=total||n===cur||busy)return;busy=true;slides[cur].classList.remove('active');dots[cur].classList.remove('a');cur=n;slides[cur].classList.add('active');dots[cur].classList.add('a');setTimeout(function(){busy=false},600)}
+  
+  function reset(s){var els=s.querySelectorAll('.st,.h2,.h3,.body,.list,.cards,.hero-num,.hero-cap,.stats,.quote,.pr,.li,.card,.end');for(var i=0;i<els.length;i++){els[i].style.animation='none';els[i].offsetHeight;els[i].style.animation=''}}
+  function go(n){if(n<0||n>=total||n===cur||busy)return;busy=true;slides[cur].classList.remove('active');reset(slides[cur]);dots[cur].classList.remove('a');cur=n;slides[cur].classList.add('active');dots[cur].classList.add('a');setTimeout(function(){busy=false},600)}
   document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();go(cur+1)}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();go(cur-1)}});
   dots.forEach(function(d){d.addEventListener('click',function(){go(+d.dataset.i)})});
   // Sidebar nav

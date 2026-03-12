@@ -64,6 +64,74 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
 .dots{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:100}
 .pd{width:8px;height:8px;border-radius:50%;background:#d1ccc5;cursor:pointer;transition:background .3s}
 .pd.a{background:#e85d26}
+
+/* Animations */
+@keyframes warmFadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes warmFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.slide .stag, .slide .h1, .slide .h2, .slide .h3, .slide .body, .slide .list, .slide .cards, .slide .card, .slide .nums, .slide .nv, .slide .quote, .slide .pr, .slide .hr, .slide .pill {
+  opacity: 0;
+}
+.slide.active .stag {
+  animation: warmFadeIn 0.4s ease both;
+  animation-delay: 0s;
+}
+.slide.active .h1 {
+  animation: warmFadeUp 0.7s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.08s;
+}
+.slide.active .h2, .slide.active .h3 {
+  animation: warmFadeUp 0.6s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.1s;
+}
+.slide.active .body {
+  animation: warmFadeIn 0.5s ease both;
+  animation-delay: 0.2s;
+}
+.slide.active .list {
+  animation: warmFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.22s;
+}
+.slide.active .cards {
+  animation: warmFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.15s;
+}
+.slide.active .card {
+  animation: warmFadeUp 0.4s cubic-bezier(0.23,1,0.32,1) both;
+}
+.slide.active .card:nth-child(1) { animation-delay: 0.1s; }
+.slide.active .card:nth-child(2) { animation-delay: 0.18s; }
+.slide.active .card:nth-child(3) { animation-delay: 0.26s; }
+.slide.active .card:nth-child(4) { animation-delay: 0.34s; }
+.slide.active .nums {
+  animation: warmFadeUp 0.6s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.15s;
+}
+.slide.active .pr {
+  animation: warmFadeUp 0.4s cubic-bezier(0.23,1,0.32,1) both;
+}
+.slide.active .pr:nth-child(1) { animation-delay: 0.1s; }
+.slide.active .pr:nth-child(2) { animation-delay: 0.16s; }
+.slide.active .pr:nth-child(3) { animation-delay: 0.22s; }
+.slide.active .pr:nth-child(4) { animation-delay: 0.28s; }
+.slide.active .pr:nth-child(5) { animation-delay: 0.34s; }
+.slide.active .quote {
+  animation: warmFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  animation-delay: 0.15s;
+}
+.slide.active .hr {
+  animation: warmFadeIn 0.3s ease both;
+  animation-delay: 0.18s;
+}
+.slide.active .pill {
+  animation: warmFadeIn 0.4s ease both;
+  animation-delay: 0.3s;
+}
 </style>
 </head>
 <body>
@@ -72,7 +140,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
 <!-- 01 Cover -->
 <div class="slide active" data-index="0">
   <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">{{date}}</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Weekly Update</span></div><div class="h1 serif">Status<br><span class="acc">Report</span></div></div>
+  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Weekly Status Update</span></div><div class="h1 serif">Status<br><span class="acc">Report</span></div></div>
   <div class="btm"><div><div class="author">{{author}}</div><div class="role">{{role}}</div></div><div class="pill">C2 Pre-Planning</div></div>
 </div>
 
@@ -100,7 +168,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
 <!-- 05 Progress II -->
 <div class="slide" data-index="4">
   <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">{{date}}</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Deep Dive</span></div><div class="h3 serif">API Integration</div><div class="body" style="margin-bottom:16px">Endpoint mapping, auth exchange, and sync testing.</div><div class="list"><div class="li"><span class="dot dgn"></span>24 endpoints mapped</div><div class="li"><span class="dot dgn"></span>OAuth exchange working</div><div class="li"><span class="dot do"></span>Batch sync functional</div><div class="li muted"><span class="dot dgy"></span>Webhooks pending</div><div class="li muted"><span class="dot dgy"></span>Error handling next sprint</div></div></div>
+  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Progress — Deep Dive</span></div><div class="h3 serif">API Integration</div><div class="body" style="margin-bottom:16px">Endpoint mapping, auth exchange, and sync testing.</div><div class="list"><div class="li"><span class="dot dgn"></span>24 endpoints mapped</div><div class="li"><span class="dot dgn"></span>OAuth exchange working</div><div class="li"><span class="dot do"></span>Batch sync functional</div><div class="li muted"><span class="dot dgy"></span>Webhooks pending</div><div class="li muted"><span class="dot dgy"></span>Error handling next sprint</div></div></div>
   <div class="btm"><div class="author">{{author}}</div><div class="pg">05 / 12</div></div>
 </div>
 
@@ -121,7 +189,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
 <!-- 08 Design -->
 <div class="slide" data-index="7">
   <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">{{date}}</span></div></div>
-  <div style="margin-top:24px;flex-shrink:0"><div class="stag"><span class="sln"></span><span class="stag-t">Design</span></div><div class="h3 serif">Evolving the <span class="acc">component library</span></div></div>
+  <div style="margin-top:24px;flex-shrink:0"><div class="stag"><span class="sln"></span><span class="stag-t">Design Direction</span></div><div class="h3 serif">Evolving the <span class="acc">component library</span></div></div>
   <div class="cards" style="margin-top:12px"><div class="card"><div class="ct">Spacing</div><div class="cb">8pt grid. 40 components.</div></div><div class="card"><div class="ct">Color</div><div class="cb">Semantic tokens. Dark mode 95%.</div></div><div class="card"><div class="ct">Motion</div><div class="cb">Guidelines drafted.</div></div><div class="card"><div class="ct">Typography</div><div class="cb">4 weights, 6 sizes rationalized.</div></div></div>
   <div class="btm"><div class="author">{{author}}</div><div class="pg">08 / 12</div></div>
 </div>
@@ -129,7 +197,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
 <!-- 09 Technical -->
 <div class="slide" data-index="8">
   <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">{{date}}</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Technical</span></div><div class="list" style="gap:24px"><div><div class="li" style="margin-bottom:4px"><span class="dot do"></span><strong>Lighthouse: 94 → 97</strong></div><div class="body" style="margin-left:22px">Lazy loading + font-display swap.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot do"></span><strong>Bundle −18%</strong></div><div class="body" style="margin-left:22px">Tree-shaking unused components.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot do"></span><strong>CI: 12min → 7min</strong></div><div class="body" style="margin-left:22px">Parallelized + caching.</div></div></div></div>
+  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Technical Highlights</span></div><div class="list" style="gap:24px"><div><div class="li" style="margin-bottom:4px"><span class="dot do"></span><strong>Lighthouse: 94 → 97</strong></div><div class="body" style="margin-left:22px">Lazy loading + font-display swap.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot do"></span><strong>Bundle −18%</strong></div><div class="body" style="margin-left:22px">Tree-shaking unused components.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot do"></span><strong>CI: 12min → 7min</strong></div><div class="body" style="margin-left:22px">Parallelized + caching.</div></div></div></div>
   <div class="btm"><div class="author">{{author}}</div><div class="pg">09 / 12</div></div>
 </div>
 
@@ -160,7 +228,9 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,s
   var dc=document.getElementById('dots');
   for(var i=0;i<total;i++){var d=document.createElement('div');d.className='pd'+(i===0?' a':'');d.dataset.i=i;dc.appendChild(d)}
   var dots=dc.querySelectorAll('.pd');
-  function go(n){if(n<0||n>=total||n===cur||busy)return;busy=true;slides[cur].classList.remove('active');dots[cur].classList.remove('a');cur=n;slides[cur].classList.add('active');dots[cur].classList.add('a');setTimeout(function(){busy=false},600)}
+  
+  function reset(s){var els=s.querySelectorAll('.stag,.h1,.h2,.h3,.body,.list,.cards,.card,.nums,.nv,.quote,.pr,.hr,.pill');for(var i=0;i<els.length;i++){els[i].style.animation='none';els[i].offsetHeight;els[i].style.animation=''}}
+  function go(n){if(n<0||n>=total||n===cur||busy)return;busy=true;slides[cur].classList.remove('active');reset(slides[cur]);dots[cur].classList.remove('a');cur=n;slides[cur].classList.add('active');dots[cur].classList.add('a');setTimeout(function(){busy=false},600)}
   document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();go(cur+1)}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();go(cur-1)}});
   dots.forEach(function(d){d.addEventListener('click',function(){go(+d.dataset.i)})});
 })();
