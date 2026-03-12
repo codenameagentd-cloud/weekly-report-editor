@@ -319,10 +319,20 @@ function buildCoverSlide(summary, dateStr, cat, itemCount) {
           <div class="eyebrow">Status Update</div>
           <h1 style="font-size:clamp(36px,4.5vw,64px);letter-spacing:-2px;line-height:1.05">${esc}</h1>
         </div>
-        <div style="display:flex;align-items:center;justify-content:center;background:var(--card);border-radius:20px;padding:40px;border:1px solid var(--border)">
-          <div style="text-align:center">
-            <div style="font-size:72px;font-weight:900;color:var(--accent);line-height:1">${itemCount || 0}</div>
-            <div style="font-size:14px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:8px">ITEMS THIS WEEK</div>
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:16px;padding-left:48px">
+          <div style="background:var(--card);border-radius:16px;padding:28px 32px;border:1px solid var(--border)">
+            <div style="font-size:48px;font-weight:900;color:var(--accent);line-height:1">${itemCount || 0}</div>
+            <div style="font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:6px">Progress Items</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:var(--card);border-radius:12px;padding:18px 20px;border:1px solid var(--border)">
+              <div style="font-size:24px;font-weight:800;color:var(--text)">W${String(getWeekNumber()).padStart(2,'0')}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px">Week</div>
+            </div>
+            <div style="background:var(--card);border-radius:12px;padding:18px 20px;border:1px solid var(--border)">
+              <div style="font-size:24px;font-weight:800;color:var(--text)">${sectionCount}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px">Sections</div>
+            </div>
           </div>
         </div>
         <div class="footer" style="grid-column:1/-1"><span>Confidential</span><span class="page-num">1 / {TOTAL}</span></div>
