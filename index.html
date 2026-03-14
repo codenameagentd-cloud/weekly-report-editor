@@ -17,7 +17,7 @@
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.5; }
-  .container { max-width: 680px; margin: 0 auto; padding: 48px 24px 80px; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
   h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 4px; }
   .subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: 36px; }
 
@@ -70,7 +70,22 @@
   .ai-row select { margin-top: 4px; }
   .ai-row button { white-space: nowrap; }
 
-  @media (max-width: 600px) {
+  
+  .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .col-left, .col-right { display: flex; flex-direction: column; gap: 16px; }
+  .field { margin-bottom: 0; }
+  textarea { min-height: 68px; }
+  #progress { min-height: 100px; }
+  h1 { font-size: 22px; margin-bottom: 2px; }
+  .subtitle { margin-bottom: 16px; font-size: 13px; }
+  .ai-section { margin-top: 0; padding: 16px; }
+  .ai-section h3 { margin-bottom: 8px; }
+  .actions { margin-top: 0; }
+  .output { margin-top: 0; }
+  .row { margin-bottom: 0; }
+
+  @media (max-width: 900px) {
+    .editor-grid { grid-template-columns: 1fr; }
     .row { flex-direction: column; gap: 16px; }
     .ai-row { flex-direction: column; align-items: stretch; }
   }
@@ -82,6 +97,8 @@
   <h1>Weekly Report</h1>
   <p class="subtitle">Fill sections, pick a style, generate slides.</p>
 
+  <div class="editor-grid">
+  <div class="col-left">
   <div class="field">
     <label>Summary <span class="tag">required</span></label>
     <textarea id="summary" placeholder="One-line conclusion of the week" rows="2"></textarea>
@@ -96,7 +113,9 @@
     <label>Newsletter <span class="tag optional">optional</span></label>
     <textarea id="newsletter" placeholder="Design direction, team updates, insights"></textarea>
   </div>
+  </div>
 
+  <div class="col-right">
   <div class="field">
     <label>Others <span class="tag optional">optional</span></label>
     <textarea id="others" placeholder="Meetings, cross-team work, misc"></textarea>
@@ -139,7 +158,7 @@
       </div>
       <div class="field">
         <label style="margin-bottom:4px">API Key</label>
-        <input type="password" id="aiKey" placeholder="GitHub token (saved locally)" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;">
+        <input type="password" id="aiKey" placeholder="GitHub token (saved locally)" onchange="localStorage.setItem("wr-gh-token",this.value)" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;">
       </div>
       <button class="btn-secondary" onclick="polishAll()" id="polishBtn">Polish</button>
     </div>
@@ -151,6 +170,7 @@
     <button class="btn-secondary" onclick="preview()">Preview</button>
   </div>
 
+  </div></div>
   <div class="output" id="output">
     <h3>Ready</h3>
     <p class="meta" id="outputMeta"></p>
