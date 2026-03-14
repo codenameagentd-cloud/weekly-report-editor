@@ -1,86 +1,181 @@
-<div class="container">
-  <header>
-    <h1>Weekly Report</h1>
-    <p class="subtitle">Fill sections, pick a style, generate slides.</p>
-  </header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Report Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8f8f7;
+    --surface: #ffffff;
+    --border: #e8e6e3;
+    --text: #1d1b16;
+    --muted: #9c9990;
+    --accent: #1d1b16;
+    --radius: 10px;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:var(--font); background:var(--bg); color:var(--text); }
 
-  <div class="editor-grid">
-    <div class="col-left">
+  .app { display:flex; height:100vh; }
+  
+  /* Left: content fields */
+  .editor-main { flex:1; display:flex; flex-direction:column; padding:28px 32px 20px; overflow-y:auto; }
+  .editor-main h1 { font-size:18px; font-weight:600; letter-spacing:-0.3px; margin-bottom:2px; }
+  .editor-main .sub { font-size:12px; color:var(--muted); margin-bottom:20px; }
+  
+  .fields { display:flex; flex-direction:column; gap:14px; flex:1; }
+  .field label { display:flex; align-items:center; gap:5px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px; color:var(--muted); margin-bottom:3px; }
+  .badge { font-size:9px; font-weight:600; padding:1px 5px; border-radius:3px; color:#fff; }
+  .badge.req { background:var(--text); }
+  .badge.opt { background:#c4c0b9; }
+  
+  textarea { width:100%; border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; font-family:var(--font); font-size:13px; line-height:1.55; color:var(--text); background:var(--surface); resize:none; transition:border-color .15s; }
+  textarea:focus { outline:none; border-color:var(--accent); }
+  textarea::placeholder { color:#d0cec9; }
+
+  .grow { flex:1; }
+  .grow textarea { height:100%; min-height:70px; }
+  
+  /* Right: sidebar */
+  .sidebar { width:280px; background:var(--surface); border-left:1px solid var(--border); display:flex; flex-direction:column; padding:28px 20px 20px; gap:16px; overflow-y:auto; }
+  
+  .sb-section { }
+  .sb-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:8px; }
+  
+  .style-chips { display:flex; flex-wrap:wrap; gap:5px; }
+  .chip { padding:5px 11px; border:1.5px solid var(--border); border-radius:6px; font-size:11px; font-weight:500; cursor:pointer; transition:all .12s; user-select:none; background:var(--surface); }
+  .chip:hover { border-color:#ccc; }
+  .chip.active { border-color:var(--accent); background:var(--accent); color:#fff; }
+  
+  select { width:100%; padding:7px 10px; border:1px solid var(--border); border-radius:6px; font-family:var(--font); font-size:12px; color:var(--text); background:var(--surface); appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='M2 4l3 3 3-3'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; }
+  select:focus { outline:none; border-color:var(--accent); }
+  
+  .token-input { width:100%; padding:7px 10px; border:1px solid var(--border); border-radius:6px; font-family:var(--font); font-size:12px; color:var(--text); background:var(--surface); }
+  .token-input:focus { outline:none; border-color:var(--accent); }
+  
+  .sb-row { display:flex; gap:6px; align-items:end; }
+  .sb-row > *:first-child { flex:1; }
+  
+  .sb-hint { font-size:10px; color:var(--muted); margin-top:4px; line-height:1.4; }
+  
+  .btn { padding:8px 16px; border:none; border-radius:6px; font-family:var(--font); font-size:12px; font-weight:500; cursor:pointer; transition:all .12s; }
+  .btn-primary { background:var(--accent); color:#fff; width:100%; padding:10px; font-size:13px; font-weight:600; border-radius:8px; }
+  .btn-primary:hover { opacity:.88; }
+  .btn-primary:disabled { opacity:.35; cursor:not-allowed; }
+  .btn-ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
+  .btn-ghost:hover { background:var(--bg); }
+  
+  .action-row { display:flex; gap:6px; flex-wrap:wrap; }
+  .action-row .btn { font-size:11px; padding:6px 10px; }
+  
+  .output-panel { display:none; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px 12px; }
+  .output-panel.active { display:block; }
+  .output-panel h4 { font-size:12px; font-weight:600; margin-bottom:1px; }
+  .output-panel .meta { font-size:10px; color:var(--muted); margin-bottom:6px; }
+
+  .spacer { flex:1; }
+
+  .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--text); color:#fff; padding:8px 18px; border-radius:6px; font-size:12px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:200; }
+  .toast.show { opacity:1; }
+  .preview-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100; justify-content:center; align-items:center; }
+  .preview-overlay.active { display:flex; }
+  .preview-frame { width:92vw; height:88vh; background:#fff; border-radius:14px; overflow:hidden; position:relative; }
+  .preview-close { position:absolute; top:12px; right:12px; width:32px; height:32px; border-radius:50%; background:rgba(0,0,0,.06); border:none; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; z-index:10; }
+  .preview-iframe { width:100%; height:100%; border:none; }
+
+  @media (max-width:800px) {
+    .app { flex-direction:column; }
+    html, body { overflow:auto; }
+    .sidebar { width:100%; border-left:none; border-top:1px solid var(--border); }
+    .editor-main { overflow:visible; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="editor-main">
+    <h1>Weekly Report</h1>
+    <p class="sub">Fill in your sections, pick a style, generate.</p>
+    <div class="fields">
       <div class="field">
-        <label>Summary <span class="tag">required</span></label>
-        <textarea id="summary" placeholder="One-line conclusion of the week"></textarea>
+        <label>Summary <span class="badge req">required</span></label>
+        <textarea id="summary" rows="2" placeholder="One-line conclusion of the week"></textarea>
       </div>
-      <div class="field">
-        <label>Progress Status <span class="tag">required</span></label>
+      <div class="field grow">
+        <label>Progress Status <span class="badge req">required</span></label>
         <textarea id="progress" placeholder="- Feature A: ✅ shipped&#10;- Feature B: 🔵 in progress&#10;- Feature C: 🟡 blocked"></textarea>
       </div>
       <div class="field">
-        <label>Newsletter <span class="tag optional">optional</span></label>
-        <textarea id="newsletter" placeholder="Design direction, team updates, insights"></textarea>
+        <label>Newsletter <span class="badge opt">optional</span></label>
+        <textarea id="newsletter" rows="2" placeholder="Design direction, team updates, insights"></textarea>
       </div>
       <div class="field">
-        <label>Others <span class="tag optional">optional</span></label>
-        <textarea id="others" placeholder="Meetings, cross-team work, misc"></textarea>
+        <label>Others <span class="badge opt">optional</span></label>
+        <textarea id="others" rows="2" placeholder="Meetings, cross-team work, misc"></textarea>
       </div>
       <div class="field">
-        <label>Top of Mind <span class="tag optional">optional</span></label>
-        <textarea id="topofmind" placeholder="1-2 things on your mind"></textarea>
-      </div>
-    </div>
-
-    <div class="col-right">
-      <div class="panel">
-        <div class="panel-title">Style</div>
-        <div class="options" id="styleOptions">
-          <div class="opt active" data-style="minimal" onclick="pickStyle(this)">Minimal</div>
-          <div class="opt" data-style="bold" onclick="pickStyle(this)">Bold</div>
-          <div class="opt" data-style="warm" onclick="pickStyle(this)">Warm</div>
-          <div class="opt" data-style="corporate" onclick="pickStyle(this)">Corporate</div>
-          <div class="opt" data-style="monochrome" onclick="pickStyle(this)">Monochrome</div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">AI Polish</div>
-        <div class="ai-row">
-          <div class="field">
-            <label style="margin-bottom:2px">Model</label>
-            <select id="aiModel">
-              <option value="">None (skip)</option>
-              <option value="gpt-5.2">GPT-5.2</option>
-              <option value="gpt-4.1">GPT-4.1</option>
-              <option value="gpt-4o">GPT-4o</option>
-              <option value="gpt-5-mini">GPT-5 mini</option>
-              <option value="claude-opus-4.6">Claude Opus 4.6</option>
-              <option value="claude-sonnet-4.6">Claude Sonnet 4.6</option>
-              <option value="gemini-3-pro-preview">Gemini 3 Pro</option>
-              <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
-            </select>
-          </div>
-          <button class="btn-secondary btn-sm" onclick="polishAll()" id="polishBtn">Polish</button>
-        </div>
-        <div class="field" style="margin-top:8px">
-          <label style="margin-bottom:2px">Token</label>
-          <input type="password" id="aiKey" placeholder="GitHub token (saved locally)" onchange="localStorage.setItem('wr-gh-token',this.value)">
-        </div>
-        <p style="font-size:10px;color:var(--text-secondary);margin-top:6px;">Polishes tone. Does not generate new content.</p>
-      </div>
-
-      <button class="btn-primary" onclick="generate()" id="genBtn">Generate Slides</button>
-
-      <div class="actions-row">
-        <button class="btn-secondary btn-sm" onclick="preview()">Preview</button>
-        <button class="btn-secondary btn-sm" onclick="downloadHTML()">Download</button>
-        <button class="btn-secondary btn-sm" onclick="publishAndCopy()">Publish & Copy URL</button>
-        <button class="btn-secondary btn-sm" onclick="openNewTab()">Open in New Tab</button>
-      </div>
-
-      <div class="output" id="output">
-        <h3>Ready</h3>
-        <p class="meta" id="outputMeta"></p>
+        <label>Top of Mind <span class="badge opt">optional</span></label>
+        <textarea id="topofmind" rows="2" placeholder="1-2 things on your mind"></textarea>
       </div>
     </div>
   </div>
+
+  <div class="sidebar">
+    <div class="sb-section">
+      <div class="sb-title">Style</div>
+      <div class="style-chips" id="styleOptions">
+        <div class="chip active" data-style="minimal" onclick="pickStyle(this)">Minimal</div>
+        <div class="chip" data-style="bold" onclick="pickStyle(this)">Bold</div>
+        <div class="chip" data-style="warm" onclick="pickStyle(this)">Warm</div>
+        <div class="chip" data-style="corporate" onclick="pickStyle(this)">Corporate</div>
+        <div class="chip" data-style="monochrome" onclick="pickStyle(this)">Mono</div>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-title">AI Polish</div>
+      <div class="sb-row">
+        <div>
+          <select id="aiModel">
+            <option value="">None</option>
+            <option value="gpt-5.2">GPT-5.2</option>
+            <option value="gpt-4.1">GPT-4.1</option>
+            <option value="gpt-4o">GPT-4o</option>
+            <option value="gpt-5-mini">GPT-5 mini</option>
+            <option value="claude-opus-4.6">Claude Opus 4.6</option>
+            <option value="claude-sonnet-4.6">Claude Sonnet 4.6</option>
+            <option value="gemini-3-pro-preview">Gemini 3 Pro</option>
+            <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
+          </select>
+        </div>
+        <button class="btn btn-ghost" onclick="polishAll()" id="polishBtn">Polish</button>
+      </div>
+      <input type="password" class="token-input" id="aiKey" placeholder="GitHub token" onchange="localStorage.setItem('wr-gh-token',this.value)" style="margin-top:6px;">
+      <p class="sb-hint">Polishes tone &amp; accuracy only.</p>
+    </div>
+
+    <div class="spacer"></div>
+
+    <button class="btn btn-primary" onclick="generate()" id="genBtn">Generate Slides</button>
+
+    <div class="action-row">
+      <button class="btn btn-ghost" onclick="preview()">Preview</button>
+      <button class="btn btn-ghost" onclick="downloadHTML()">Download</button>
+      <button class="btn btn-ghost" onclick="publishAndCopy()">Publish</button>
+      <button class="btn btn-ghost" onclick="openNewTab()">Open</button>
+    </div>
+
+    <div class="output-panel" id="output">
+      <h4>Ready</h4>
+      <p class="meta" id="outputMeta"></p>
+    </div>
+  </div>
+</div>
 
 <div class="preview-overlay" id="previewOverlay">
   <div class="preview-frame">
@@ -96,7 +191,7 @@ let selectedStyle = 'minimal';
 let generatedHTML = '';
 
 function pickStyle(el) {
-  document.querySelectorAll('.opt').forEach(o => o.classList.remove('active'));
+  document.querySelectorAll('.chip').forEach(o => o.classList.remove('active'));
   el.classList.add('active');
   selectedStyle = el.dataset.style;
 }
