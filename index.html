@@ -54,8 +54,10 @@
   textarea:hover { border-color:rgba(255,255,255,.12); background:rgba(255,255,255,.04); }
   textarea:focus { outline:none; border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.05); box-shadow:0 0 0 3px rgba(255,255,255,.04); }
   textarea::placeholder { color:rgba(255,255,255,.15); }
-  
+  textarea { height:38px; min-height:38px; }
 
+  .field-grow { flex:1; }
+  .field-grow textarea { height:100%; min-height:50px; flex:1; }
 
   /* ── Right: Sidebar ── */
   .sidebar {
@@ -156,7 +158,7 @@
         <div class="field-head"><span class="field-label">Summary</span><span class="pill pill-req">Required</span></div>
         <textarea id="summary" rows="1" placeholder="One-line conclusion of the week"></textarea>
       </div>
-      <div class="field">
+      <div class="field field-grow">
         <div class="field-head"><span class="field-label">Progress</span><span class="pill pill-req">Required</span></div>
         <textarea id="progress" placeholder="- Feature A: ✅ shipped&#10;- Feature B: 🔵 in progress&#10;- Feature C: 🟡 blocked"></textarea>
       </div>
@@ -818,20 +820,6 @@ async function callAI(model, key, fieldName, text) {
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     document.getElementById('weekLabel').textContent = 'Week ' + wk + ' · ' + months[now.getMonth()] + ' ' + now.getFullYear();
   })();
-</script>
-
-<script>
-  // Auto-resize textareas on input
-  document.querySelectorAll('textarea').forEach(ta => {
-    ta.style.height = 'auto';
-    ta.style.overflow = 'hidden';
-    function resize() {
-      ta.style.height = 'auto';
-      ta.style.height = Math.max(36, ta.scrollHeight) + 'px';
-    }
-    ta.addEventListener('input', resize);
-    resize();
-  });
 </script>
 </body>
 </html>
