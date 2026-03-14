@@ -224,6 +224,10 @@
       </div>
     </div>
   </div>
+  <div class="preview-panel" id="previewPanel">
+    <div class="preview-empty" id="previewEmpty">Generate slides to see preview</div>
+    <iframe id="previewIframe" style="display:none;"></iframe>
+  </div>
 </div>
 
 <div class="preview-overlay" id="previewOverlay">
@@ -680,6 +684,11 @@ function generate() {
   const data = validate();
   if (!data) return;
   generatedHTML = buildSlides(data, selectedStyle);
+  // Auto-update inline preview
+  const pIframe = document.getElementById('previewIframe');
+  const pEmpty = document.getElementById('previewEmpty');
+  if(pIframe) { pIframe.srcdoc = generatedHTML; pIframe.style.display = 'block'; }
+  if(pEmpty) pEmpty.style.display = 'none';
   const skipped = [];
   if (!data.newsletter) skipped.push('Newsletter');
   if (!data.others) skipped.push('Others');
