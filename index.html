@@ -213,16 +213,17 @@
 
     <button class="btn-generate" onclick="generate()" id="genBtn">Generate Slides</button>
 
-    <div class="action-bar">
-      <button class="btn-action" onclick="preview()">Preview</button>
-      <button class="btn-action" onclick="downloadHTML()">Download</button>
-      <button class="btn-action" onclick="publishAndCopy()">Publish</button>
-      <button class="btn-action" onclick="openNewTab()">Open</button>
-    </div>
-
     <div class="output-box" id="output">
-      <h4>Ready</h4>
-      <p class="meta" id="outputMeta"></p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <h4>✓ Generated</h4>
+        <p class="meta" id="outputMeta" style="margin:0;"></p>
+      </div>
+      <div class="action-bar">
+        <button class="btn-action" onclick="preview()">👁 Preview</button>
+        <button class="btn-action" onclick="openNewTab()">↗ Open</button>
+        <button class="btn-action" onclick="downloadHTML()">↓ Download</button>
+        <button class="btn-action" onclick="publishAndCopy()">🔗 Publish & Copy URL</button>
+      </div>
     </div>
   </div>
 </div>
