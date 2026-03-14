@@ -1,166 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weekly Report Editor</title>
-<style>
-  :root {
-    --bg: #fafafa;
-    --surface: #fff;
-    --border: #e5e5e5;
-    --text: #1a1a1a;
-    --text-secondary: #888;
-    --accent: #0066cc;
-    --radius: 10px;
-    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.5; }
-  .container { max-width: 680px; margin: 0 auto; padding: 48px 24px 80px; }
-  h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 4px; }
-  .subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: 36px; }
-
-  .field { margin-bottom: 24px; }
-  .field label { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 6px; }
-  .field label .tag { font-size: 10px; font-weight: 500; color: #fff; background: var(--text); border-radius: 3px; padding: 1px 5px; text-transform: uppercase; }
-  .field label .tag.optional { background: #ccc; }
-  textarea { width: 100%; min-height: 100px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); font-family: var(--font); font-size: 14px; line-height: 1.6; color: var(--text); background: var(--surface); resize: vertical; transition: border-color 0.15s; }
-  textarea:focus { outline: none; border-color: var(--accent); }
-  textarea::placeholder { color: #c0c0c0; }
-
-  .row { display: flex; gap: 12px; margin-bottom: 24px; }
-  .row > * { flex: 1; }
-
-  .picker label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 8px; }
-  .options { display: flex; flex-wrap: wrap; gap: 8px; }
-  .opt { padding: 8px 16px; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; background: var(--surface); transition: all 0.15s; user-select: none; }
-  .opt:hover { border-color: #bbb; }
-  .opt.active { border-color: var(--text); background: var(--text); color: #fff; }
-
-  select { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-family: var(--font); font-size: 14px; color: var(--text); background: var(--surface); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M3 5l3 3 3-3'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
-  select:focus { outline: none; border-color: var(--accent); }
-
-  .actions { display: flex; gap: 10px; margin-top: 32px; }
-  button { padding: 10px 24px; border-radius: var(--radius); font-family: var(--font); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; border: none; }
-  .btn-primary { background: var(--text); color: #fff; }
-  .btn-primary:hover { background: #333; }
-  .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
-  .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
-  .btn-secondary:hover { background: #f0f0f0; }
-
-  .output { display: none; margin-top: 32px; padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
-  .output.active { display: block; }
-  .output h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-  .output .meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; }
-  .output-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 13px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 200; }
-  .toast.show { opacity: 1; }
-
-  .preview-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; }
-  .preview-overlay.active { display: flex; }
-  .preview-frame { width: 92vw; height: 88vh; background: #fff; border-radius: 14px; overflow: hidden; position: relative; }
-  .preview-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.06); border: none; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; }
-  .preview-iframe { width: 100%; height: 100%; border: none; }
-
-  .ai-section { margin-top: 32px; padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
-  .ai-section h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 12px; }
-  .ai-row { display: flex; gap: 10px; align-items: end; }
-  .ai-row .field { flex: 1; margin-bottom: 0; }
-  .ai-row select { margin-top: 4px; }
-  .ai-row button { white-space: nowrap; }
-
-  @media (max-width: 600px) {
-    .row { flex-direction: column; gap: 16px; }
-    .ai-row { flex-direction: column; align-items: stretch; }
-  }
-</style>
-</head>
-<body>
-
 <div class="container">
-  <h1>Weekly Report</h1>
-  <p class="subtitle">Fill sections, pick a style, generate slides.</p>
+  <header>
+    <h1>Weekly Report</h1>
+    <p class="subtitle">Fill sections, pick a style, generate slides.</p>
+  </header>
 
-  <div class="field">
-    <label>Summary <span class="tag">required</span></label>
-    <textarea id="summary" placeholder="One-line conclusion of the week" rows="2"></textarea>
-  </div>
-
-  <div class="field">
-    <label>Progress Status <span class="tag">required</span></label>
-    <textarea id="progress" placeholder="- Feature A: ✅ shipped&#10;- Feature B: 🔵 in progress&#10;- Feature C: 🟡 blocked"></textarea>
-  </div>
-
-  <div class="field">
-    <label>Newsletter <span class="tag optional">optional</span></label>
-    <textarea id="newsletter" placeholder="Design direction, team updates, insights"></textarea>
-  </div>
-
-  <div class="field">
-    <label>Others <span class="tag optional">optional</span></label>
-    <textarea id="others" placeholder="Meetings, cross-team work, misc"></textarea>
-  </div>
-
-  <div class="field">
-    <label>Top of Mind <span class="tag optional">optional</span></label>
-    <textarea id="topofmind" placeholder="1-2 things on your mind" rows="2"></textarea>
-  </div>
-
-  <div class="row">
-    <div class="picker">
-      <label>Style</label>
-      <div class="options" id="styleOptions">
-        <div class="opt active" data-style="minimal" onclick="pickStyle(this)">Minimal</div>
-        <div class="opt" data-style="bold" onclick="pickStyle(this)">Bold</div>
-        <div class="opt" data-style="warm" onclick="pickStyle(this)">Warm</div>
-        <div class="opt" data-style="corporate" onclick="pickStyle(this)">Corporate</div>
-        <div class="opt" data-style="monochrome" onclick="pickStyle(this)">Monochrome</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="ai-section">
-    <h3>AI Polish</h3>
-    <div class="ai-row">
+  <div class="editor-grid">
+    <div class="col-left">
       <div class="field">
-        <label style="margin-bottom:4px">Model</label>
-        <select id="aiModel">
-          <option value="">None (skip)</option>
-          <option value="gpt-5.2">GPT-5.2</option>
-          <option value="gpt-4.1">GPT-4.1</option>
-          <option value="gpt-4o">GPT-4o</option>
-          <option value="gpt-5-mini">GPT-5 mini</option>
-          <option value="claude-opus-4.6">Claude Opus 4.6</option>
-          <option value="claude-sonnet-4.6">Claude Sonnet 4.6</option>
-          <option value="gemini-3-pro-preview">Gemini 3 Pro</option>
-          <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
-        </select>
+        <label>Summary <span class="tag">required</span></label>
+        <textarea id="summary" placeholder="One-line conclusion of the week"></textarea>
       </div>
       <div class="field">
-        <label style="margin-bottom:4px">API Key</label>
-        <input type="password" id="aiKey" placeholder="GitHub token (saved locally)" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;">
+        <label>Progress Status <span class="tag">required</span></label>
+        <textarea id="progress" placeholder="- Feature A: ✅ shipped&#10;- Feature B: 🔵 in progress&#10;- Feature C: 🟡 blocked"></textarea>
       </div>
-      <button class="btn-secondary" onclick="polishAll()" id="polishBtn">Polish</button>
+      <div class="field">
+        <label>Newsletter <span class="tag optional">optional</span></label>
+        <textarea id="newsletter" placeholder="Design direction, team updates, insights"></textarea>
+      </div>
+      <div class="field">
+        <label>Others <span class="tag optional">optional</span></label>
+        <textarea id="others" placeholder="Meetings, cross-team work, misc"></textarea>
+      </div>
+      <div class="field">
+        <label>Top of Mind <span class="tag optional">optional</span></label>
+        <textarea id="topofmind" placeholder="1-2 things on your mind"></textarea>
+      </div>
     </div>
-    <p style="font-size:11px;color:var(--text-secondary);margin-top:8px;">Polishes tone and accuracy. Does not generate new content.</p>
-  </div>
 
-  <div class="actions">
-    <button class="btn-primary" onclick="generate()" id="genBtn">Generate Slides</button>
-    <button class="btn-secondary" onclick="preview()">Preview</button>
-  </div>
+    <div class="col-right">
+      <div class="panel">
+        <div class="panel-title">Style</div>
+        <div class="options" id="styleOptions">
+          <div class="opt active" data-style="minimal" onclick="pickStyle(this)">Minimal</div>
+          <div class="opt" data-style="bold" onclick="pickStyle(this)">Bold</div>
+          <div class="opt" data-style="warm" onclick="pickStyle(this)">Warm</div>
+          <div class="opt" data-style="corporate" onclick="pickStyle(this)">Corporate</div>
+          <div class="opt" data-style="monochrome" onclick="pickStyle(this)">Monochrome</div>
+        </div>
+      </div>
 
-  <div class="output" id="output">
-    <h3>Ready</h3>
-    <p class="meta" id="outputMeta"></p>
-    <div class="output-btns">
-      <button class="btn-secondary" onclick="downloadHTML()">Download</button>
-      <button class="btn-secondary" onclick="publishAndCopy()">Publish & Copy URL</button>
-      <button class="btn-secondary" onclick="openNewTab()">Open in New Tab</button>
+      <div class="panel">
+        <div class="panel-title">AI Polish</div>
+        <div class="ai-row">
+          <div class="field">
+            <label style="margin-bottom:2px">Model</label>
+            <select id="aiModel">
+              <option value="">None (skip)</option>
+              <option value="gpt-5.2">GPT-5.2</option>
+              <option value="gpt-4.1">GPT-4.1</option>
+              <option value="gpt-4o">GPT-4o</option>
+              <option value="gpt-5-mini">GPT-5 mini</option>
+              <option value="claude-opus-4.6">Claude Opus 4.6</option>
+              <option value="claude-sonnet-4.6">Claude Sonnet 4.6</option>
+              <option value="gemini-3-pro-preview">Gemini 3 Pro</option>
+              <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
+            </select>
+          </div>
+          <button class="btn-secondary btn-sm" onclick="polishAll()" id="polishBtn">Polish</button>
+        </div>
+        <div class="field" style="margin-top:8px">
+          <label style="margin-bottom:2px">Token</label>
+          <input type="password" id="aiKey" placeholder="GitHub token (saved locally)" onchange="localStorage.setItem('wr-gh-token',this.value)">
+        </div>
+        <p style="font-size:10px;color:var(--text-secondary);margin-top:6px;">Polishes tone. Does not generate new content.</p>
+      </div>
+
+      <button class="btn-primary" onclick="generate()" id="genBtn">Generate Slides</button>
+
+      <div class="actions-row">
+        <button class="btn-secondary btn-sm" onclick="preview()">Preview</button>
+        <button class="btn-secondary btn-sm" onclick="downloadHTML()">Download</button>
+        <button class="btn-secondary btn-sm" onclick="publishAndCopy()">Publish & Copy URL</button>
+        <button class="btn-secondary btn-sm" onclick="openNewTab()">Open in New Tab</button>
+      </div>
+
+      <div class="output" id="output">
+        <h3>Ready</h3>
+        <p class="meta" id="outputMeta"></p>
+      </div>
     </div>
   </div>
-</div>
 
 <div class="preview-overlay" id="previewOverlay">
   <div class="preview-frame">
