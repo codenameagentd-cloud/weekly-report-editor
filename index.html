@@ -625,16 +625,16 @@ strong{color:var(--text);font-weight:600}
 .pg-dot.active{opacity:1;background:var(--accent1);transform:scale(1.4)}
 @media(max-width:1024px){.slide{padding:40px 48px}}
 @media(max-width:768px){.slide{padding:24px 24px}h1{font-size:42px!important}h2{font-size:28px!important}.pg-dots{display:none}}
-</style>
-</head>
-<body>
+<\x2Fstyle>
+<\x2Fhead>
+<\x62ody>
 <div class="presentation">
 ${slideHTML}
 </div>
 <div class="pg-dots" id="pgDots">${dotsHTML}</div>
 <div class="nav-hint"><kbd>\u2190</kbd> <kbd>\u2192</kbd> to navigate</div>
-</script>
-<script>
+<\x2Fscript>
+<\x73cript>
 (function(){
   let cur=0;
   const slides=document.querySelectorAll('.slide');
@@ -656,7 +656,7 @@ ${slideHTML}
 })();
 <\/script>
 
-<script>
+<\x73cript>
   // Set week label
   (function(){
     var now = new Date();
@@ -665,7 +665,7 @@ ${slideHTML}
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     document.getElementById('weekLabel').textContent = 'Week ' + wk + ' · ' + months[now.getMonth()] + ' ' + now.getFullYear();
   })();
-</script>
+<\x2Fscript>
 
 `;
 }
