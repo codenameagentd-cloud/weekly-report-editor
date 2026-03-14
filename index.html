@@ -811,15 +811,6 @@ async function callAI(model, key, fieldName, text) {
 }
 </script>
 
-<script>
-  // Set week label
-  (function(){
-    var now = new Date();
-    var onejan = new Date(now.getFullYear(),0,1);
-    var wk = Math.ceil((((now - onejan) / 86400000) + onejan.getDay()+1)/7);
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    document.getElementById('weekLabel').textContent = 'Week ' + wk + ' · ' + months[now.getMonth()] + ' ' + now.getFullYear();
-  })();
-</script>
+
 </body>
 </html>
