@@ -47,9 +47,12 @@
 
 
 
-  #summary { height:calc(22vh); min-height:80px; }
-  #progress { height:calc(26vh); min-height:90px; }
-  #newsletter, #others, #topofmind { height:calc(12vh); min-height:50px; }
+  .fields { display:flex; flex-direction:column; flex:1; gap:4px; }
+  .field-wrap { display:flex; flex-direction:column; min-height:0; }
+  .field-wrap.major { flex:2; }
+  .field-wrap.minor { flex:1.5; }
+  .field-wrap label { font-size:11px; font-weight:600; color:#78716c; text-transform:uppercase; letter-spacing:.5px; margin-bottom:2px; flex-shrink:0; }
+  .field-wrap textarea { flex:1; resize:none; min-height:0; }
   textarea {
     width:100%; border:1.5px solid #e7e5e4; border-radius:10px;
     padding:9px 12px; font-family:inherit; font-size:13px; line-height:1.6;
@@ -159,25 +162,25 @@
       <div class="week" id="weekLabel"></div>
     </div>
     <div class="fields">
-      <div class="field">
-        <div class="field-head"><span class="field-label">Summary</span><span class="pill pill-req">Required</span></div>
-        <textarea id="summary" rows="1" placeholder="One-line conclusion of the week"></textarea>
+      <div class="field-wrap major">
+        <label for="summary">Summary *</label>
+        <textarea id="summary" placeholder="Key highlights and achievements this week..."></textarea>
       </div>
-      <div class="field field-grow">
-        <div class="field-head"><span class="field-label">Progress</span><span class="pill pill-req">Required</span></div>
-        <textarea id="progress" placeholder="- Feature A: ✅ shipped&#10;- Feature B: 🔵 in progress&#10;- Feature C: 🟡 blocked"></textarea>
+      <div class="field-wrap major">
+        <label for="progress">Progress Status *</label>
+        <textarea id="progress" placeholder="- Feature A: 80% complete&#10;- Feature B: In review&#10;- Bug fixes: 12 resolved"></textarea>
       </div>
-      <div class="field">
-        <div class="field-head"><span class="field-label">Newsletter</span><span class="pill pill-opt">Optional</span></div>
-        <textarea id="newsletter" rows="1" placeholder="Design direction, team updates"></textarea>
+      <div class="field-wrap minor">
+        <label for="newsletter">Newsletter</label>
+        <textarea id="newsletter" placeholder="Design direction updates, team news..."></textarea>
       </div>
-      <div class="field">
-        <div class="field-head"><span class="field-label">Others</span><span class="pill pill-opt">Optional</span></div>
-        <textarea id="others" rows="1" placeholder="Meetings, cross-team work"></textarea>
+      <div class="field-wrap minor">
+        <label for="others">Others</label>
+        <textarea id="others" placeholder="Miscellaneous items..."></textarea>
       </div>
-      <div class="field">
-        <div class="field-head"><span class="field-label">Top of Mind</span><span class="pill pill-opt">Optional</span></div>
-        <textarea id="topofmind" rows="1" placeholder="What's on your mind"></textarea>
+      <div class="field-wrap minor">
+        <label for="topofmind">Top of Mind</label>
+        <textarea id="topofmind" placeholder="Key concerns or focus areas..."></textarea>
       </div>
     </div>
   </div>
