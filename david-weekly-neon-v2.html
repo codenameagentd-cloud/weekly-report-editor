@@ -115,6 +115,68 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .pd{width:32px;height:2px;background:rgba(255,255,255,.12);border-radius:1px;transition:all .4s cubic-bezier(.23,1,.32,1);cursor:pointer}
 .pd.active{background:var(--cyan);box-shadow:0 0 10px rgba(0,255,245,.5);width:48px}
 .page-counter{position:fixed;bottom:36px;right:48px;font-size:14px;letter-spacing:3px;color:rgba(255,255,255,.2);z-index:100}
+
+/* ── Mobile Responsive ── */
+@media (max-width: 768px) {
+  .si{max-width:100%;padding:0 28px}
+  
+  /* Cover */
+  h1,.slide h1{font-size:56px !important}
+  
+  /* Summary: stack sidebar */
+  .grid-sidebar,.grid-sidebar-r{grid-template-columns:1fr;gap:28px}
+  .pq{font-size:28px !important}
+  .bt{font-size:14px;line-height:1.85;max-width:100%}
+  .bt-wide{max-width:100%}
+  .stat-num{font-size:40px}
+  .card{padding:20px}
+  .card .stat-label{font-size:9px}
+  
+  /* Progress: stack 3 cols */
+  .grid-3{grid-template-columns:1fr;gap:14px}
+  .stat-row{flex-wrap:wrap;gap:16px}
+  .stat-item{flex:1;min-width:80px}
+  .card-title{font-size:18px}
+  .card-body{font-size:13px}
+  .card-links{flex-wrap:wrap}
+  .flink{font-size:11px;padding:6px 12px}
+  
+  /* Newsletter */
+  .pq.pq-border,.pq.pq-magenta{font-size:22px !important}
+  .vline{display:none}
+  [style*="grid-template-columns:auto 1fr"]{display:block !important}
+  
+  /* Direction cards */
+  .grid-2{grid-template-columns:1fr;gap:14px}
+  .dir-card{padding:20px}
+  .dir-card .dc-title{font-size:18px}
+  .dir-card .dc-body{font-size:13px}
+  
+  /* Others template grid */
+  .tmpl-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .tmpl-btn{font-size:11px;padding:10px 12px}
+  
+  /* Label */
+  .lbl{font-size:11px;letter-spacing:4px;margin-bottom:24px}
+  
+  /* Slide scroll */
+  .slide{overflow-y:auto;align-items:flex-start;padding:48px 0 72px}
+  
+  /* Page indicator */
+  .page-indicator{bottom:16px}
+  .page-counter{bottom:16px;right:24px;font-size:12px}
+  .corner{display:none}
+}
+
+@media (max-width: 420px) {
+  .si{padding:0 20px}
+  h1,.slide h1{font-size:44px !important}
+  .pq{font-size:24px !important}
+  .pq.pq-border,.pq.pq-magenta{font-size:20px !important}
+  .bt{font-size:13px}
+  .stat-num{font-size:32px}
+  .tmpl-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
