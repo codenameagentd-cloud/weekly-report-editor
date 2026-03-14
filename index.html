@@ -3,132 +3,184 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weekly Report Editor</title>
+<title>Weekly Report</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #f8f8f7;
-    --surface: #ffffff;
-    --border: #e8e6e3;
-    --text: #1d1b16;
-    --muted: #9c9990;
-    --accent: #1d1b16;
-    --radius: 10px;
-    --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  }
   * { margin:0; padding:0; box-sizing:border-box; }
-  html, body { height:100%; overflow:hidden; }
-  body { font-family:var(--font); background:var(--bg); color:var(--text); }
+  html, body { height:100%; }
+  body { 
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif; 
+    background:#0a0a0a; 
+    color:#fafafa;
+    overflow:hidden;
+  }
 
-  .app { display:flex; height:100vh; }
-  
-  /* Left: content fields */
-  .editor-main { flex:1; display:flex; flex-direction:column; padding:28px 32px 20px; overflow-y:auto; }
-  .editor-main h1 { font-size:18px; font-weight:600; letter-spacing:-0.3px; margin-bottom:2px; }
-  .editor-main .sub { font-size:12px; color:var(--muted); margin-bottom:20px; }
-  
-  .fields { display:flex; flex-direction:column; gap:14px; flex:1; }
-  .field label { display:flex; align-items:center; gap:5px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px; color:var(--muted); margin-bottom:3px; }
-  .badge { font-size:9px; font-weight:600; padding:1px 5px; border-radius:3px; color:#fff; }
-  .badge.req { background:var(--text); }
-  .badge.opt { background:#c4c0b9; }
-  
-  textarea { width:100%; border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; font-family:var(--font); font-size:13px; line-height:1.55; color:var(--text); background:var(--surface); resize:none; transition:border-color .15s; }
-  textarea:focus { outline:none; border-color:var(--accent); }
-  textarea::placeholder { color:#d0cec9; }
+  .app { display:grid; grid-template-columns:1fr 300px; height:100vh; }
 
-  .grow { flex:1; }
-  .grow textarea { height:100%; min-height:70px; }
+  /* ── Left: Editor ── */
+  .editor {
+    display:flex; flex-direction:column; padding:24px 36px 16px;
+    border-right:1px solid rgba(255,255,255,.06);
+    overflow-y:auto;
+  }
+  .editor-header { margin-bottom:16px; }
+  .editor-header h1 { 
+    font-size:15px; font-weight:600; letter-spacing:-.2px;
+    color:rgba(255,255,255,.5);
+  }
+  .editor-header .week {
+    font-size:24px; font-weight:700; letter-spacing:-1.2px;
+    background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.6) 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    margin-top:2px;
+  }
+
+  .fields { display:flex; flex-direction:column; gap:10px; flex:1; }
   
-  /* Right: sidebar */
-  .sidebar { width:280px; background:var(--surface); border-left:1px solid var(--border); display:flex; flex-direction:column; padding:28px 20px 20px; gap:16px; overflow-y:auto; }
+  .field { display:flex; flex-direction:column; }
+  .field-head { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+  .field-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:rgba(255,255,255,.35); }
+  .pill { font-size:8px; font-weight:700; padding:2px 6px; border-radius:10px; text-transform:uppercase; letter-spacing:.5px; }
+  .pill-req { background:rgba(255,255,255,.1); color:rgba(255,255,255,.5); }
+  .pill-opt { background:rgba(255,255,255,.04); color:rgba(255,255,255,.2); }
+
+  textarea {
+    width:100%; border:1px solid rgba(255,255,255,.08); border-radius:10px;
+    padding:9px 12px; font-family:inherit; font-size:13px; line-height:1.6;
+    color:#fafafa; background:rgba(255,255,255,.03);
+    resize:none; transition:all .2s;
+  }
+  textarea:hover { border-color:rgba(255,255,255,.12); background:rgba(255,255,255,.04); }
+  textarea:focus { outline:none; border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.05); box-shadow:0 0 0 3px rgba(255,255,255,.04); }
+  textarea::placeholder { color:rgba(255,255,255,.15); }
+  textarea { height:38px; min-height:38px; }
+
+  .field-grow { flex:1; }
+  .field-grow textarea { height:100%; min-height:50px; flex:1; }
+
+  /* ── Right: Sidebar ── */
+  .sidebar {
+    display:flex; flex-direction:column; padding:24px 18px 16px;
+    background:rgba(255,255,255,.02);
+    gap:14px; overflow-y:auto;
+  }
+
+  .sb-group { }
+  .sb-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:rgba(255,255,255,.25); margin-bottom:8px; }
   
-  .sb-section { }
-  .sb-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:8px; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip {
+    padding:6px 14px; border-radius:8px; font-size:12px; font-weight:500;
+    border:1px solid rgba(255,255,255,.08); cursor:pointer;
+    transition:all .15s; user-select:none; color:rgba(255,255,255,.45);
+    background:transparent;
+  }
+  .chip:hover { border-color:rgba(255,255,255,.15); color:rgba(255,255,255,.7); }
+  .chip.active { 
+    background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.2); 
+    color:#fff; font-weight:600;
+  }
+
+  select {
+    width:100%; padding:8px 12px; border:1px solid rgba(255,255,255,.08); border-radius:8px;
+    font-family:inherit; font-size:12px; color:rgba(255,255,255,.6);
+    background:rgba(255,255,255,.03); appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M2 4l3 3 3-3'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 12px center;
+  }
+  select:focus { outline:none; border-color:rgba(255,255,255,.2); }
+  select option { background:#1a1a1a; color:#fafafa; }
+
+  .token-field {
+    width:100%; padding:8px 12px; border:1px solid rgba(255,255,255,.08); border-radius:8px;
+    font-family:inherit; font-size:12px; color:rgba(255,255,255,.6);
+    background:rgba(255,255,255,.03); margin-top:8px;
+  }
+  .token-field:focus { outline:none; border-color:rgba(255,255,255,.2); }
   
-  .style-chips { display:flex; flex-wrap:wrap; gap:5px; }
-  .chip { padding:5px 11px; border:1.5px solid var(--border); border-radius:6px; font-size:11px; font-weight:500; cursor:pointer; transition:all .12s; user-select:none; background:var(--surface); }
-  .chip:hover { border-color:#ccc; }
-  .chip.active { border-color:var(--accent); background:var(--accent); color:#fff; }
-  
-  select { width:100%; padding:7px 10px; border:1px solid var(--border); border-radius:6px; font-family:var(--font); font-size:12px; color:var(--text); background:var(--surface); appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='M2 4l3 3 3-3'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; }
-  select:focus { outline:none; border-color:var(--accent); }
-  
-  .token-input { width:100%; padding:7px 10px; border:1px solid var(--border); border-radius:6px; font-family:var(--font); font-size:12px; color:var(--text); background:var(--surface); }
-  .token-input:focus { outline:none; border-color:var(--accent); }
-  
+  .sb-hint { font-size:10px; color:rgba(255,255,255,.2); margin-top:4px; line-height:1.4; }
+
   .sb-row { display:flex; gap:6px; align-items:end; }
   .sb-row > *:first-child { flex:1; }
-  
-  .sb-hint { font-size:10px; color:var(--muted); margin-top:4px; line-height:1.4; }
-  
-  .btn { padding:8px 16px; border:none; border-radius:6px; font-family:var(--font); font-size:12px; font-weight:500; cursor:pointer; transition:all .12s; }
-  .btn-primary { background:var(--accent); color:#fff; width:100%; padding:10px; font-size:13px; font-weight:600; border-radius:8px; }
-  .btn-primary:hover { opacity:.88; }
-  .btn-primary:disabled { opacity:.35; cursor:not-allowed; }
-  .btn-ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
-  .btn-ghost:hover { background:var(--bg); }
-  
-  .action-row { display:flex; gap:6px; flex-wrap:wrap; }
-  .action-row .btn { font-size:11px; padding:6px 10px; }
-  
-  .output-panel { display:none; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px 12px; }
-  .output-panel.active { display:block; }
-  .output-panel h4 { font-size:12px; font-weight:600; margin-bottom:1px; }
-  .output-panel .meta { font-size:10px; color:var(--muted); margin-bottom:6px; }
 
   .spacer { flex:1; }
 
-  .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--text); color:#fff; padding:8px 18px; border-radius:6px; font-size:12px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:200; }
+  .btn-generate {
+    width:100%; padding:12px; border:none; border-radius:10px;
+    font-family:inherit; font-size:13px; font-weight:600;
+    cursor:pointer; transition:all .2s;
+    background:linear-gradient(135deg,#fff,#e0e0e0);
+    color:#0a0a0a; letter-spacing:-.2px;
+  }
+  .btn-generate:hover { opacity:.9; transform:translateY(-1px); box-shadow:0 4px 20px rgba(255,255,255,.1); }
+  .btn-generate:active { transform:translateY(0); }
+  .btn-generate:disabled { opacity:.3; cursor:not-allowed; transform:none; box-shadow:none; }
+
+  .action-bar { display:flex; gap:6px; flex-wrap:wrap; }
+  .btn-action {
+    padding:6px 12px; border-radius:6px; font-family:inherit; font-size:11px;
+    font-weight:500; cursor:pointer; transition:all .15s; border:none;
+    background:rgba(255,255,255,.06); color:rgba(255,255,255,.45);
+  }
+  .btn-action:hover { background:rgba(255,255,255,.1); color:rgba(255,255,255,.7); }
+
+  .output-box { display:none; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:8px; padding:10px 12px; }
+  .output-box.active { display:block; }
+  .output-box h4 { font-size:12px; font-weight:600; color:rgba(255,255,255,.7); }
+  .output-box .meta { font-size:10px; color:rgba(255,255,255,.25); margin-top:2px; }
+
+  .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#fff; color:#0a0a0a; padding:8px 18px; border-radius:8px; font-size:12px; font-weight:500; opacity:0; transition:opacity .3s; pointer-events:none; z-index:200; }
   .toast.show { opacity:1; }
-  .preview-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100; justify-content:center; align-items:center; }
+
+  .preview-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:100; justify-content:center; align-items:center; backdrop-filter:blur(8px); }
   .preview-overlay.active { display:flex; }
-  .preview-frame { width:92vw; height:88vh; background:#fff; border-radius:14px; overflow:hidden; position:relative; }
+  .preview-frame { width:92vw; height:88vh; background:#fff; border-radius:14px; overflow:hidden; position:relative; box-shadow:0 25px 60px rgba(0,0,0,.5); }
   .preview-close { position:absolute; top:12px; right:12px; width:32px; height:32px; border-radius:50%; background:rgba(0,0,0,.06); border:none; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; z-index:10; }
   .preview-iframe { width:100%; height:100%; border:none; }
 
   @media (max-width:800px) {
-    .app { flex-direction:column; }
-    html, body { overflow:auto; }
-    .sidebar { width:100%; border-left:none; border-top:1px solid var(--border); }
-    .editor-main { overflow:visible; }
+    .app { grid-template-columns:1fr; }
+    body { overflow:auto; }
+    .editor { border-right:none; min-height:60vh; }
   }
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="editor-main">
-    <h1>Weekly Report</h1>
-    <p class="sub">Fill in your sections, pick a style, generate.</p>
+  <div class="editor">
+    <div class="editor-header">
+      <h1>Weekly Report</h1>
+      <div class="week" id="weekLabel"></div>
+    </div>
     <div class="fields">
       <div class="field">
-        <label>Summary <span class="badge req">required</span></label>
-        <textarea id="summary" rows="2" placeholder="One-line conclusion of the week"></textarea>
+        <div class="field-head"><span class="field-label">Summary</span><span class="pill pill-req">Required</span></div>
+        <textarea id="summary" rows="1" placeholder="One-line conclusion of the week"></textarea>
       </div>
-      <div class="field grow">
-        <label>Progress Status <span class="badge req">required</span></label>
+      <div class="field field-grow">
+        <div class="field-head"><span class="field-label">Progress</span><span class="pill pill-req">Required</span></div>
         <textarea id="progress" placeholder="- Feature A: ✅ shipped&#10;- Feature B: 🔵 in progress&#10;- Feature C: 🟡 blocked"></textarea>
       </div>
       <div class="field">
-        <label>Newsletter <span class="badge opt">optional</span></label>
-        <textarea id="newsletter" rows="2" placeholder="Design direction, team updates, insights"></textarea>
+        <div class="field-head"><span class="field-label">Newsletter</span><span class="pill pill-opt">Optional</span></div>
+        <textarea id="newsletter" rows="1" placeholder="Design direction, team updates"></textarea>
       </div>
       <div class="field">
-        <label>Others <span class="badge opt">optional</span></label>
-        <textarea id="others" rows="2" placeholder="Meetings, cross-team work, misc"></textarea>
+        <div class="field-head"><span class="field-label">Others</span><span class="pill pill-opt">Optional</span></div>
+        <textarea id="others" rows="1" placeholder="Meetings, cross-team work"></textarea>
       </div>
       <div class="field">
-        <label>Top of Mind <span class="badge opt">optional</span></label>
-        <textarea id="topofmind" rows="2" placeholder="1-2 things on your mind"></textarea>
+        <div class="field-head"><span class="field-label">Top of Mind</span><span class="pill pill-opt">Optional</span></div>
+        <textarea id="topofmind" rows="1" placeholder="What's on your mind"></textarea>
       </div>
     </div>
   </div>
 
   <div class="sidebar">
-    <div class="sb-section">
-      <div class="sb-title">Style</div>
-      <div class="style-chips" id="styleOptions">
+    <div class="sb-group">
+      <div class="sb-label">Style</div>
+      <div class="chips" id="styleOptions">
         <div class="chip active" data-style="minimal" onclick="pickStyle(this)">Minimal</div>
         <div class="chip" data-style="bold" onclick="pickStyle(this)">Bold</div>
         <div class="chip" data-style="warm" onclick="pickStyle(this)">Warm</div>
@@ -137,40 +189,38 @@
       </div>
     </div>
 
-    <div class="sb-section">
-      <div class="sb-title">AI Polish</div>
+    <div class="sb-group">
+      <div class="sb-label">AI Polish</div>
       <div class="sb-row">
-        <div>
-          <select id="aiModel">
-            <option value="">None</option>
-            <option value="gpt-5.2">GPT-5.2</option>
-            <option value="gpt-4.1">GPT-4.1</option>
-            <option value="gpt-4o">GPT-4o</option>
-            <option value="gpt-5-mini">GPT-5 mini</option>
-            <option value="claude-opus-4.6">Claude Opus 4.6</option>
-            <option value="claude-sonnet-4.6">Claude Sonnet 4.6</option>
-            <option value="gemini-3-pro-preview">Gemini 3 Pro</option>
-            <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
-          </select>
-        </div>
-        <button class="btn btn-ghost" onclick="polishAll()" id="polishBtn">Polish</button>
+        <select id="aiModel">
+          <option value="">None</option>
+          <option value="gpt-5.2">GPT-5.2</option>
+          <option value="gpt-4.1">GPT-4.1</option>
+          <option value="gpt-4o">GPT-4o</option>
+          <option value="gpt-5-mini">GPT-5 mini</option>
+          <option value="claude-opus-4.6">Claude Opus 4.6</option>
+          <option value="claude-sonnet-4.6">Claude Sonnet 4.6</option>
+          <option value="gemini-3-pro-preview">Gemini 3 Pro</option>
+          <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
+        </select>
+        <button class="btn-action" onclick="polishAll()" id="polishBtn" style="padding:8px 14px;">Polish</button>
       </div>
-      <input type="password" class="token-input" id="aiKey" placeholder="GitHub token" onchange="localStorage.setItem('wr-gh-token',this.value)" style="margin-top:6px;">
-      <p class="sb-hint">Polishes tone &amp; accuracy only.</p>
+      <input type="password" class="token-field" id="aiKey" placeholder="GitHub token" onchange="localStorage.setItem('wr-gh-token',this.value)">
+      <p class="sb-hint">Polishes tone. Doesn't generate content.</p>
     </div>
 
     <div class="spacer"></div>
 
-    <button class="btn btn-primary" onclick="generate()" id="genBtn">Generate Slides</button>
+    <button class="btn-generate" onclick="generate()" id="genBtn">Generate Slides</button>
 
-    <div class="action-row">
-      <button class="btn btn-ghost" onclick="preview()">Preview</button>
-      <button class="btn btn-ghost" onclick="downloadHTML()">Download</button>
-      <button class="btn btn-ghost" onclick="publishAndCopy()">Publish</button>
-      <button class="btn btn-ghost" onclick="openNewTab()">Open</button>
+    <div class="action-bar">
+      <button class="btn-action" onclick="preview()">Preview</button>
+      <button class="btn-action" onclick="downloadHTML()">Download</button>
+      <button class="btn-action" onclick="publishAndCopy()">Publish</button>
+      <button class="btn-action" onclick="openNewTab()">Open</button>
     </div>
 
-    <div class="output-panel" id="output">
+    <div class="output-box" id="output">
       <h4>Ready</h4>
       <p class="meta" id="outputMeta"></p>
     </div>
@@ -463,7 +513,7 @@ function buildSlides(data, styleName) {
 
     // Section heading
     const headingText = sec.title;
-    inner += '<h2 style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(32px,3.5vw,44px);font-weight:' + headlineWeight + ';line-height:1.1;letter-spacing:-1px;margin-bottom:24px;color:' + text + '">' + escH(headingText) + '</h2>';
+    inner += '<h2 style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(32px,3.5vw,44px);font-weight:' + headlineWeight + ';line-height:1.1;letter-spacing:-1px;margin-bottom:16px;color:' + text + '">' + escH(headingText) + '</h2>';
 
     if (useSplit && paragraphs.length > 2) {
       const mid = Math.ceil(paragraphs.length / 2);
@@ -508,7 +558,7 @@ function buildSlides(data, styleName) {
     inner += topBarHTML(pageNum);
     inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:10vh">';
     inner += eyebrowHTML(sec.title);
-    inner += '<h2 style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(32px,3.5vw,44px);font-weight:' + headlineWeight + ';line-height:1.1;letter-spacing:-1px;margin-bottom:24px;color:' + text + '">' + escH(sec.title) + '</h2>';
+    inner += '<h2 style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(32px,3.5vw,44px);font-weight:' + headlineWeight + ';line-height:1.1;letter-spacing:-1px;margin-bottom:16px;color:' + text + '">' + escH(sec.title) + '</h2>';
     inner += progressCardsHTML(sec.content);
     inner += '</div>';
     inner += footerHTML();
@@ -605,6 +655,17 @@ ${slideHTML}
   });
 })();
 <\/script>
+
+<script>
+  // Set week label
+  (function(){
+    var now = new Date();
+    var onejan = new Date(now.getFullYear(),0,1);
+    var wk = Math.ceil((((now - onejan) / 86400000) + onejan.getDay()+1)/7);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    document.getElementById('weekLabel').textContent = 'Week ' + wk + ' · ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  })();
+</script>
 </body>
 </html>`;
 }
@@ -748,6 +809,17 @@ async function callAI(model, key, fieldName, text) {
   if (data.error) throw new Error(data.error.message);
   return data.choices?.[0]?.message?.content?.trim() || '';
 }
+</script>
+
+<script>
+  // Set week label
+  (function(){
+    var now = new Date();
+    var onejan = new Date(now.getFullYear(),0,1);
+    var wk = Math.ceil((((now - onejan) / 86400000) + onejan.getDay()+1)/7);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    document.getElementById('weekLabel').textContent = 'Week ' + wk + ' · ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  })();
 </script>
 </body>
 </html>
