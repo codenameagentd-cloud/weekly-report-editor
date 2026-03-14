@@ -635,6 +635,7 @@ ${slideHTML}
 </div>
 <div class="pg-dots" id="pgDots">${dotsHTML}</div>
 <div class="nav-hint"><kbd>\u2190</kbd> <kbd>\u2192</kbd> to navigate</div>
+</script>
 <script>
 (function(){
   let cur=0;
@@ -667,8 +668,8 @@ ${slideHTML}
     document.getElementById('weekLabel').textContent = 'Week ' + wk + ' · ' + months[now.getMonth()] + ' ' + now.getFullYear();
   })();
 </script>
-</body>
-</html>`;
+
+`;
 }
 
 function validate() {
