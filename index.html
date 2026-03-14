@@ -48,7 +48,10 @@
 
 
   .fields { display:flex; flex-direction:column; flex:1; gap:4px; }
-  .field-wrap { display:flex; flex-direction:column; min-height:0; }
+    .badge { font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; text-transform:uppercase; letter-spacing:.5px; vertical-align:middle; margin-left:6px; }
+  .badge.required { background:#1c1917; color:#fff; }
+  .badge.optional { background:#e7e5e4; color:#78716c; }
+.field-wrap { display:flex; flex-direction:column; min-height:0; }
   .field-wrap.major { flex:2; }
   .field-wrap.minor { flex:1.5; }
   .field-wrap label { font-size:11px; font-weight:600; color:#78716c; text-transform:uppercase; letter-spacing:.5px; margin-bottom:2px; flex-shrink:0; }
@@ -171,24 +174,24 @@
     </div>
     <div class="fields">
       <div class="field-wrap major">
-        <label for="summary">Summary *</label>
-        <textarea id="summary" placeholder="Key highlights and achievements this week..."></textarea>
+        <label for="summary">Summary <span class="badge required">Required</span></label>
+        <textarea id="summary" placeholder="One-line conclusion of the week"></textarea>
       </div>
       <div class="field-wrap major">
-        <label for="progress">Progress Status *</label>
-        <textarea id="progress" placeholder="- Feature A: 80% complete&#10;- Feature B: In review&#10;- Bug fixes: 12 resolved"></textarea>
+        <label for="progress">Progress Status <span class="badge required">Required</span></label>
+        <textarea id="progress" placeholder="- Feature A: ✅ shipped&#10;- Feature B: 🔵 in progress&#10;- Feature C: 🟡 blocked"></textarea>
       </div>
       <div class="field-wrap minor">
-        <label for="newsletter">Newsletter</label>
-        <textarea id="newsletter" placeholder="Design direction updates, team news..."></textarea>
+        <label for="newsletter">Newsletter <span class="badge optional">Optional</span></label>
+        <textarea id="newsletter" placeholder="Design direction, team updates, insights"></textarea>
       </div>
       <div class="field-wrap minor">
-        <label for="others">Others</label>
-        <textarea id="others" placeholder="Miscellaneous items..."></textarea>
+        <label for="others">Others <span class="badge optional">Optional</span></label>
+        <textarea id="others" placeholder="Meetings, cross-team work, misc"></textarea>
       </div>
       <div class="field-wrap minor">
-        <label for="topofmind">Top of Mind</label>
-        <textarea id="topofmind" placeholder="Key concerns or focus areas..."></textarea>
+        <label for="topofmind">Top of Mind <span class="badge optional">Optional</span></label>
+        <textarea id="topofmind" placeholder="1-2 things on your mind"></textarea>
       </div>
     </div>
   </div>
