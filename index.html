@@ -555,7 +555,7 @@ function buildSlides(data, styleName) {
       // Single paragraph: large quote style with accent card
       inner += '<div style="margin-top:16px;display:grid;grid-template-columns:4px 1fr;gap:28px;align-items:start">';
       inner += '<div style="background:linear-gradient(180deg,' + accent1 + ',' + accent2 + ');border-radius:2px;height:100%"></div>';
-      let t = firstPara.trim();
+      let t = paragraphs[0].trim();
       if (t.startsWith('- ') || t.startsWith('• ')) t = t.slice(2);
       t = t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:' + text + ';font-weight:600">$1</strong>');
       inner += '<div>';
