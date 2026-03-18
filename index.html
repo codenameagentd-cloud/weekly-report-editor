@@ -560,8 +560,9 @@ function buildSlides(data, styleName) {
         if (t.startsWith('- ') || t.startsWith('\u2022 ')) t = t.slice(2);
         t = t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:' + text + ';font-weight:600">$1</strong>');
         const fontSize = useGrid ? '18px' : '24px';
-        const cardPad = useGrid ? '20px 0' : '32px';
-        inner += '<div style="font-size:' + fontSize + ';line-height:1.7;color:' + muted + ';padding:' + cardPad + '">' + cardHTML(t) + '</div>';
+        const cardPad = useGrid ? '20px 0' : '0';
+        const flexGrow = useGrid ? '' : 'flex:1;display:flex;flex-direction:column;';
+        inner += '<div style="font-size:' + fontSize + ';line-height:1.7;color:' + muted + ';padding:' + cardPad + ';' + flexGrow + '">' + cardHTML(t) + '</div>';
       });
       inner += '</div>';
     } else {
