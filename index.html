@@ -531,7 +531,7 @@ function buildSlides(data, styleName) {
 
     let inner = '';
     inner += topBarHTML(pageNum);
-    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center">';
+    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding-top:4vh">';
     inner += eyebrowHTML(sec.title);
 
     // Extract first sentence as pull quote
@@ -575,9 +575,8 @@ function buildSlides(data, styleName) {
   function buildProgressSlide(sec, pageNum) {
     let inner = '';
     inner += topBarHTML(pageNum);
-    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center">';
-    inner += eyebrowHTML(sec.title);
-    // Add a headline summary
+    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding-top:4vh">';
+    // Removed eyebrow — Key Updates headline replaces it
     const items = parseItems(sec.content);
     inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(28px,3vw,40px);font-weight:' + headlineWeight + ';line-height:1.15;letter-spacing:-0.5px;margin-bottom:40px;color:' + text + ';max-width:800px">' + items.length + ' Key Updates This Week</div>';
     inner += progressCardsHTML(sec.content);
@@ -627,7 +626,7 @@ function buildSlides(data, styleName) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weekly Report \u2014 ${week}</title>
+<title>Report Generator \u2014 ${week}</title>
 <link href="https://fonts.googleapis.com/css2?family=${fp.gf}&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
