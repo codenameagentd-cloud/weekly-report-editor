@@ -485,10 +485,10 @@ function buildSlides(data, styleName) {
     const mutedColor = opts.dark ? 'rgba(255,255,255,0.7)' : muted;
     const shadow = styleName === 'monochrome' ? 'none' : '0 1px 3px rgba(0,0,0,0.04)';
     const borderCSS = styleName === 'minimal' ? 'border:1px solid ' + border + ';' : styleName === 'monochrome' ? 'border:1px solid ' + border + ';' : '';
-    let html = '<div style="background:' + bg + ';border-radius:' + cardRadius + 'px;padding:36px 40px;box-shadow:' + shadow + ';' + borderCSS + 'color:' + txtColor + '">';
+    let html = '<div style="background:' + bg + ';border-radius:' + cardRadius + 'px;padding:44px 48px;box-shadow:' + shadow + ';' + borderCSS + 'color:' + txtColor + '">';
     if (opts.label) html += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:' + (opts.dark ? accent1 : light) + ';margin-bottom:10px">' + escH(opts.label) + '</div>';
     if (opts.title) html += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:22px;font-weight:800;margin-bottom:10px;color:' + txtColor + '">' + escH(opts.title) + '</div>';
-    html += '<div style="font-size:18px;line-height:1.65;color:' + mutedColor + '">' + content + '</div>';
+    html += '<div style="font-size:20px;line-height:1.7;color:' + mutedColor + '">' + content + '</div>';
     html += '</div>';
     return html;
   }
@@ -500,7 +500,7 @@ function buildSlides(data, styleName) {
       let t = p.trim();
       t = t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:' + text + ';font-weight:600">$1</strong>');
       if (t.startsWith('- ') || t.startsWith('• ')) t = t.slice(2);
-      html += '<div style="font-size:18px;line-height:1.65;color:' + muted + ';padding:16px 0;border-bottom:1px solid ' + border + '">' + t + '</div>';
+      html += '<div style="font-size:20px;line-height:1.7;color:' + muted + ';padding:16px 0;border-bottom:1px solid ' + border + '">' + t + '</div>';
     });
     return html;
   }
@@ -575,7 +575,7 @@ function buildSlides(data, styleName) {
     inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center">';
     // Removed eyebrow — Key Updates headline replaces it
     const items = parseItems(sec.content);
-    inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(28px,3vw,40px);font-weight:' + headlineWeight + ';line-height:1.15;letter-spacing:-0.5px;margin-bottom:40px;color:' + text + ';max-width:800px">' + items.length + ' Key Updates This Week</div>';
+    inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(32px,4vw,48px);font-weight:' + headlineWeight + ';line-height:1.15;letter-spacing:-0.5px;margin-bottom:40px;color:' + text + ';max-width:800px">' + items.length + ' Key Updates This Week</div>';
     inner += progressCardsHTML(sec.content);
     inner += '</div>';
     inner += footerHTML();
@@ -630,7 +630,7 @@ function buildSlides(data, styleName) {
 :root{--bg:${bg};--text:${text};--muted:${muted};--light:${light};--card:${card};--border:${border};--accent1:${accent1};--accent2:${accent2}}
 html,body{font-family:'${fp.b}',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;height:100vh}
 .presentation{height:100vh;overflow:hidden}
-.slide{display:none;width:100%;min-height:100vh;padding:56px 80px;animation:fadeIn 0.4s ease}
+.slide{display:none;width:100%;min-height:100vh;padding:40px 80px;animation:fadeIn 0.4s ease}
 .slide.active{display:flex;flex-direction:column}
 .slide-inner{max-width:1300px;margin:0 auto;width:100%;flex:1;display:flex;flex-direction:column}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
