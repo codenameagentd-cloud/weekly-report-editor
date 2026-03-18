@@ -541,7 +541,7 @@ function buildSlides(data, styleName) {
 
     if (hasMultiple) {
       // Pull quote + two-column layout
-      inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(26px,3vw,36px);font-weight:' + headlineWeight + ';line-height:1.25;letter-spacing:-0.5px;margin-bottom:32px;color:' + text + ';max-width:900px;border-left:4px solid ' + accent1 + ';padding-left:24px">' + escH(firstSentence) + '.</div>';
+      inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(32px,4vw,48px);font-weight:' + headlineWeight + ';line-height:1.3;letter-spacing:-0.5px;margin-bottom:40px;color:' + text + ';max-width:900px;border-left:4px solid ' + accent1 + ';padding-left:24px">' + escH(firstSentence) + '.</div>';
       // Show all paragraphs, strip pull quote sentence from source
       const cardParas = paragraphs.map((p, idx) => {
         if (idx === paragraphs.length - 1) {
@@ -553,14 +553,15 @@ function buildSlides(data, styleName) {
       if (useGrid) {
         inner += '<div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start">';
       } else {
-        inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:24px">';
+        inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:32px">';
       }
       cardParas.forEach((p, i) => {
         let t = p.trim();
         if (t.startsWith('- ') || t.startsWith('\u2022 ')) t = t.slice(2);
         t = t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:' + text + ';font-weight:600">$1</strong>');
-        const fontSize = useGrid ? '18px' : '22px';
-        inner += '<div style="font-size:' + fontSize + ';line-height:1.7;color:' + muted + ';padding:20px 0">' + cardHTML(t) + '</div>';
+        const fontSize = useGrid ? '18px' : '24px';
+        const cardPad = useGrid ? '20px 0' : '32px';
+        inner += '<div style="font-size:' + fontSize + ';line-height:1.7;color:' + muted + ';padding:' + cardPad + '">' + cardHTML(t) + '</div>';
       });
       inner += '</div>';
     } else {
