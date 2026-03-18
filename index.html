@@ -472,7 +472,7 @@ function buildSlides(data, styleName) {
 
   function topBarHTML(pageNum) {
     const pageStr = pageNum > 0 ? '<div style="font-size:14px;color:' + light + ';font-weight:500">' + String(pageNum).padStart(2,'0') + ' / ' + String(totalSlides - 1).padStart(2,'0') + '</div>' : '<div style="font-size:14px;color:' + muted + ';font-weight:500">' + week.replace('Week of ', '') + '</div>';
-    return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="font-family:\'' + fp.h + '\',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:' + text + '">WEEKLY STATUS</div>' + pageStr + '</div>';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="font-family:\'' + fp.h + '\',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:' + text + '">WEEKLY REPORT</div>' + pageStr + '</div>';
   }
 
   function footerHTML() {
