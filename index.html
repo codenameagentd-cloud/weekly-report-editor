@@ -543,15 +543,12 @@ function buildSlides(data, styleName) {
       // Pull quote + two-column layout
       inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(26px,3vw,36px);font-weight:' + headlineWeight + ';line-height:1.25;letter-spacing:-0.5px;margin-bottom:32px;color:' + text + ';max-width:900px;border-left:4px solid ' + accent1 + ';padding-left:24px">' + escH(firstSentence) + '.</div>';
       inner += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start">';
-      paragraphs.forEach((p, i) => {
+      // Skip first paragraph (already used as pull quote)
+      paragraphs.slice(1).forEach((p, i) => {
         let t = p.trim();
         if (t.startsWith('- ') || t.startsWith('• ')) t = t.slice(2);
         t = t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:' + text + ';font-weight:600">$1</strong>');
-        if (i === 0) {
-          inner += '<div>' + cardHTML(t) + '</div>';
-        } else {
-          inner += '<div style="font-size:18px;line-height:1.7;color:' + muted + ';padding:20px 0">' + t + '</div>';
-        }
+        inner += '<div style="font-size:18px;line-height:1.7;color:' + muted + ';padding:20px 0">' + cardHTML(t) + '</div>';
       });
       inner += '</div>';
     } else {
