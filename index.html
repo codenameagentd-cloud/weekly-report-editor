@@ -543,8 +543,15 @@ function buildSlides(data, styleName) {
       // Pull quote + two-column layout
       inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(26px,3vw,36px);font-weight:' + headlineWeight + ';line-height:1.25;letter-spacing:-0.5px;margin-bottom:32px;color:' + text + ';max-width:900px;border-left:4px solid ' + accent1 + ';padding-left:24px">' + escH(firstSentence) + '.</div>';
       inner += '<div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start">';
-      // Show all paragraphs except last (used as pull quote source)
-      paragraphs.slice(0, -1).forEach((p, i) => {
+      // Show all paragraphs, but strip pull quote sentence from its source (last para)
+      paragraphs.map((p, idx) => {
+        if (idx === paragraphs.length - 1) {
+          // Remove the pull quote sentence from the last paragraph
+          const remaining = p.replace(firstSentence, '').replace(/^[.!?。！？\s]+/, '').trim();
+          return remaining;
+        }
+        return p;
+      }).filter(p => p.length > 0).forEach((p, i) => {
         let t = p.trim();
         if (t.startsWith('- ') || t.startsWith('• ')) t = t.slice(2);
         t = t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:' + text + ';font-weight:600">$1</strong>');
