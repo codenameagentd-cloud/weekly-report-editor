@@ -472,11 +472,11 @@ function buildSlides(data, styleName) {
 
   function topBarHTML(pageNum) {
     const pageStr = pageNum > 0 ? '<div style="font-size:14px;color:' + light + ';font-weight:500">' + String(pageNum).padStart(2,'0') + ' / ' + String(totalSlides - 1).padStart(2,'0') + '</div>' : '<div style="font-size:14px;color:' + muted + ';font-weight:500">' + week.replace('Week of ', '') + '</div>';
-    return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="font-family:\'' + fp.h + '\',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:' + text + '">REPORT GENERATOR</div>' + pageStr + '</div>';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="font-family:\'' + fp.h + '\',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:' + text + '">WEEKLY REPORT</div>' + pageStr + '</div>';
   }
 
   function footerHTML() {
-    return '<div style="margin-top:auto;padding-top:24px;display:flex;justify-content:space-between;font-size:13px;color:' + light + ';font-weight:500"><span>Report Generator</span><span>' + new Date().toLocaleDateString('en-US', {month:'long', year:'numeric'}) + '</span></div>';
+    return '<div style="margin-top:auto;padding-top:24px;display:flex;justify-content:space-between;font-size:13px;color:' + light + ';font-weight:500"><span>Weekly Report</span><span>' + new Date().toLocaleDateString('en-US', {month:'long', year:'numeric'}) + '</span></div>';
   }
 
   function cardHTML(content, opts = {}) {
