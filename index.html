@@ -531,7 +531,7 @@ function buildSlides(data, styleName) {
 
     let inner = '';
     inner += topBarHTML(pageNum);
-    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:3vh">';
+    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center">';
     inner += eyebrowHTML(sec.title);
 
     // Extract first sentence as pull quote
@@ -575,9 +575,8 @@ function buildSlides(data, styleName) {
   function buildProgressSlide(sec, pageNum) {
     let inner = '';
     inner += topBarHTML(pageNum);
-    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:5vh">';
+    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center">';
     inner += eyebrowHTML(sec.title);
-    inner += '<h2 style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(32px,3.5vw,44px);font-weight:' + headlineWeight + ';line-height:1.1;letter-spacing:-1px;margin-bottom:24px;color:' + text + '">' + escH(sec.title) + '</h2>';
     inner += progressCardsHTML(sec.content);
     inner += '</div>';
     inner += footerHTML();
@@ -640,7 +639,7 @@ h1,h2{font-family:'${fp.h}',-apple-system,sans-serif}
 strong{color:var(--text);font-weight:600}
 .nav-hint{position:fixed;bottom:24px;right:24px;font-size:11px;color:var(--light);background:var(--card);padding:8px 16px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);z-index:100}
 .nav-hint kbd{background:var(--bg);padding:2px 8px;border-radius:4px;font-family:inherit;margin:0 2px}
-.pg-dots{position:fixed;right:32px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:100}
+.pg-dots{position:fixed;right:40px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:100}
 .pg-dot{width:6px;height:6px;border-radius:50%;background:var(--light);opacity:0.3;transition:all 0.3s;cursor:pointer}
 .pg-dot.active{opacity:1;background:var(--accent1);transform:scale(1.4)}
 @media(max-width:1024px){.slide{padding:40px 48px}}
