@@ -485,7 +485,7 @@ function buildSlides(data, styleName) {
     const mutedColor = opts.dark ? 'rgba(255,255,255,0.7)' : muted;
     const shadow = styleName === 'monochrome' ? 'none' : '0 1px 3px rgba(0,0,0,0.04)';
     const borderCSS = styleName === 'minimal' ? 'border:1px solid ' + border + ';' : styleName === 'monochrome' ? 'border:1px solid ' + border + ';' : '';
-    let html = '<div style="background:' + bg + ';border-radius:' + cardRadius + 'px;padding:44px 48px;box-shadow:' + shadow + ';' + borderCSS + 'color:' + txtColor + '">';
+    let html = '<div style="background:' + bg + ';border-radius:' + cardRadius + 'px;padding:56px 48px;box-shadow:' + shadow + ';' + borderCSS + 'color:' + txtColor + '">';
     if (opts.label) html += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:' + (opts.dark ? accent1 : light) + ';margin-bottom:10px">' + escH(opts.label) + '</div>';
     if (opts.title) html += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:22px;font-weight:800;margin-bottom:10px;color:' + txtColor + '">' + escH(opts.title) + '</div>';
     html += '<div style="font-size:20px;line-height:1.7;color:' + mutedColor + '">' + content + '</div>';
@@ -542,7 +542,7 @@ function buildSlides(data, styleName) {
     if (hasMultiple) {
       // Pull quote + two-column layout
       inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(26px,3vw,36px);font-weight:' + headlineWeight + ';line-height:1.25;letter-spacing:-0.5px;margin-bottom:32px;color:' + text + ';max-width:900px;border-left:4px solid ' + accent1 + ';padding-left:24px">' + escH(firstSentence) + '.</div>';
-      inner += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start">';
+      inner += '<div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start">';
       // Skip first paragraph (already used as pull quote)
       paragraphs.slice(1).forEach((p, i) => {
         let t = p.trim();
@@ -576,7 +576,7 @@ function buildSlides(data, styleName) {
     // Removed eyebrow — Key Updates headline replaces it
     const items = parseItems(sec.content);
     inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(32px,4vw,48px);font-weight:' + headlineWeight + ';line-height:1.15;letter-spacing:-0.5px;margin-bottom:40px;color:' + text + ';max-width:800px">' + items.length + ' Key Updates This Week</div>';
-    inner += progressCardsHTML(sec.content);
+    inner += '<div style="flex:1;display:flex;align-items:center">' + progressCardsHTML(sec.content) + '</div>';
     inner += '</div>';
     inner += footerHTML();
     return inner;
