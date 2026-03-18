@@ -542,20 +542,25 @@ function buildSlides(data, styleName) {
     if (hasMultiple) {
       // Pull quote + two-column layout
       inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(26px,3vw,36px);font-weight:' + headlineWeight + ';line-height:1.25;letter-spacing:-0.5px;margin-bottom:32px;color:' + text + ';max-width:900px;border-left:4px solid ' + accent1 + ';padding-left:24px">' + escH(firstSentence) + '.</div>';
-      inner += '<div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start">';
-      // Show all paragraphs, but strip pull quote sentence from its source (last para)
-      paragraphs.map((p, idx) => {
+      // Show all paragraphs, strip pull quote sentence from source
+      const cardParas = paragraphs.map((p, idx) => {
         if (idx === paragraphs.length - 1) {
-          // Remove the pull quote sentence from the last paragraph
-          const remaining = p.replace(firstSentence, '').replace(/^[.!?。！？\s]+/, '').trim();
-          return remaining;
+          return p.replace(firstSentence, '').replace(/^[.!?\u3002\uff01\uff1f\s]+/, '').trim();
         }
         return p;
-      }).filter(p => p.length > 0).forEach((p, i) => {
+      }).filter(p => p.length > 0);
+      const useGrid = cardParas.length >= 2;
+      if (useGrid) {
+        inner += '<div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start">';
+      } else {
+        inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:24px">';
+      }
+      cardParas.forEach((p, i) => {
         let t = p.trim();
-        if (t.startsWith('- ') || t.startsWith('• ')) t = t.slice(2);
+        if (t.startsWith('- ') || t.startsWith('\u2022 ')) t = t.slice(2);
         t = t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:' + text + ';font-weight:600">$1</strong>');
-        inner += '<div style="font-size:18px;line-height:1.7;color:' + muted + ';padding:20px 0">' + cardHTML(t) + '</div>';
+        const fontSize = useGrid ? '18px' : '22px';
+        inner += '<div style="font-size:' + fontSize + ';line-height:1.7;color:' + muted + ';padding:20px 0">' + cardHTML(t) + '</div>';
       });
       inner += '</div>';
     } else {
