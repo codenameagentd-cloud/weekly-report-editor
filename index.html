@@ -531,44 +531,40 @@ function buildSlides(data, styleName) {
 
     let inner = '';
     inner += topBarHTML(pageNum);
-    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:10vh">';
+    inner += '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:3vh">';
     inner += eyebrowHTML(sec.title);
 
-    // Section heading
-    const headingText = sec.title;
-    inner += '<h2 style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(32px,3.5vw,44px);font-weight:' + headlineWeight + ';line-height:1.1;letter-spacing:-1px;margin-bottom:16px;color:' + text + '">' + escH(headingText) + '</h2>';
+    // Extract first sentence as pull quote
+    const firstPara = paragraphs[0] || '';
+    const firstSentence = firstPara.split(/[.!?。！？]/)[0].trim();
+    const hasMultiple = paragraphs.length > 1;
 
-    if (useSplit && paragraphs.length > 2) {
-      const mid = Math.ceil(paragraphs.length / 2);
-      const left = paragraphs.slice(0, mid);
-      const right = paragraphs.slice(mid);
-      inner += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:8px">';
-      inner += '<div>' + left.map(p => {
+    if (hasMultiple) {
+      // Pull quote + two-column layout
+      inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(26px,3vw,36px);font-weight:' + headlineWeight + ';line-height:1.25;letter-spacing:-0.5px;margin-bottom:32px;color:' + text + ';max-width:900px;border-left:4px solid ' + accent1 + ';padding-left:24px">' + escH(firstSentence) + '.</div>';
+      inner += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start">';
+      paragraphs.forEach((p, i) => {
         let t = p.trim();
         if (t.startsWith('- ') || t.startsWith('• ')) t = t.slice(2);
         t = t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:' + text + ';font-weight:600">$1</strong>');
-        return '<div style="font-size:18px;line-height:1.65;color:' + muted + ';padding:16px 0;border-bottom:1px solid ' + border + '">' + t + '</div>';
-      }).join('') + '</div>';
-      inner += '<div>' + cardHTML(right.map(p => {
-        let t = p.trim();
-        if (t.startsWith('- ') || t.startsWith('• ')) t = t.slice(2);
-        t = t.replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight:600">$1</strong>');
-        return t;
-      }).join('<br><br>'), { dark: rand([true, false]) }) + '</div>';
+        if (i === 0) {
+          inner += '<div>' + cardHTML(t) + '</div>';
+        } else {
+          inner += '<div style="font-size:18px;line-height:1.7;color:' + muted + ';padding:20px 0">' + t + '</div>';
+        }
+      });
       inner += '</div>';
     } else {
-      // Single column with card(s)
-      const bodyHTML = paragraphs.map(p => {
-        let t = p.trim();
-        if (t.startsWith('- ') || t.startsWith('• ')) t = t.slice(2);
-        t = t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:' + text + ';font-weight:600">$1</strong>');
-        return '<div style="font-size:18px;line-height:1.65;color:' + muted + ';padding:16px 0;border-bottom:1px solid ' + border + '">' + t + '</div>';
-      }).join('');
-      if (rand([true, false])) {
-        inner += cardHTML(bodyHTML);
-      } else {
-        inner += '<div style="margin-top:8px;max-width:800px">' + bodyHTML + '</div>';
-      }
+      // Single paragraph: large quote style with accent card
+      inner += '<div style="margin-top:16px;display:grid;grid-template-columns:4px 1fr;gap:28px;align-items:start">';
+      inner += '<div style="background:linear-gradient(180deg,' + accent1 + ',' + accent2 + ');border-radius:2px;height:100%"></div>';
+      let t = firstPara.trim();
+      if (t.startsWith('- ') || t.startsWith('• ')) t = t.slice(2);
+      t = t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:' + text + ';font-weight:600">$1</strong>');
+      inner += '<div>';
+      inner += '<div style="font-family:\'' + fp.h + '\',sans-serif;font-size:clamp(24px,2.5vw,32px);font-weight:' + headlineWeight + ';line-height:1.3;color:' + text + ';margin-bottom:20px">' + escH(sec.title) + '</div>';
+      inner += '<div style="font-size:19px;line-height:1.75;color:' + muted + '">' + t + '</div>';
+      inner += '</div></div>';
     }
 
     inner += '</div>';
@@ -644,7 +640,7 @@ h1,h2{font-family:'${fp.h}',-apple-system,sans-serif}
 strong{color:var(--text);font-weight:600}
 .nav-hint{position:fixed;bottom:24px;right:24px;font-size:11px;color:var(--light);background:var(--card);padding:8px 16px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);z-index:100}
 .nav-hint kbd{background:var(--bg);padding:2px 8px;border-radius:4px;font-family:inherit;margin:0 2px}
-.pg-dots{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:100}
+.pg-dots{position:fixed;right:32px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:100}
 .pg-dot{width:6px;height:6px;border-radius:50%;background:var(--light);opacity:0.3;transition:all 0.3s;cursor:pointer}
 .pg-dot.active{opacity:1;background:var(--accent1);transform:scale(1.4)}
 @media(max-width:1024px){.slide{padding:40px 48px}}
