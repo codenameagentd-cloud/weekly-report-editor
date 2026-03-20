@@ -2,254 +2,588 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Weekly Status — Warm</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status — Swiss Typographic</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;background:#f4efe9;color:#1a1a1a}
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
 
-.slide{position:absolute;top:0;left:0;width:100vw;height:100vh;opacity:0;pointer-events:none;transition:opacity .6s ease;display:flex;flex-direction:column;padding:44px 56px}
-.slide.active{opacity:1;pointer-events:auto}
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-.top{display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.brand{font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
-.top-r{display:flex;align-items:center;gap:10px}
-.dto{width:8px;height:8px;border-radius:50%;background:#e85d26}
-.top-d{font-size:13px;color:#999}
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #F5F5F0;
+    color: #1A1A1A;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-.stag{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-shrink:0}
-.sln{width:28px;height:2px;background:#e85d26}
-.stag-t{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#999}
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #F5F5F0;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+  }
 
-.serif{font-family:'Playfair Display',Georgia,serif}
-.h1{font-size:120px;font-weight:800;line-height:.92;letter-spacing:-3px}
-.h2{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-1px;margin-bottom:20px}
-.h3{font-size:32px;font-weight:700;line-height:1.15;letter-spacing:-0.5px;margin-bottom:16px}
-.acc{color:#e85d26}
-.body{font-size:15px;line-height:1.7;color:#666;max-width:680px}
-.btm{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto;flex-shrink:0;padding-top:16px}
-.author{font-size:14px;font-weight:600}
-.role{font-size:13px;color:#999;margin-top:2px}
-.pill{display:inline-flex;background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:10px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
-.pg{font-size:12px;color:#bbb}
+  .slide.active {
+    clip-path: inset(0 0 0 0);
+    pointer-events: auto;
+  }
 
-.flex1{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0}
+  /* ── Swiss Animations ── */
+  @keyframes swissScaleIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
 
-.list{display:flex;flex-direction:column;gap:14px}
-.li{display:flex;align-items:center;gap:12px;font-size:16px;font-weight:500}
-.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.do{background:#e85d26}.dgn{background:#5a9a6e}.drd{background:#c0392b}.dgy{background:#ccc}
-.muted{color:#999}
+  @keyframes swissFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
 
-.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-height:0}
-.card{background:#ebe6df;border-radius:14px;padding:28px;display:flex;flex-direction:column}
-.ct{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#e85d26;margin-bottom:6px}
-.cv{font-size:40px;font-weight:800;letter-spacing:-1px;margin-bottom:6px}
-.cb{font-size:13px;color:#888;line-height:1.6}
+  @keyframes swissSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-.pr{display:flex;align-items:center;gap:14px;margin-bottom:14px}
-.pl{font-size:14px;font-weight:600;width:160px}
-.pb{flex:1;height:7px;background:#e0dbd4;border-radius:4px;overflow:hidden}
-.pf{height:100%;border-radius:4px;background:#e85d26}
-.pp{font-size:13px;font-weight:600;color:#999;width:44px;text-align:right}
+  /* Geometric element animations */
+  .slide.active .red-block,
+  .slide.active .red-bar,
+  .slide.active .red-block-large {
+    animation: swissScaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.15s;
+    transform-origin: center;
+  }
 
-.quote{font-size:22px;font-weight:500;line-height:1.5;border-left:3px solid #e85d26;padding-left:20px;margin:16px 0;max-width:600px;color:#444}
-.hr{height:1px;background:#e0dbd4;margin:16px 0;flex-shrink:0}
+  .slide.active .black-vert,
+  .slide.active .black-block,
+  .slide.active .black-square {
+    animation: swissFadeIn 0.3s ease both;
+    animation-delay: 0.1s;
+  }
 
-.nums{display:flex;gap:64px}
-.nv{font-size:88px;font-weight:800;line-height:1;letter-spacing:-3px}
-.nl{font-size:13px;color:#999;margin-top:6px}
+  .slide.active .page-number {
+    animation: swissSlideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.2s;
+  }
 
-.dots{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:100}
-.pd{width:8px;height:8px;border-radius:50%;background:#d1ccc5;cursor:pointer;transition:background .3s}
-.pd.a{background:#e85d26}
+  /* Content animations */
+  .slide.active .content .label {
+    animation: swissSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.1s;
+  }
 
-/* Animations */
-@keyframes warmFadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes warmFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-.slide .stag, .slide .h1, .slide .h2, .slide .h3, .slide .body, .slide .list, .slide .cards, .slide .card, .slide .nums, .slide .nv, .slide .quote, .slide .pr, .slide .hr, .slide .pill {
-  opacity: 0;
-}
-.slide.active .stag {
-  animation: warmFadeIn 0.4s ease both;
-  animation-delay: 0s;
-}
-.slide.active .h1 {
-  animation: warmFadeUp 0.7s cubic-bezier(0.23,1,0.32,1) both;
-  animation-delay: 0.08s;
-}
-.slide.active .h2, .slide.active .h3 {
-  animation: warmFadeUp 0.6s cubic-bezier(0.23,1,0.32,1) both;
-  animation-delay: 0.1s;
-}
-.slide.active .body {
-  animation: warmFadeIn 0.5s ease both;
-  animation-delay: 0.2s;
-}
-.slide.active .list {
-  animation: warmFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
-  animation-delay: 0.22s;
-}
-.slide.active .cards {
-  animation: warmFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
-  animation-delay: 0.15s;
-}
-.slide.active .card {
-  animation: warmFadeUp 0.4s cubic-bezier(0.23,1,0.32,1) both;
-}
-.slide.active .card:nth-child(1) { animation-delay: 0.1s; }
-.slide.active .card:nth-child(2) { animation-delay: 0.18s; }
-.slide.active .card:nth-child(3) { animation-delay: 0.26s; }
-.slide.active .card:nth-child(4) { animation-delay: 0.34s; }
-.slide.active .nums {
-  animation: warmFadeUp 0.6s cubic-bezier(0.23,1,0.32,1) both;
-  animation-delay: 0.15s;
-}
-.slide.active .pr {
-  animation: warmFadeUp 0.4s cubic-bezier(0.23,1,0.32,1) both;
-}
-.slide.active .pr:nth-child(1) { animation-delay: 0.1s; }
-.slide.active .pr:nth-child(2) { animation-delay: 0.16s; }
-.slide.active .pr:nth-child(3) { animation-delay: 0.22s; }
-.slide.active .pr:nth-child(4) { animation-delay: 0.28s; }
-.slide.active .pr:nth-child(5) { animation-delay: 0.34s; }
-.slide.active .quote {
-  animation: warmFadeUp 0.5s cubic-bezier(0.23,1,0.32,1) both;
-  animation-delay: 0.15s;
-}
-.slide.active .hr {
-  animation: warmFadeIn 0.3s ease both;
-  animation-delay: 0.18s;
-}
-.slide.active .pill {
-  animation: warmFadeIn 0.4s ease both;
-  animation-delay: 0.3s;
-}
+  .slide.active .content .rule {
+    animation: swissScaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.15s;
+    transform-origin: left;
+  }
+
+  .slide.active .content .stat {
+    animation: swissSlideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.2s;
+  }
+
+  .slide.active .content .body-text {
+    animation: swissSlideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.25s;
+  }
+
+  /* Title slide */
+  .slide.active .title-block {
+    animation: swissSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.1s;
+  }
+
+  .slide.active .date-rule {
+    animation: swissScaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.2s;
+    transform-origin: left;
+  }
+
+  .slide.active .date {
+    animation: swissSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.25s;
+  }
+
+  /* Progress rows stagger */
+  .slide-3.active .content > :nth-child(3) {
+    animation: swissSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.15s;
+  }
+  .slide-3.active .content > :nth-child(5) {
+    animation: swissSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.22s;
+  }
+  .slide-3.active .content > :nth-child(7) {
+    animation: swissSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.29s;
+  }
+
+  /* Page numbers */
+  .page-number {
+    position: absolute;
+    bottom: 6vh;
+    right: 8vw;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+    font-size: 80px;
+    font-weight: 900;
+    color: #DDDDD8;
+    line-height: 1;
+    user-select: none;
+    letter-spacing: -2px;
+  }
+
+  /* Labels */
+  .label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #1A1A1A;
+    margin-bottom: 16px;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+  }
+
+  .rule {
+    width: 100%;
+    height: 1px;
+    background: #1A1A1A;
+    margin-bottom: 40px;
+  }
+
+  .rule-thin {
+    width: 100%;
+    height: 1px;
+    background: #1A1A1A;
+    opacity: 0.15;
+  }
+
+  /* =========================================
+     SLIDE 1 — Title
+     ========================================= */
+  .slide-1 .content {
+    position: relative;
+    margin-left: 12vw;
+    z-index: 2;
+  }
+
+  .slide-1 .title-line {
+    font-size: 96px;
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -3px;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+    color: #1A1A1A;
+    display: block;
+  }
+
+  .slide-1 .title-block {
+    margin-bottom: 48px;
+  }
+
+  .slide-1 .date-rule {
+    width: 280px;
+    height: 1px;
+    background: #1A1A1A;
+    margin-bottom: 20px;
+  }
+
+  .slide-1 .date {
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #1A1A1A;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+  }
+
+  /* Red compositional rectangle */
+  .slide-1 .red-block {
+    position: absolute;
+    top: 12vh;
+    right: 18vw;
+    width: 200px;
+    height: 80px;
+    background: #FF0000;
+    z-index: 1;
+  }
+
+  /* Vertical black structure line */
+  .slide-1 .black-vert {
+    position: absolute;
+    top: 0;
+    right: 38vw;
+    width: 1px;
+    height: 100vh;
+    background: #1A1A1A;
+    opacity: 0.07;
+    z-index: 0;
+  }
+
+  /* =========================================
+     SLIDE 2 — Summary
+     ========================================= */
+  .slide-2 .content {
+    position: relative;
+    margin-left: 12vw;
+    max-width: 55vw;
+    z-index: 2;
+  }
+
+  .slide-2 .stat {
+    font-size: 64px;
+    font-weight: 900;
+    color: #1A1A1A;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 24px;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+  }
+
+  .slide-2 .body-text {
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: #1A1A1A;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+    max-width: 55vw;
+  }
+
+  /* Red vertical bar */
+  .slide-2 .red-bar {
+    position: absolute;
+    top: 20vh;
+    right: 14vw;
+    width: 8px;
+    height: 30vh;
+    background: #FF0000;
+    z-index: 1;
+  }
+
+  /* Structural horizontal */
+  .slide-2 .horiz-line {
+    position: absolute;
+    bottom: 32vh;
+    left: 0;
+    width: 100vw;
+    height: 1px;
+    background: #1A1A1A;
+    opacity: 0.06;
+    z-index: 0;
+  }
+
+  /* =========================================
+     SLIDE 3 — Progress
+     ========================================= */
+  .slide-3 .content {
+    position: relative;
+    margin-left: 12vw;
+    max-width: 70vw;
+    z-index: 2;
+  }
+
+  .slide-3 .progress-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 160px;
+    align-items: baseline;
+    padding: 28px 0;
+    gap: 32px;
+  }
+
+  .slide-3 .project-name {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+    color: #1A1A1A;
+  }
+
+  .slide-3 .project-desc {
+    font-size: 18px;
+    font-weight: 300;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+    color: #1A1A1A;
+    line-height: 1.5;
+  }
+
+  .slide-3 .project-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+    white-space: nowrap;
+  }
+
+  .slide-3 .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .slide-3 .dot-green { background: #00A542; }
+  .slide-3 .dot-red { background: #FF0000; }
+  .slide-3 .dot-black { background: #1A1A1A; }
+
+  /* Red accent block in negative space */
+  .slide-3 .red-block {
+    position: absolute;
+    bottom: 14vh;
+    right: 10vw;
+    width: 60px;
+    height: 60px;
+    background: #FF0000;
+    z-index: 1;
+  }
+
+  /* =========================================
+     SLIDE 4 — Newsletter
+     ========================================= */
+  .slide-4 .content {
+    position: relative;
+    margin-left: 12vw;
+    max-width: 55vw;
+    z-index: 2;
+  }
+
+  .slide-4 .stat {
+    font-size: 64px;
+    font-weight: 900;
+    color: #1A1A1A;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 24px;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+  }
+
+  .slide-4 .body-text {
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: #1A1A1A;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+    max-width: 55vw;
+  }
+
+  /* Red compositional block — top right */
+  .slide-4 .red-block {
+    position: absolute;
+    top: 10vh;
+    right: 12vw;
+    width: 140px;
+    height: 40px;
+    background: #FF0000;
+    z-index: 1;
+  }
+
+  /* Black structural rect */
+  .slide-4 .black-block {
+    position: absolute;
+    bottom: 18vh;
+    right: 22vw;
+    width: 1px;
+    height: 20vh;
+    background: #1A1A1A;
+    opacity: 0.1;
+    z-index: 0;
+  }
+
+  /* =========================================
+     SLIDE 5 — Top of Mind
+     ========================================= */
+  .slide-5 .content {
+    position: relative;
+    margin-left: 12vw;
+    max-width: 50vw;
+    z-index: 2;
+  }
+
+  .slide-5 .body-text {
+    font-size: 34px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: #1A1A1A;
+    font-family: "Helvetica Neue", Inter, sans-serif;
+  }
+
+  /* Large red dominant rectangle */
+  .slide-5 .red-block-large {
+    position: absolute;
+    top: 15vh;
+    right: 8vw;
+    width: 18vw;
+    height: 50vh;
+    background: #FF0000;
+    z-index: 1;
+  }
+
+  /* Small black square */
+  .slide-5 .black-square {
+    position: absolute;
+    top: 68vh;
+    right: 28vw;
+    width: 24px;
+    height: 24px;
+    background: #1A1A1A;
+    z-index: 1;
+  }
 </style>
 </head>
 <body>
-<div class="dots" id="dots"></div>
 
-<!-- 01 Cover -->
-<div class="slide active" data-index="0">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Weekly Status Update</span></div><div class="h1 serif">Status<br><span class="acc">Report</span></div></div>
-  <div class="btm"><div><div class="author">David Chen</div><div class="role">Principal Designer · Copilot Mac</div></div><div class="pill">C3 Week 3</div></div>
+<!-- SLIDE 1 — Title -->
+<div class="slide slide-1 active" data-index="0">
+  <div class="black-vert"></div>
+  <div class="red-block"></div>
+  <div class="content">
+    <div class="title-block">
+      <span class="title-line">Weekly</span>
+      <span class="title-line">Status</span>
+    </div>
+    <div class="date-rule"></div>
+    <div class="date" data-content="date">20.03.2026</div>
+  </div>
+  <div class="page-number">01</div>
 </div>
 
-<!-- 02 Summary -->
-<div class="slide" data-index="1">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Summary</span></div><div class="h2 serif">Org Reorg:<br>Native → <span class="acc">Chromium</span></div><div class="body" style="margin-bottom:20px">The biggest update this week is the org reorg. We've been asked to move from native to Chromium-based architecture, with a 4-week deadline to dogfood the new build.</div><div class="hr"></div><div class="list"><div class="li"><span class="dot drd"></span>Native → Chromium — 4-week dogfood deadline</div><div class="li muted"><span class="dot dgy"></span>All native feature work paused</div><div class="li"><span class="dot do"></span>Focus shifting to Chromium quality fit & finish</div></div></div>
-  <div class="btm"><div class="author">David Chen</div><div class="pg">02 / 12</div></div>
+<!-- SLIDE 2 — Summary -->
+<div class="slide slide-2" data-index="1">
+  <div class="red-bar"></div>
+  <div class="horiz-line"></div>
+  <div class="content">
+    <div class="label" data-content="auto-label">Summary</div>
+    <div class="rule"></div>
+    <div class="stat" data-content="summary-stat">4wk</div>
+    <p class="body-text" data-content="summary">Org reorg landed. We're transitioning from native to Chromium-based architecture with a 4-week dogfood deadline. All native feature work is paused — focus shifts to Chromium migration and quality fit & finish.</p>
+  </div>
+  <div class="page-number">02</div>
 </div>
 
-<!-- 03 Metrics -->
-<div class="slide" data-index="2">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Key Metrics</span></div><div class="nums serif"><div><div class="nv">4<span class="acc">wk</span></div><div class="nl">Dogfood Deadline</div></div><div><div class="nv">3</div><div class="nl">Features Stopped</div></div><div><div class="nv">1</div><div class="nl">Major Reorg</div></div><div><div class="nv">28</div><div class="nl">Days to Ship</div></div></div></div>
-  <div class="btm"><div class="author">David Chen</div><div class="pg">03 / 12</div></div>
-</div>
+<!-- SLIDE 3 — Progress -->
+<div class="slide slide-3" data-index="2">
+  <div class="content">
+    <div class="label" data-content="auto-label">Progress</div>
+    <div class="rule"></div>
 
-<!-- 04 Progress -->
-<div class="slide" data-index="3">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Progress</span></div><div class="h3 serif">Feature Status</div><div style="margin-bottom:16px"><div class="pr"><div class="pl">Connector V2</div><div class="pb"><div class="pf" style="width:95%;background:#c0a060"></div></div><div class="pp">STOP</div></div><div class="pr"><div class="pl">Shopping</div><div class="pb"><div class="pf" style="width:70%;background:#c0a060"></div></div><div class="pp">STOP</div></div><div class="pr"><div class="pl">Podcast Player</div><div class="pb"><div class="pf" style="width:100%;background:#c0a060"></div></div><div class="pp">STOP</div></div></div><div class="body">All features paused under new Chromium direction.</div></div>
-  <div class="btm"><div class="author">David Chen</div><div class="pg">04 / 12</div></div>
-</div>
-
-<!-- 05 Progress II -->
-<div class="slide" data-index="4">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Feature Detail</span></div><div class="h3 serif">Final Status Before Pause</div><div class="body" style="margin-bottom:16px">Where each feature stood when the reorg landed.</div><div class="list"><div class="li"><span class="dot dgn"></span><strong>Connector V2</strong> — All screens completed. Design QA against dev build was in progress.</div><div class="li"><span class="dot do"></span><strong>Shopping</strong> — Partial design done. Synced with US inline answer & PDP designers this week to avoid parity errors.</div><div class="li"><span class="dot dgn"></span><strong>Podcast Mini Player</strong> — Full flow approved. Unlikely to proceed under new parity direction.</div></div></div>
-  <div class="btm"><div class="author">David Chen</div><div class="pg">05 / 12</div></div>
-</div>
-
-<!-- 06 Blockers -->
-<div class="slide" data-index="5">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Blockers &amp; Risks</span></div><div class="list" style="gap:24px"><div><div class="li" style="margin-bottom:4px"><span class="dot drd"></span><strong>4-week timeline</strong></div><div class="body" style="margin-left:22px">Aggressive deadline to dogfood a Chromium-based build.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot do"></span><strong>Feature carry-over TBD</strong></div><div class="body" style="margin-left:22px">Which native features port to Chromium — still being assessed.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot do"></span><strong>Design system adaptation</strong></div><div class="body" style="margin-left:22px">Native UI patterns need rethinking for Chromium context.</div></div></div></div>
-  <div class="btm"><div class="author">David Chen</div><div class="pg">06 / 12</div></div>
-</div>
-
-<!-- 07 Newsletter -->
-<div class="slide" data-index="6">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div class="flex1" style="gap:0">
-    <div class="stag"><span class="sln"></span><span class="stag-t">Newsletter</span></div>
-    <div class="h2 serif" style="margin-bottom:32px">Team Updates</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;flex:1;align-items:start">
-      <div>
-        <div class="quote serif" style="font-size:24px;line-height:1.55;margin:0 0 28px 0;padding-left:24px;border-left:3px solid #e85d26">"The hardest pivot isn't the new direction — it's letting go of what you already built."</div>
-        <div class="body" style="max-width:none;color:#888;font-size:13px;line-height:1.7">Kobayashi's direction: push hard to complete the Chromium dogfood build within 4 weeks, fully support Jacob in replacing the current native version.</div>
-      </div>
-      <div class="list" style="gap:20px">
-        <div class="li"><span class="dot dgn"></span>New engineer onboarded &amp; paired</div>
-        <div class="li"><span class="dot do"></span>Accessibility audit completed</div>
-        <div class="li"><span class="dot do"></span>Design review cadence established</div>
-        <div class="li"><span class="dot dgn"></span>Component docs published</div>
-        <div class="li"><span class="dot dgy"></span>Q2 planning kickoff scheduled</div>
+    <div class="progress-row">
+      <div class="project-name" data-content="progress-1-title">Connector V2</div>
+      <div class="project-desc" data-content="progress-1-desc">All screens done, design QA started → Stopped</div>
+      <div class="project-status">
+        <div class="dot dot-red"></div>
+        Stopped
       </div>
     </div>
+    <div class="rule-thin"></div>
+
+    <div class="progress-row">
+      <div class="project-name" data-content="progress-2-title">Shopping</div>
+      <div class="project-desc" data-content="progress-2-desc">Partial design, US designer sync done → Stopped</div>
+      <div class="project-status">
+        <div class="dot dot-red"></div>
+        Stopped
+      </div>
+    </div>
+    <div class="rule-thin"></div>
+
+    <div class="progress-row">
+      <div class="project-name" data-content="progress-3-title">Podcast Mini Player</div>
+      <div class="project-desc" data-content="progress-3-desc">Full flow approved, unlikely to proceed → Stopped</div>
+      <div class="project-status">
+        <div class="dot dot-red"></div>
+        Stopped
+      </div>
+    </div>
+    <div class="rule-thin"></div>
   </div>
-  <div class="btm"><div class="author">David Chen</div><div class="pg">07 / 12</div></div>
+  <div class="red-block"></div>
+  <div class="page-number">03</div>
 </div>
 
-<!-- 08 Design -->
-<div class="slide" data-index="7">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div style="margin-top:24px;flex-shrink:0"><div class="stag"><span class="sln"></span><span class="stag-t">Work Context</span></div><div class="h3 serif">Paused features — <span class="acc">context preserved</span></div></div>
-  <div class="cards" style="margin-top:12px"><div class="card"><div class="ct">Connector V2</div><div class="cb">Email, Calendar, Google Contacts. All screens done, design QA started.</div></div><div class="card"><div class="ct">Shopping</div><div class="cb">Inline Answer & PDP. Partial design, US sync completed.</div></div><div class="card"><div class="ct">Podcast</div><div class="cb">Mini Player full flow approved. Paused.</div></div><div class="card"><div class="ct">Next</div><div class="cb">Focus shifts to Chromium quality fit & finish post-migration.</div></div></div>
-  <div class="btm"><div class="author">David Chen</div><div class="pg">08 / 12</div></div>
+<!-- SLIDE 4 — Newsletter -->
+<div class="slide slide-4" data-index="3" data-section="newsletter">
+  <div class="red-block"></div>
+  <div class="black-block"></div>
+  <div class="content">
+    <div class="label" data-content="auto-label">Newsletter</div>
+    <div class="rule"></div>
+    <div class="stat" data-content="newsletter-stat">Reorg</div>
+    <p class="body-text" data-content="newsletter">Kobayashi's direction: push hard to complete the Chromium dogfood build within 4 weeks, fully support Jacob in replacing the current native version. No other significant updates beyond the reorg at this time.</p>
+  </div>
+  <div class="page-number">04</div>
 </div>
 
-<!-- 09 Technical -->
-<div class="slide" data-index="8">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Transition Plan</span></div><div class="list" style="gap:24px"><div><div class="li" style="margin-bottom:4px"><span class="dot do"></span><strong>Week 1–2: Chromium foundation</strong></div><div class="body" style="margin-left:22px">Shell setup, build pipeline, core navigation.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot do"></span><strong>Week 3: Feature migration</strong></div><div class="body" style="margin-left:22px">Priority features ported, design patterns adapted.</div></div><div><div class="li" style="margin-bottom:4px"><span class="dot do"></span><strong>Week 4: Dogfood</strong></div><div class="body" style="margin-left:22px">Internal rollout, replace native build, collect feedback.</div></div></div></div>
-  <div class="btm"><div class="author">David Chen</div><div class="pg">09 / 12</div></div>
-</div>
-
-<!-- 10 Others -->
-<div class="slide" data-index="9">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Others</span></div><div class="list"><div class="li"><span class="dot do"></span>Reorg communicated — team aligned</div><div class="li"><span class="dot do"></span>US designer sync — parity check completed</div><div class="li muted"><span class="dot dgy"></span>Native feature backlog — frozen</div></div></div>
-  <div class="btm"><div class="author">David Chen</div><div class="pg">10 / 12</div></div>
-</div>
-
-<!-- 11 Top of Mind -->
-<div class="slide" data-index="10">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Top of Mind</span></div><div class="h2 serif">How do we ship <span class="acc">fast</span><br>without starting from zero?</div><div class="body">Design decisions, UX patterns, and user insights from native all carry forward. The challenge is knowing what to port faithfully vs. what to rethink for Chromium.</div></div>
-  <div class="btm"><div class="author">David Chen</div><div class="pg">11 / 12</div></div>
-</div>
-
-<!-- 12 Next Steps -->
-<div class="slide" data-index="11">
-  <div class="top"><div class="brand">Copilot Mac</div><div class="top-r"><span class="dto"></span><span class="top-d">March 20, 2026</span></div></div>
-  <div class="flex1"><div class="stag"><span class="sln"></span><span class="stag-t">Next Steps</span></div><div class="h3 serif">What's next</div><div class="list"><div class="li"><span class="dot do"></span>Chromium build — first working shell</div><div class="li"><span class="dot do"></span>Feature parity audit — what ports, what doesn't</div><div class="li"><span class="dot do"></span>Design system — Chromium adaptation</div><div class="li"><span class="dot do"></span>Dogfood planning — internal rollout logistics</div></div></div>
-  <div class="btm"><div><div class="author">David Chen</div><div class="role">Principal Designer · Copilot Mac</div></div><div class="pill">Thank You</div></div>
+<!-- SLIDE 5 — Top of Mind -->
+<div class="slide slide-5" data-index="4" data-section="topofmind">
+  <div class="red-block-large"></div>
+  <div class="black-square"></div>
+  <div class="content">
+    <div class="label" data-content="auto-label">Top of Mind</div>
+    <div class="rule"></div>
+    <p class="body-text" data-content="topofmind">How do we ship fast without starting from zero? The native work wasn't wasted — design decisions, UX patterns, and user insights all carry forward. The challenge is knowing what to port faithfully vs. what to rethink for Chromium.</p>
+  </div>
+  <div class="page-number">05</div>
 </div>
 
 <script>
-(function(){
-  var slides=document.querySelectorAll('.slide'),total=slides.length,cur=0,busy=false;
-  var dc=document.getElementById('dots');
-  for(var i=0;i<total;i++){var d=document.createElement('div');d.className='pd'+(i===0?' a':'');d.dataset.i=i;dc.appendChild(d)}
-  var dots=dc.querySelectorAll('.pd');
-  
-  function reset(s){var els=s.querySelectorAll('.stag,.h1,.h2,.h3,.body,.list,.cards,.card,.nums,.nv,.quote,.pr,.hr,.pill');for(var i=0;i<els.length;i++){els[i].style.animation='none';els[i].offsetHeight;els[i].style.animation=''}}
-  function go(n){if(n<0||n>=total||n===cur||busy)return;busy=true;slides[cur].classList.remove('active');reset(slides[cur]);dots[cur].classList.remove('a');cur=n;slides[cur].classList.add('active');dots[cur].classList.add('a');setTimeout(function(){busy=false},600)}
-  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();go(cur+1)}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();go(cur-1)}});
-  dots.forEach(function(d){d.addEventListener('click',function(){go(+d.dataset.i)})});
-})();
+  (function () {
+    var slides = document.querySelectorAll('.slide');
+    var current = 0;
+    var total = slides.length;
+    var transitioning = false;
+
+    function go(index) {
+      if (index < 0 || index >= total || index === current || transitioning) return;
+      transitioning = true;
+
+      var oldSlide = slides[current];
+      oldSlide.classList.remove('active');
+
+      // Reset animations
+      var els = oldSlide.querySelectorAll('.red-block, .red-bar, .red-block-large, .black-vert, .black-block, .black-square, .page-number, .label, .rule, .stat, .body-text, .title-block, .date-rule, .date, .progress-row, .rule-thin');
+      for (var j = 0; j < els.length; j++) {
+        els[j].style.animation = 'none';
+        els[j].offsetHeight;
+        els[j].style.animation = '';
+      }
+
+      current = index;
+      slides[current].classList.add('active');
+
+      setTimeout(function() { transitioning = false; }, 520);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+          e.preventDefault();
+          go(current + 1);
+          break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+          e.preventDefault();
+          go(current - 1);
+          break;
+      }
+    });
+  })();
 </script>
 </body>
 </html>
