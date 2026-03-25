@@ -824,7 +824,7 @@ function extractHTML(content) {
 
 async function generateAI(data) {
   const key = document.getElementById('aiKey').value.trim() || localStorage.getItem('wr-gh-token');
-  if (!key) { showToast('Enter your GitHub token first'); return null; }
+  if (!key) { throw new Error('No token — using local template'); }
 
   const style = selectedStyle !== 'random' ? selectedStyle : pickRandomStyle();
   const sysPrompt = buildAISystemPrompt(style);
