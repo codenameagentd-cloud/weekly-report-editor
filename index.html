@@ -144,6 +144,20 @@
   }
   .btn-action:hover { background:#e7e5e4; color:#44403c; }
 
+  /* Loading overlay */
+  .loading-overlay {
+    position:fixed; inset:0; background:rgba(250,250,249,.92); z-index:9999;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .3s;
+  }
+  .loading-overlay.active { opacity:1; pointer-events:auto; }
+  .loading-spinner {
+    width:32px; height:32px; border:3px solid #e7e5e4; border-top-color:#1c1917;
+    border-radius:50%; animation:spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .loading-text { margin-top:16px; font-size:13px; color:#78716c; font-weight:500; }
+
   .output-box { display:none; background:#fff; border:1px solid #e7e5e4; border-radius:8px; padding:10px 12px; }
   .output-box.active { display:block; }
   .output-box h4 { font-size:12px; font-weight:600; color:#1c1917; }
@@ -253,6 +267,11 @@
     <button class="preview-close" onclick="closePreview()">✕</button>
     <iframe class="preview-iframe" id="previewIframe"></iframe>
   </div>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loadingText">Generating slides...</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -708,26 +727,204 @@ function validate() {
   return d;
 }
 
-function generate() {
-  const data = validate();
-  if (!data) return;
-  generatedHTML = buildSlides(data, selectedStyle);
-  const skipped = [];
-  if (!data.newsletter) skipped.push('Newsletter');
-  if (!data.others) skipped.push('Others');
-  if (!data.topofmind) skipped.push('Top of Mind');
-  document.getElementById('output').classList.add('active');
-  document.getElementById('outputMeta').textContent = 'Style: ' + selectedStyle + (skipped.length ? ' \u00b7 Skipped: ' + skipped.join(', ') : '');
-  showToast('Slides generated');
+function showLoading(msg) {
+  document.getElementById('loadingText').textContent = msg || 'Generating slides...';
+  document.getElementById('loadingOverlay').classList.add('active');
+}
+function hideLoading() {
+  document.getElementById('loadingOverlay').classList.remove('active');
 }
 
-function preview() {
+const AI_STYLES = [
+  'Swiss Typographic — Helvetica, red/black geometric blocks, asymmetric grid, bold page numbers',
+  'Warm Editorial — Earthy tones, serif headlines, soft shadows, warm gradients',
+  'Dark Cinematic — Near-black bg, white text, dramatic lighting, wide letter-spacing',
+  'Minimal Apple — White bg, SF Pro/Inter, subtle gray borders, extreme whitespace',
+  'Neon Dashboard — Dark bg, cyan/magenta neon accents, monospace stats, glassmorphism cards',
+  'Brutalist Mono — Raw exposed grid, monospace everything, thick borders, high contrast',
+  'Paper & Ink — Off-white, black ink aesthetic, thin serif, ruled lines, vintage feel',
+  'Gradient Flow — Smooth gradient backgrounds, modern sans, floating cards with blur',
+];
+let lastStyleIdx = -1;
+
+function pickRandomStyle() {
+  let idx;
+  do { idx = Math.floor(Math.random() * AI_STYLES.length); } while (idx === lastStyleIdx && AI_STYLES.length > 1);
+  lastStyleIdx = idx;
+  return AI_STYLES[idx];
+}
+
+function buildAISystemPrompt(styleDir) {
+  return `You are a world-class presentation designer. Generate a standalone HTML file for a weekly status report.
+
+STYLE DIRECTION: ${styleDir}
+
+Create a UNIQUE design. Vary color palette, typography, layout structure, decorative elements, animations.
+
+TECHNICAL:
+- Standalone HTML with embedded CSS + JS (no external deps except Google Fonts via @import)
+- Each section = one full-viewport slide (100vw × 100vh)
+- Slide transitions with clip-path or transform (NOT scroll-snap)
+- Keyboard nav: Arrow keys + Space
+- Page counter (current/total)
+- Responsive (desktop priority)
+- Animations: 150-500ms, cubic-bezier easing
+- 8pt grid spacing
+
+CONTENT:
+- McKinsey style: headline = conclusion, not topic
+- Body ≥ 20px, headlines 36-72pt
+- Short text → hero typography; Long text → columns/cards
+- Progress items: done/completed → ✅, in progress → 🔵, blocked → 🔴
+- ALL text from user input. NEVER invent content.
+
+SLIDES (in order):
+1. Title — "Weekly Status Update" + date
+2. Summary
+3. Progress Status (cards/rows with indicators)
+4. Newsletter (if provided)
+5. Others (if provided)
+6. Top of Mind (if provided)
+
+QUALITY: Awwwards-level. Apple.com presentation quality.
+
+OUTPUT: Complete HTML only. Start with <!DOCTYPE html>. No markdown, no explanation.`;
+}
+
+function buildUserPrompt(data) {
+  let p = 'Generate the weekly status report HTML:\n\n';
+  p += 'DATE: ' + (data.week || 'This Week') + '\n\n';
+  if (data.summary) p += 'SUMMARY:\n' + data.summary + '\n\n';
+  if (data.progress) p += 'PROGRESS STATUS:\n' + data.progress + '\n\n';
+  if (data.newsletter) p += 'NEWSLETTER:\n' + data.newsletter + '\n\n';
+  if (data.others) p += 'OTHERS:\n' + data.others + '\n\n';
+  if (data.topofmind) p += 'TOP OF MIND:\n' + data.topofmind + '\n\n';
+  p += 'Output ONLY the complete HTML file starting with <!DOCTYPE html>.';
+  return p;
+}
+
+function extractHTML(content) {
+  const m = content.match(/```html?\s*\n([\s\S]*?)```/);
+  if (m) return m[1].trim();
+  if (content.trim().startsWith('<!') || content.trim().startsWith('<html')) return content.trim();
+  return content;
+}
+
+async function generateAI(data) {
+  const key = document.getElementById('aiKey').value.trim() || localStorage.getItem('wr-gh-token');
+  if (!key) { showToast('Enter your GitHub token first'); return null; }
+
+  const style = selectedStyle !== 'random' ? selectedStyle : pickRandomStyle();
+  const sysPrompt = buildAISystemPrompt(style);
+  const userPrompt = buildUserPrompt(data);
+
+  showLoading('Designing with AI — ' + style.split('—')[0].trim() + '...');
+
+  const steps = ['Composing layout...', 'Styling slides...', 'Adding animations...', 'Finalizing...'];
+  let stepIdx = 0;
+  const stepTimer = setInterval(() => {
+    stepIdx++;
+    if (stepIdx < steps.length) document.getElementById('loadingText').textContent = steps[stepIdx];
+  }, 5000);
+
+  try {
+    const res = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        messages: [
+          { role: 'system', content: sysPrompt },
+          { role: 'user', content: userPrompt },
+        ],
+        max_tokens: 16000,
+        temperature: 0.75,
+      }),
+    });
+
+    clearInterval(stepTimer);
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || 'API error ' + res.status);
+    }
+
+    const result = await res.json();
+    const raw = result.choices?.[0]?.message?.content || '';
+    const html = extractHTML(raw);
+
+    if (!html || html.length < 100) throw new Error('AI returned empty or invalid HTML');
+
+    localStorage.setItem('wr-gh-token', key);
+    return { html, style };
+  } catch (e) {
+    clearInterval(stepTimer);
+    throw e;
+  }
+}
+
+async function generate() {
   const data = validate();
   if (!data) return;
-  generatedHTML = buildSlides(data, selectedStyle);
-  document.getElementById('previewOverlay').classList.add('active');
-  document.getElementById('previewIframe').srcdoc = generatedHTML;
+
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+
+  try {
+    const result = await generateAI(data);
+    if (!result) { btn.disabled = false; hideLoading(); return; }
+
+    generatedHTML = result.html;
+    const skipped = [];
+    if (!data.newsletter) skipped.push('Newsletter');
+    if (!data.others) skipped.push('Others');
+    if (!data.topofmind) skipped.push('Top of Mind');
+
+    document.getElementById('output').classList.add('active');
+    document.getElementById('outputMeta').textContent = 'AI: ' + result.style.split('—')[0].trim() + (skipped.length ? ' · Skipped: ' + skipped.join(', ') : '');
+    showToast('Slides generated by AI ✨');
+  } catch (e) {
+    console.error(e);
+    showToast('AI generation failed: ' + e.message);
+    // Fallback to local buildSlides
+    generatedHTML = buildSlides(data, selectedStyle);
+    document.getElementById('output').classList.add('active');
+    document.getElementById('outputMeta').textContent = 'Fallback: ' + selectedStyle;
+    showToast('Used local fallback template');
+  }
+
+  hideLoading();
+  btn.disabled = false;
 }
+
+async function preview() {
+  const data = validate();
+  if (!data) return;
+
+  const btn = document.querySelector('.btn-preview');
+  btn.disabled = true;
+
+  try {
+    const result = await generateAI(data);
+    if (!result) { btn.disabled = false; hideLoading(); return; }
+    generatedHTML = result.html;
+  } catch (e) {
+    console.error(e);
+    showToast('AI failed, using local template');
+    generatedHTML = buildSlides(data, selectedStyle);
+  }
+
+  hideLoading();
+  btn.disabled = false;
+
+  document.getElementById('previewOverlay').classList.add('active');
+  try {
+    document.getElementById('previewIframe').srcdoc = generatedHTML;
+  } catch (e) {
+    showToast('Render error — try downloading the HTML');
+  }
+}
+
 function closePreview() { document.getElementById('previewOverlay').classList.remove('active'); }
 
 function downloadHTML() {
