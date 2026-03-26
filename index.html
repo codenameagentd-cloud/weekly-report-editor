@@ -823,8 +823,8 @@ function extractHTML(content) {
 }
 
 async function generateAI(data) {
-  const key = document.getElementById('aiKey').value.trim() || localStorage.getItem('wr-gh-token');
-  if (!key) { throw new Error('No token — using local template'); }
+  const key = 'wr-editor-2026';
+  
 
   const style = selectedStyle !== 'random' ? selectedStyle : pickRandomStyle();
   const sysPrompt = buildAISystemPrompt(style);
@@ -840,11 +840,11 @@ async function generateAI(data) {
   }, 5000);
 
   try {
-    const res = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+    const res = await fetch('https://mac.tail009579.ts.net/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer wr-editor-2026' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'github-copilot/claude-opus-4.6',
         messages: [
           { role: 'system', content: sysPrompt },
           { role: 'user', content: userPrompt },
@@ -867,7 +867,7 @@ async function generateAI(data) {
 
     if (!html || html.length < 100) throw new Error('AI returned empty or invalid HTML');
 
-    localStorage.setItem('wr-gh-token', key);
+    
     return { html, style };
   } catch (e) {
     clearInterval(stepTimer);
@@ -953,7 +953,7 @@ function downloadHTML() {
 
 async function publishAndCopy() {
   if (!generatedHTML) return;
-  const key = document.getElementById('aiKey').value.trim() || localStorage.getItem('wr-gh-token');
+  const key = 'wr-editor-2026';
   if (!key) { showToast('Enter GitHub token first (needed to publish)'); return; }
   const btn = event.target;
   btn.disabled = true; btn.textContent = 'Publishing\u2026';
@@ -964,7 +964,7 @@ async function publishAndCopy() {
     let sha;
     try {
       const existing = await fetch('https://api.github.com/repos/codenameagentd-cloud/weekly-report-editor/contents/' + path + '?ref=gh-pages', {
-        headers: { 'Authorization': 'Bearer ' + key }
+        headers: { 'Authorization': 'Bearer wr-editor-2026' }
       });
       if (existing.ok) { const d = await existing.json(); sha = d.sha; }
     } catch(e) {}
@@ -972,7 +972,7 @@ async function publishAndCopy() {
     if (sha) body.sha = sha;
     const res = await fetch('https://api.github.com/repos/codenameagentd-cloud/weekly-report-editor/contents/' + path, {
       method: 'PUT',
-      headers: { 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' },
+      headers: { 'Authorization': 'Bearer wr-editor-2026', 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
     if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Failed'); }
@@ -1003,10 +1003,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function polishAll() {
-  const model = document.getElementById('aiModel').value;
-  const key = document.getElementById('aiKey').value.trim();
-  if (!model) { showToast('Select a model first'); return; }
-  if (!key) { showToast('Enter your GitHub token'); return; }
+  
+  
+  
+  
 
   const btn = document.getElementById('polishBtn');
   btn.disabled = true; btn.textContent = 'Polishing…';
@@ -1019,7 +1019,7 @@ async function polishAll() {
     const text = el.value.trim();
     if (!text) return;
     try {
-      const polished = await callAI(model, key, labels[i], text);
+      const polished = await callAI(labels[i], text);
       if (polished) el.value = polished;
     } catch(e) {
       console.error(e);
@@ -1027,17 +1027,17 @@ async function polishAll() {
     }
   }));
   btn.disabled = false; btn.textContent = 'Polish';
-  localStorage.setItem('wr-gh-token', key);
-  localStorage.setItem('wr-ai-model', model);
+  
+  
   showToast('Polish complete');
 }
 
-async function callAI(model, key, fieldName, text) {
-  const res = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+async function callAI(fieldName, text) {
+  const res = await fetch('https://mac.tail009579.ts.net/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer wr-editor-2026' },
     body: JSON.stringify({
-      model,
+      model: 'github-copilot/claude-opus-4.6',
       messages: [
         { role: 'system', content: 'You are a writing assistant for a weekly status report sent to senior leadership. Polish the text for tone (professional but natural), clarity, and accuracy. Keep the same structure and meaning. Do not add new content. Return only the polished text, no explanation.' },
         { role: 'user', content: `Field: ${fieldName}\n\n${text}` }
