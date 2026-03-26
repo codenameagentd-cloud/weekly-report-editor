@@ -1,5 +1,5 @@
 // Cloudflare Worker: AI Proxy for Weekly Report Editor
-// Backend: Azure OpenAI (server-side key, no client credentials needed)
+// Backend: Anthropic API (Claude Opus 4.6) — server-side key
 
 export default {
   async fetch(request, env) {
@@ -13,86 +13,93 @@ export default {
   },
 };
 
-// ── Azure OpenAI chat completions helper ──
-async function azureChat(env, model, messages, maxTokens = 16000, temperature = 0.75) {
-  const endpoint = env.AZURE_OPENAI_ENDPOINT;
-  const key = env.AZURE_OPENAI_KEY;
-  if (!endpoint || !key) throw new Error('Missing Azure OpenAI credentials');
+// ── Anthropic Messages API ──
+async function anthropicChat(env, model, system, messages, maxTokens = 16000) {
+  const key = env.ANTHROPIC_API_KEY;
+  if (!key) throw new Error('Missing ANTHROPIC_API_KEY');
 
-  // For Claude models, use the models/chat/completions path (serverless)
-  // For GPT models, use the deployments path
-  const isServerless = model.startsWith('claude-') || model.startsWith('Llama-') || model.startsWith('DeepSeek-');
-  
-  let url, headers, body;
-  if (isServerless) {
-    url = `${endpoint}/models/chat/completions?api-version=2024-05-01-preview`;
-    headers = {
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
       'Content-Type': 'application/json',
-      'api-key': key,
-    };
-    body = { model, messages, max_tokens: maxTokens, temperature };
-  } else {
-    url = `${endpoint}/openai/deployments/${model}/chat/completions?api-version=2025-04-01-preview`;
-    headers = {
-      'Content-Type': 'application/json',
-      'api-key': key,
-    };
-    body = { messages, max_tokens: maxTokens, temperature };
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: maxTokens,
+      system,
+      messages,
+    }),
+  });
+
+  if (!resp.ok) {
+    const errText = await resp.text();
+    throw new Error(`Anthropic API ${resp.status}: ${errText}`);
   }
 
+  return resp.json();
+}
+
+// ── Azure OpenAI fallback ──
+async function azureChat(env, model, messages, maxTokens = 4096, temperature = 0.3) {
+  const endpoint = env.AZURE_OPENAI_ENDPOINT;
+  const key = env.AZURE_OPENAI_KEY;
+  if (!endpoint || !key) throw new Error('Missing Azure credentials');
+
+  const url = `${endpoint}/openai/deployments/${model}/chat/completions?api-version=2025-04-01-preview`;
   const resp = await fetch(url, {
     method: 'POST',
-    headers,
-    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'application/json', 'api-key': key },
+    body: JSON.stringify({ messages, max_tokens: maxTokens, temperature }),
   });
 
   if (!resp.ok) {
     const errText = await resp.text();
     throw new Error(`Azure API ${resp.status}: ${errText}`);
   }
-
   return resp.json();
 }
 
-// ── /generate: Full HTML generation ──
+// ── /generate: Claude Opus 4.6 full HTML generation ──
 async function handleGenerate(request, env) {
   try {
-    const { data, style_hint, model } = await request.json();
+    const { data, style_hint } = await request.json();
     if (!data) return jsonResponse({ error: 'Missing data field' }, 400);
 
-    // Default to claude-opus-4-6, allow override
-    const useModel = model || 'gpt-4o-mini';
     const systemPrompt = buildSystemPrompt(style_hint);
     const userPrompt = buildUserPrompt(data);
 
-    const result = await azureChat(env, useModel, [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: userPrompt },
-    ], 16000, 0.75);
+    const result = await anthropicChat(
+      env,
+      'claude-opus-4-6-20250305',
+      systemPrompt,
+      [{ role: 'user', content: userPrompt }],
+      16000
+    );
 
-    const html = extractHTML(result.choices?.[0]?.message?.content || '');
-    return corsResponse(JSON.stringify({ html, model: useModel }), 200);
+    const content = result.content?.[0]?.text || '';
+    const html = extractHTML(content);
+    return corsResponse(JSON.stringify({ html, model: 'claude-opus-4-6' }), 200);
   } catch (e) {
     return jsonResponse({ error: `Generate error: ${e.message}` }, 500);
   }
 }
 
-// ── /polish: Text polishing ──
+// ── /polish: GPT-4o-mini text polish ──
 async function handlePolish(request, env) {
   try {
     const body = await request.json();
     if (!body.messages) return jsonResponse({ error: 'Missing messages' }, 400);
 
-    const useModel = body.model || 'gpt-4o-mini';
-    const result = await azureChat(env, useModel, body.messages, body.max_tokens || 4096, body.temperature || 0.3);
-
+    const result = await azureChat(env, 'gpt-4o-mini', body.messages, body.max_tokens || 4096, body.temperature || 0.3);
     return corsResponse(JSON.stringify(result), 200);
   } catch (e) {
     return jsonResponse({ error: `Polish error: ${e.message}` }, 500);
   }
 }
 
-// ── System prompt for HTML generation ──
+// ── System prompt ──
 function buildSystemPrompt(styleHint) {
   return `You are a world-class presentation designer. Generate a complete standalone HTML file for a weekly status report presentation.
 
@@ -105,7 +112,7 @@ REQUIREMENTS:
 
 QUALITY: Awwwards-level. Apple.com presentation quality.
 
-REFERENCE DESIGN PATTERNS (from hand-crafted examples):
+REFERENCE DESIGN PATTERNS:
 - Geometric accent elements: colored blocks, vertical bars, positioned absolutely
 - Slide transitions: clip-path inset animation (0.5s cubic-bezier)
 - Content animations: staggered slideUp/fadeIn with incremental delays
@@ -149,7 +156,6 @@ function extractHTML(content) {
   return content;
 }
 
-// ── CORS + Response helpers ──
 function corsResponse(body, status = 200) {
   return new Response(body, {
     status,
