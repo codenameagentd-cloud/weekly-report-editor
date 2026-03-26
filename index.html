@@ -238,7 +238,7 @@
         </select>
         <button class="btn-action" onclick="polishAll()" id="polishBtn" style="padding:8px 14px;">Polish</button>
       </div>
-      <input type="password" class="token-field" id="aiKey" placeholder="GitHub token" onchange="localStorage.setItem('wr-gh-token',this.value)">
+
       <p class="sb-hint">Polishes tone. Doesn't generate content.</p>
     </div>
 
@@ -996,8 +996,8 @@ function openNewTab() {
 
 // Load saved token on page load
 document.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('wr-gh-token');
-  if (saved) document.getElementById('aiKey').value = saved;
+  
+  
   const savedModel = localStorage.getItem('wr-ai-model');
   if (savedModel) document.getElementById('aiModel').value = savedModel;
 });
