@@ -1,5 +1,5 @@
 // Cloudflare Worker: AI Proxy for Weekly Report Editor
-// Backend: Anthropic API (Claude Opus 4.6) — server-side key
+// Backend: Azure OpenAI — server-side key only
 
 export default {
   async fetch(request, env) {
@@ -13,45 +13,21 @@ export default {
   },
 };
 
-// ── Anthropic Messages API ──
-async function anthropicChat(env, model, system, messages, maxTokens = 16000) {
-  const key = env.ANTHROPIC_API_KEY;
-  if (!key) throw new Error('Missing ANTHROPIC_API_KEY');
-
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model,
-      max_tokens: maxTokens,
-      system,
-      messages,
-    }),
-  });
-
-  if (!resp.ok) {
-    const errText = await resp.text();
-    throw new Error(`Anthropic API ${resp.status}: ${errText}`);
-  }
-
-  return resp.json();
-}
-
-// ── Azure OpenAI fallback ──
-async function azureChat(env, model, messages, maxTokens = 4096, temperature = 0.3) {
+// ── Azure OpenAI ──
+async function azureChat(env, deployment, messages, system, maxTokens = 16000, temperature = 0.75) {
   const endpoint = env.AZURE_OPENAI_ENDPOINT;
   const key = env.AZURE_OPENAI_KEY;
-  if (!endpoint || !key) throw new Error('Missing Azure credentials');
+  if (!endpoint || !key) throw new Error('Missing Azure OpenAI credentials');
 
-  const url = `${endpoint}/openai/deployments/${model}/chat/completions?api-version=2025-04-01-preview`;
+  const allMessages = system
+    ? [{ role: 'system', content: system }, ...messages]
+    : messages;
+
+  const url = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2025-04-01-preview`;
   const resp = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'api-key': key },
-    body: JSON.stringify({ messages, max_tokens: maxTokens, temperature }),
+    body: JSON.stringify({ messages: allMessages, max_tokens: maxTokens, temperature }),
   });
 
   if (!resp.ok) {
@@ -61,7 +37,7 @@ async function azureChat(env, model, messages, maxTokens = 4096, temperature = 0
   return resp.json();
 }
 
-// ── /generate: Claude Opus 4.6 full HTML generation ──
+// ── /generate: Full HTML generation ──
 async function handleGenerate(request, env) {
   try {
     const { data, style_hint } = await request.json();
@@ -70,83 +46,67 @@ async function handleGenerate(request, env) {
     const systemPrompt = buildSystemPrompt(style_hint);
     const userPrompt = buildUserPrompt(data);
 
-    const result = await anthropicChat(
-      env,
-      'claude-opus-4-6-20250305',
-      systemPrompt,
+    // Using gpt-4o-mini for now. Will switch to Claude Opus 4.6 when available.
+    const result = await azureChat(
+      env, 'gpt-4o-mini',
       [{ role: 'user', content: userPrompt }],
-      16000
+      systemPrompt, 16000, 0.75
     );
 
-    const content = result.content?.[0]?.text || '';
+    const content = result.choices?.[0]?.message?.content || '';
     const html = extractHTML(content);
-    return corsResponse(JSON.stringify({ html, model: 'claude-opus-4-6' }), 200);
+    return corsResponse(JSON.stringify({ html, model: 'gpt-4o-mini' }), 200);
   } catch (e) {
     return jsonResponse({ error: `Generate error: ${e.message}` }, 500);
   }
 }
 
-// ── /polish: GPT-4o-mini text polish ──
+// ── /polish ──
 async function handlePolish(request, env) {
   try {
     const body = await request.json();
     if (!body.messages) return jsonResponse({ error: 'Missing messages' }, 400);
 
-    const result = await azureChat(env, 'gpt-4o-mini', body.messages, body.max_tokens || 4096, body.temperature || 0.3);
+    const result = await azureChat(env, 'gpt-4o-mini', body.messages, null, body.max_tokens || 4096, body.temperature || 0.3);
     return corsResponse(JSON.stringify(result), 200);
   } catch (e) {
     return jsonResponse({ error: `Polish error: ${e.message}` }, 500);
   }
 }
 
-// ── System prompt ──
+// ── Prompts ──
 function buildSystemPrompt(styleHint) {
   return `You are a world-class presentation designer. Generate a complete standalone HTML file for a weekly status report presentation.
 
 REQUIREMENTS:
 - Single HTML file, all CSS/JS inline
 - Keyboard navigation (← →) between slides
-- Print-friendly
-- Responsive
+- Print-friendly, Responsive
 - NO external dependencies
 
 QUALITY: Awwwards-level. Apple.com presentation quality.
 
 REFERENCE DESIGN PATTERNS:
-- Geometric accent elements: colored blocks, vertical bars, positioned absolutely
-- Slide transitions: clip-path inset animation (0.5s cubic-bezier)
-- Content animations: staggered slideUp/fadeIn with incremental delays
-- Large decorative page numbers (60-80px, light gray, bottom-right)
+- Geometric accent elements, slide transitions with clip-path inset animation
+- Content animations: staggered slideUp/fadeIn
+- Large decorative page numbers (60-80px, light gray)
 - Section labels: 12px uppercase, letter-spacing 4px
-- Progress items: horizontal layout with colored dot indicators
 - Generous whitespace: content occupies ~60% of viewport
-- Typography hierarchy: one display size (60-96px), one body size (16-20px), one label size (11-13px)
+- Typography hierarchy: display (60-96px), body (16-20px), label (11-13px)
 
-SLIDES (generate all that have content):
-1. Cover — title, subtitle, date, author
-2. Summary — executive overview
-3. Progress — feature status with visual indicators
-4. Newsletter — updates, design direction
-5. Others — miscellaneous items
-6. Top of Mind — current focus/concerns
+SLIDES: Cover, Summary, Progress, Newsletter, Others, Top of Mind
 
 ${styleHint ? 'STYLE DIRECTION: ' + styleHint : 'STYLE: Choose a distinctive, bold design direction. Each generation should look different.'}
 
-Return ONLY the complete HTML. No markdown, no explanation.`;
+Return ONLY the complete HTML.`;
 }
 
 function buildUserPrompt(data) {
-  let prompt = 'Generate the presentation with this content:\n\n';
-  if (data.title) prompt += `TITLE: ${data.title}\n`;
-  if (data.subtitle) prompt += `SUBTITLE: ${data.subtitle}\n`;
-  if (data.date) prompt += `DATE: ${data.date}\n`;
-  if (data.author) prompt += `AUTHOR: ${data.author}\n`;
-  if (data.summary) prompt += `\nSUMMARY:\n${data.summary}\n`;
-  if (data.progress) prompt += `\nPROGRESS:\n${data.progress}\n`;
-  if (data.newsletter) prompt += `\nNEWSLETTER:\n${data.newsletter}\n`;
-  if (data.others) prompt += `\nOTHERS:\n${data.others}\n`;
-  if (data.topofmind) prompt += `\nTOP OF MIND:\n${data.topofmind}\n`;
-  return prompt;
+  let p = 'Generate the presentation:\n\n';
+  for (const [k, v] of Object.entries(data)) {
+    if (v) p += `${k.toUpperCase()}:\n${v}\n\n`;
+  }
+  return p;
 }
 
 function extractHTML(content) {
