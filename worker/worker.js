@@ -61,7 +61,7 @@ async function handleGenerate(request, env) {
     if (!data) return jsonResponse({ error: 'Missing data field' }, 400);
 
     // Default to claude-opus-4-6, allow override
-    const useModel = model || 'claude-opus-4-6';
+    const useModel = model || 'gpt-4o-mini';
     const systemPrompt = buildSystemPrompt(style_hint);
     const userPrompt = buildUserPrompt(data);
 
