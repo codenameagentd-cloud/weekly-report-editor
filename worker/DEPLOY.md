@@ -1,36 +1,33 @@
 # Deploy AI Proxy Worker
 
 ## Prerequisites
-- Node.js installed
-- Cloudflare account (free tier is fine)
+- Node.js, wrangler CLI
+- Cloudflare account (free tier)
 
 ## Steps
 
-1. Install wrangler:
-```bash
-npm install -g wrangler
-```
-
-2. Login to Cloudflare:
+1. Login to Cloudflare:
 ```bash
 wrangler login
 ```
 
-3. Set the GitHub token as a secret:
+2. Set Azure OpenAI secrets:
 ```bash
 cd worker/
-wrangler secret put GITHUB_TOKEN
-# Paste your GitHub Personal Access Token when prompted
+wrangler secret put AZURE_OPENAI_ENDPOINT
+# Paste: https://cwcdavid1983-0016-resource.services.ai.azure.com
+wrangler secret put AZURE_OPENAI_KEY
+# Paste the API key
 ```
 
-4. Deploy:
+3. Deploy:
 ```bash
 wrangler deploy
 ```
 
-5. Note the Worker URL (e.g., `https://wr-ai-proxy.<your-subdomain>.workers.dev`)
+4. Update `index.html` — replace the AI endpoint URL with your Worker URL.
 
-6. Update `index.html` — replace the AI endpoint URL with your Worker URL.
-
-## That's it!
-Users no longer need to provide a token. The Worker handles auth server-side.
+## Models
+- Default generate: claude-opus-4-6 (serverless on Azure AI)
+- Default polish: gpt-4o-mini (deployed on Azure OpenAI)
+- Override via request body `model` field

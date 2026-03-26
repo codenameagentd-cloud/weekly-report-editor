@@ -1,193 +1,156 @@
 // Cloudflare Worker: AI Proxy for Weekly Report Editor
-// Routes: /polish (GitHub Models) + /generate (Claude full HTML generation)
+// Backend: Azure OpenAI (server-side key, no client credentials needed)
 
 export default {
   async fetch(request, env) {
-    if (request.method === 'OPTIONS') {
-      return corsResponse(null, 204);
-    }
-    if (request.method !== 'POST') {
-      return jsonResponse({ error: 'Method not allowed' }, 405);
-    }
+    if (request.method === 'OPTIONS') return corsResponse(null, 204);
+    if (request.method !== 'POST') return jsonResponse({ error: 'Method not allowed' }, 405);
 
     const url = new URL(request.url);
-
-    if (url.pathname === '/generate') {
-      return handleGenerate(request, env);
-    }
-    // Default: legacy polish route
-    return handlePolish(request, env);
+    if (url.pathname === '/generate') return handleGenerate(request, env);
+    if (url.pathname === '/polish') return handlePolish(request, env);
+    return jsonResponse({ error: 'Not found' }, 404);
   },
 };
 
-// ── /generate: Claude full HTML generation ──
-async function handleGenerate(request, env) {
-  const token = env.GITHUB_TOKEN;
-  if (!token) return jsonResponse({ error: 'Missing API token' }, 500);
+// ── Azure OpenAI chat completions helper ──
+async function azureChat(env, model, messages, maxTokens = 16000, temperature = 0.75) {
+  const endpoint = env.AZURE_OPENAI_ENDPOINT;
+  const key = env.AZURE_OPENAI_KEY;
+  if (!endpoint || !key) throw new Error('Missing Azure OpenAI credentials');
 
+  // For Claude models, use the models/chat/completions path (serverless)
+  // For GPT models, use the deployments path
+  const isServerless = model.startsWith('claude-') || model.startsWith('Llama-') || model.startsWith('DeepSeek-');
+  
+  let url, headers, body;
+  if (isServerless) {
+    url = `${endpoint}/models/chat/completions?api-version=2024-05-01-preview`;
+    headers = {
+      'Content-Type': 'application/json',
+      'api-key': key,
+    };
+    body = { model, messages, max_tokens: maxTokens, temperature };
+  } else {
+    url = `${endpoint}/openai/deployments/${model}/chat/completions?api-version=2025-04-01-preview`;
+    headers = {
+      'Content-Type': 'application/json',
+      'api-key': key,
+    };
+    body = { messages, max_tokens: maxTokens, temperature };
+  }
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  if (!resp.ok) {
+    const errText = await resp.text();
+    throw new Error(`Azure API ${resp.status}: ${errText}`);
+  }
+
+  return resp.json();
+}
+
+// ── /generate: Full HTML generation ──
+async function handleGenerate(request, env) {
   try {
-    const body = await request.json();
-    const { data, style_hint } = body;
+    const { data, style_hint, model } = await request.json();
     if (!data) return jsonResponse({ error: 'Missing data field' }, 400);
 
+    // Default to claude-opus-4-6, allow override
+    const useModel = model || 'claude-opus-4-6';
     const systemPrompt = buildSystemPrompt(style_hint);
     const userPrompt = buildUserPrompt(data);
 
-    const resp = await fetch('https://models.inference.ai.azure.com/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt },
-        ],
-        max_tokens: 16000,
-        temperature: 0.75,
-      }),
-    });
+    const result = await azureChat(env, useModel, [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ], 16000, 0.75);
 
-    if (!resp.ok) {
-      const errText = await resp.text();
-      return jsonResponse({ error: `Model API error: ${resp.status}`, detail: errText }, resp.status);
-    }
-
-    const result = await resp.json();
     const html = extractHTML(result.choices?.[0]?.message?.content || '');
-
-    return corsResponse(JSON.stringify({ html, model: 'claude-sonnet-4' }), 200);
+    return corsResponse(JSON.stringify({ html, model: useModel }), 200);
   } catch (e) {
     return jsonResponse({ error: `Generate error: ${e.message}` }, 500);
   }
 }
 
-// ── Legacy polish route ──
+// ── /polish: Text polishing ──
 async function handlePolish(request, env) {
-  const token = env.GITHUB_TOKEN;
-  if (!token) return jsonResponse({ error: 'Missing API token' }, 500);
-
   try {
     const body = await request.json();
-    if (!body.model || !body.messages) {
-      return jsonResponse({ error: 'Missing required fields' }, 400);
-    }
+    if (!body.messages) return jsonResponse({ error: 'Missing messages' }, 400);
 
-    const allowed = ['gpt-5.2', 'gpt-4.1', 'gpt-4o', 'gpt-5-mini', 'claude-opus-4.6', 'claude-sonnet-4.6', 'gemini-3-pro', 'gemini-3-flash'];
-    if (!allowed.includes(body.model)) {
-      return jsonResponse({ error: `Model not allowed: ${body.model}` }, 400);
-    }
+    const useModel = body.model || 'gpt-4o-mini';
+    const result = await azureChat(env, useModel, body.messages, body.max_tokens || 4096, body.temperature || 0.3);
 
-    const resp = await fetch('https://models.inference.ai.azure.com/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        model: body.model,
-        messages: body.messages,
-        max_tokens: body.max_tokens || 4000,
-        temperature: body.temperature ?? 0.4,
-      }),
-    });
-
-    const data = await resp.text();
-    return corsResponse(data, resp.status);
+    return corsResponse(JSON.stringify(result), 200);
   } catch (e) {
-    return jsonResponse({ error: `Proxy error: ${e.message}` }, 500);
+    return jsonResponse({ error: `Polish error: ${e.message}` }, 500);
   }
 }
 
-// ── Extract HTML from AI response ──
-function extractHTML(content) {
-  // Try to extract from code block first
-  const match = content.match(/```html?\s*\n([\s\S]*?)```/);
-  if (match) return match[1].trim();
-  // If starts with <!DOCTYPE or <html, use as-is
-  if (content.trim().startsWith('<!') || content.trim().startsWith('<html')) {
-    return content.trim();
-  }
-  return content;
-}
-
-// ── System Prompt Builder ──
+// ── System prompt for HTML generation ──
 function buildSystemPrompt(styleHint) {
-  const styles = [
-    'Swiss Typographic — Helvetica, red/black geometric blocks, asymmetric grid, bold page numbers',
-    'Warm Editorial — Earthy tones (#3D2B1F, #F4E8D1), serif headlines, soft shadows, warm gradients',
-    'Dark Cinematic — Near-black bg (#0A0A0A), white text, dramatic lighting, wide letter-spacing',
-    'Minimal Apple — White bg, SF Pro/Inter, subtle gray borders, extreme whitespace, single accent color',
-    'Neon Dashboard — Dark bg, cyan/magenta neon accents, monospace stats, glassmorphism cards',
-    'Brutalist Mono — Raw, exposed grid, monospace everything, thick borders, high contrast',
-    'Paper & Ink — Off-white (#FAFAF5), black ink aesthetic, thin serif, ruled lines, vintage feel',
-    'Gradient Flow — Smooth gradient backgrounds, modern sans, floating cards with blur',
-  ];
+  return `You are a world-class presentation designer. Generate a complete standalone HTML file for a weekly status report presentation.
 
-  const pick = styleHint || styles[Math.floor(Math.random() * styles.length)];
+REQUIREMENTS:
+- Single HTML file, all CSS/JS inline
+- Keyboard navigation (← →) between slides
+- Print-friendly
+- Responsive
+- NO external dependencies
 
-  return `You are a world-class presentation designer. Generate a standalone HTML file for a weekly status report.
+QUALITY: Awwwards-level. Apple.com presentation quality.
 
-STYLE DIRECTION FOR THIS GENERATION:
-${pick}
+REFERENCE DESIGN PATTERNS (from hand-crafted examples):
+- Geometric accent elements: colored blocks, vertical bars, positioned absolutely
+- Slide transitions: clip-path inset animation (0.5s cubic-bezier)
+- Content animations: staggered slideUp/fadeIn with incremental delays
+- Large decorative page numbers (60-80px, light gray, bottom-right)
+- Section labels: 12px uppercase, letter-spacing 4px
+- Progress items: horizontal layout with colored dot indicators
+- Generous whitespace: content occupies ~60% of viewport
+- Typography hierarchy: one display size (60-96px), one body size (16-20px), one label size (11-13px)
 
-You MUST create a UNIQUE design every time. Never repeat the same layout structure. Vary:
-- Color palette and background
-- Typography choices and sizing
-- Layout structure (asymmetric grids, split layouts, full-bleed, centered, etc.)
-- Decorative elements (geometric shapes, lines, gradients, texture)
-- Animation style and timing
+SLIDES (generate all that have content):
+1. Cover — title, subtitle, date, author
+2. Summary — executive overview
+3. Progress — feature status with visual indicators
+4. Newsletter — updates, design direction
+5. Others — miscellaneous items
+6. Top of Mind — current focus/concerns
 
-TECHNICAL REQUIREMENTS:
-- Standalone HTML with embedded CSS + JS (no external deps except Google Fonts via @import)
-- Slide-based: each section = one full-viewport slide (100vw × 100vh)
-- Slide transition: use clip-path or transform animations (NOT scroll-snap)
-- Keyboard navigation: ArrowLeft/ArrowRight/ArrowUp/ArrowDown/Space
-- Page counter (current/total)
-- Responsive (desktop priority, mobile acceptable)
-- All animations: 150-500ms, cubic-bezier easing
-- 8pt grid spacing system
+${styleHint ? 'STYLE DIRECTION: ' + styleHint : 'STYLE: Choose a distinctive, bold design direction. Each generation should look different.'}
 
-CONTENT RULES:
-- McKinsey style: headline = conclusion, not topic label
-- Body ≥ 20px, headlines 36-72pt
-- Short content → hero typography with generous whitespace
-- Long content → smaller font, may use columns or cards
-- Progress items: detect status (done/completed → ✅, in progress → 🔵, blocked → 🔴)
-- ALL text must come from user input. NEVER invent content.
-
-SLIDE ORDER:
-1. Title — "Weekly Status Update" + date range
-2. Summary — user's summary with visual treatment
-3. Progress Status — items as cards/rows with status indicators
-4. Newsletter (if provided)
-5. Others (if provided)
-6. Top of Mind (if provided)
-
-QUALITY BAR: This must look like it belongs on Awwwards. Think apple.com presentation quality.
-
-OUTPUT: Complete HTML file ONLY. No markdown fences, no explanation. Start with <!DOCTYPE html>.`;
+Return ONLY the complete HTML. No markdown, no explanation.`;
 }
 
-// ── User Prompt Builder ──
 function buildUserPrompt(data) {
-  let prompt = `Generate the weekly status report HTML with this content:\n\n`;
-  prompt += `DATE RANGE: ${data.week || 'This Week'}\n\n`;
-
-  if (data.summary) prompt += `SUMMARY:\n${data.summary}\n\n`;
-  if (data.progress) prompt += `PROGRESS STATUS:\n${data.progress}\n\n`;
-  if (data.newsletter) prompt += `NEWSLETTER:\n${data.newsletter}\n\n`;
-  if (data.others) prompt += `OTHERS:\n${data.others}\n\n`;
-  if (data.topOfMind) prompt += `TOP OF MIND:\n${data.topOfMind}\n\n`;
-
-  prompt += `Remember: output ONLY the complete HTML file, starting with <!DOCTYPE html>.`;
+  let prompt = 'Generate the presentation with this content:\n\n';
+  if (data.title) prompt += `TITLE: ${data.title}\n`;
+  if (data.subtitle) prompt += `SUBTITLE: ${data.subtitle}\n`;
+  if (data.date) prompt += `DATE: ${data.date}\n`;
+  if (data.author) prompt += `AUTHOR: ${data.author}\n`;
+  if (data.summary) prompt += `\nSUMMARY:\n${data.summary}\n`;
+  if (data.progress) prompt += `\nPROGRESS:\n${data.progress}\n`;
+  if (data.newsletter) prompt += `\nNEWSLETTER:\n${data.newsletter}\n`;
+  if (data.others) prompt += `\nOTHERS:\n${data.others}\n`;
+  if (data.topofmind) prompt += `\nTOP OF MIND:\n${data.topofmind}\n`;
   return prompt;
 }
 
-// ── Helpers ──
-function corsResponse(body, status) {
+function extractHTML(content) {
+  const m = content.match(/```html\s*([\s\S]*?)```/);
+  if (m) return m[1].trim();
+  if (content.trim().startsWith('<!') || content.trim().startsWith('<html')) return content.trim();
+  return content;
+}
+
+// ── CORS + Response helpers ──
+function corsResponse(body, status = 200) {
   return new Response(body, {
     status,
     headers: {
