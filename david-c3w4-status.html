@@ -19,7 +19,7 @@ html,body{font-family:var(--sans);background:var(--white);color:var(--black);ove
 .s{display:none;width:100%;height:100vh;overflow:hidden}
 .s.on{display:flex}
 
-/* ===== COVER ===== */
+/* COVER */
 .s1{background:var(--black);color:var(--white);flex-direction:column;position:relative}
 .s1-top{padding:40px 56px;display:flex;justify-content:space-between;align-items:center}
 .s1-tag{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray-3)}
@@ -30,104 +30,97 @@ html,body{font-family:var(--sans);background:var(--white);color:var(--black);ove
 .s1-meta{font-size:14px;color:var(--gray-3);line-height:1.65;max-width:440px}
 .s1-date{font-size:13px;color:var(--gray-4);text-align:right;line-height:1.6}
 
-/* ===== SUMMARY — 只放大數字和一句話 ===== */
-.s2{flex-direction:column;padding:56px;justify-content:center;align-items:center;text-align:center}
-.s2-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:40px}
-.s2-stats{display:flex;gap:80px;margin-bottom:48px}
-.s2-stat{display:flex;flex-direction:column;align-items:center}
-.s2-stat-n{font-family:var(--serif);font-size:80px;line-height:1;letter-spacing:-.04em}
-.s2-stat-l{font-size:12px;color:var(--gray-3);letter-spacing:.1em;text-transform:uppercase;margin-top:8px}
-.s2-stat-sub{font-size:13px;color:var(--gray-4);margin-top:4px}
-.s2-divider{width:48px;height:1px;background:var(--gray-2);margin-bottom:36px}
-.s2-summary{font-size:17px;color:var(--gray-4);line-height:1.7;max-width:600px}
+/* SUMMARY */
+.s-summary{flex-direction:column;padding:56px;justify-content:center;align-items:center;text-align:center}
+.sum-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:40px}
+.sum-stats{display:flex;gap:80px;margin-bottom:48px}
+.sum-stat{display:flex;flex-direction:column;align-items:center}
+.sum-stat-n{font-family:var(--serif);font-size:80px;line-height:1;letter-spacing:-.04em}
+.sum-stat-l{font-size:12px;color:var(--gray-3);letter-spacing:.1em;text-transform:uppercase;margin-top:8px}
+.sum-stat-sub{font-size:13px;color:var(--gray-4);margin-top:4px}
+.sum-divider{width:48px;height:1px;background:var(--gray-2);margin-bottom:36px}
+.sum-text{font-size:17px;color:var(--gray-4);line-height:1.7;max-width:600px}
 
-/* ===== PROGRESS — 只講 Chromium 細節 ===== */
-.s3{flex-direction:row}
-.s3-left{width:40%;background:var(--black);color:var(--white);padding:56px;display:flex;flex-direction:column;justify-content:center}
-.s3-right{flex:1;padding:56px;display:flex;flex-direction:column;justify-content:center}
-.s3-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray-3);margin-bottom:20px}
-.s3-h{font-family:var(--serif);font-size:48px;line-height:1.05;letter-spacing:-.02em;margin-bottom:12px}
-.s3-pct{font-family:var(--serif);font-size:120px;color:rgba(255,255,255,.06);position:absolute;right:32px;bottom:32px;line-height:1;pointer-events:none}
-.s3-bar{margin:20px 0;height:4px;background:var(--gray-5);border-radius:2px;overflow:hidden}
-.s3-bar-fill{height:100%;background:var(--accent);border-radius:2px}
-.s3-status{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
-.s3-detail{font-size:14px;color:var(--gray-2);line-height:1.7}
-.s3-detail strong{color:var(--white);font-weight:500}
-.s3-section{margin-bottom:28px}
-.s3-section:last-child{margin:0}
-.s3-section-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-3);margin-bottom:10px;font-weight:500}
-.s3-section p{font-size:14px;color:var(--gray-4);line-height:1.7}
-.s3-section p strong{color:var(--black);font-weight:500}
-.s3-next{padding:20px 24px;border:1px dashed var(--gray-2);border-radius:10px;margin-top:auto}
-.s3-next-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:500}
-.s3-next li{list-style:none;font-size:13px;color:var(--gray-4);line-height:1.6;padding-left:16px;position:relative}
-.s3-next li::before{content:'→';position:absolute;left:0;color:var(--accent)}
-.s3-next li+li{margin-top:4px}
+/* PROGRESS STATUS */
+.s-progress{flex-direction:column;padding:56px}
+.prog-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:40px}
+.prog-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray-3)}
+.prog-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-content:start}
+.prog-card{border:1px solid var(--gray-1);border-radius:12px;padding:32px;display:flex;flex-direction:column}
+.prog-card.primary{background:var(--black);color:var(--white);border:none}
+.prog-card.primary .pc-desc{color:var(--gray-2)}
+.prog-card.primary .pc-desc strong{color:var(--white)}
+.prog-card.primary .pc-bar-track{background:var(--gray-5)}
+.pc-status{font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+.pc-status.ip{color:var(--accent)}
+.pc-status.done{color:var(--green)}
+.pc-title{font-family:var(--serif);font-size:28px;margin-bottom:12px;line-height:1.15}
+.pc-bar{margin-bottom:16px}
+.pc-bar-track{height:3px;background:var(--gray-1);border-radius:2px;overflow:hidden}
+.pc-bar-fill{height:100%;border-radius:2px}
+.pc-desc{font-size:13px;color:var(--gray-4);line-height:1.65}
+.pc-desc strong{font-weight:500;color:var(--black)}
+.pc-gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;border-radius:8px;overflow:hidden}
+.pc-gallery img{width:100%;height:100px;object-fit:cover;display:block;opacity:.85}
+.prog-next{grid-column:span 2;padding:20px 24px;border:1px dashed var(--gray-2);border-radius:10px;margin-top:8px}
+.prog-next-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:500}
+.prog-next li{list-style:none;font-size:13px;color:var(--gray-4);line-height:1.6;padding-left:16px;position:relative}
+.prog-next li::before{content:'→';position:absolute;left:0;color:var(--accent)}
+.prog-next li+li{margin-top:4px}
 
-/* ===== GALLERY ===== */
-.s4{flex-direction:column;background:var(--black);color:var(--white)}
-.s4-header{padding:40px 56px 0;display:flex;justify-content:space-between;align-items:baseline}
-.s4-title{font-family:var(--serif);font-size:36px;letter-spacing:-.02em}
-.s4-title em{font-style:italic;color:var(--accent)}
-.s4-sub{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gray-3)}
-.s4-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;padding:24px 56px 40px}
-.s4-img{position:relative;overflow:hidden;border-radius:4px}
-.s4-img img{width:100%;height:100%;object-fit:cover;display:block;opacity:.88;transition:opacity .3s}
-.s4-img:hover img{opacity:1}
-.s4-img figcaption{position:absolute;bottom:0;left:0;right:0;padding:16px 20px;background:linear-gradient(transparent,rgba(0,0,0,.7));font-size:11px;color:var(--gray-2)}
+/* NEWSLETTER */
+.s-news{flex-direction:row}
+.news-left{width:38%;padding:56px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--gray-1)}
+.news-right{width:62%;padding:56px;display:flex;flex-direction:column;justify-content:center;gap:28px}
+.news-h{font-family:var(--serif);font-size:44px;line-height:1.05;letter-spacing:-.02em;margin-bottom:12px}
+.news-accent{width:40px;height:3px;background:var(--accent);margin-bottom:20px}
+.news-intro{font-size:13px;color:var(--gray-3);line-height:1.6}
+.news-article{padding-bottom:24px;border-bottom:1px solid var(--gray-1)}
+.news-article:last-child{border:none;padding:0}
+.news-article h4{font-size:15px;font-weight:700;margin-bottom:6px}
+.news-article p{font-size:14px;color:var(--gray-4);line-height:1.7}
+.news-article p strong{color:var(--black);font-weight:500}
 
-/* ===== NEWSLETTER — 只講趨勢和觀察，不重複 progress ===== */
-.s5{flex-direction:row}
-.s5-left{width:38%;padding:56px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--gray-1)}
-.s5-right{width:62%;padding:56px;display:flex;flex-direction:column;justify-content:center;gap:28px}
-.s5-h{font-family:var(--serif);font-size:44px;line-height:1.05;letter-spacing:-.02em;margin-bottom:12px}
-.s5-accent{width:40px;height:3px;background:var(--accent);margin-bottom:20px}
-.s5-intro{font-size:13px;color:var(--gray-3);line-height:1.6}
-.s5-article{padding-bottom:24px;border-bottom:1px solid var(--gray-1)}
-.s5-article:last-child{border:none;padding:0}
-.s5-article h4{font-size:15px;font-weight:700;margin-bottom:6px}
-.s5-article p{font-size:14px;color:var(--gray-4);line-height:1.7}
-.s5-article p strong{color:var(--black);font-weight:500}
+/* OTHERS */
+.s-others{flex-direction:column;justify-content:center;align-items:center;padding:56px;text-align:center}
+.oth-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:24px}
+.oth-h{font-family:var(--serif);font-size:48px;line-height:1.08;letter-spacing:-.02em;margin-bottom:20px;max-width:600px}
+.oth-p{font-size:16px;color:var(--gray-4);line-height:1.7;max-width:520px;margin-bottom:24px}
+.oth-p strong{color:var(--black);font-weight:500}
+.oth-meta{display:flex;gap:32px;font-size:13px;color:var(--gray-3)}
 
-/* ===== OTHERS — 單一事項 ===== */
-.s6-others{flex-direction:column;justify-content:center;align-items:center;padding:56px;text-align:center}
-.s6-o-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:24px}
-.s6-o-h{font-family:var(--serif);font-size:48px;line-height:1.08;letter-spacing:-.02em;margin-bottom:20px;max-width:600px}
-.s6-o-p{font-size:16px;color:var(--gray-4);line-height:1.7;max-width:520px;margin-bottom:24px}
-.s6-o-p strong{color:var(--black);font-weight:500}
-.s6-o-meta{display:flex;gap:32px;font-size:13px;color:var(--gray-3)}
+/* TOP OF MIND */
+.s-mind{flex-direction:column;justify-content:center;padding:56px 80px}
+.mind-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:32px}
+.mind-rule{width:40px;height:3px;background:var(--accent);margin-bottom:32px}
+.mind-quote{font-family:var(--serif);font-size:36px;line-height:1.35;max-width:720px;margin-bottom:32px;letter-spacing:-.01em}
+.mind-body{font-size:15px;color:var(--gray-4);line-height:1.75;max-width:600px}
+.mind-body strong{color:var(--black);font-weight:500}
 
-/* ===== TOP OF MIND — 獨立一頁 ===== */
-.s7-mind{flex-direction:column;justify-content:center;padding:56px 80px;position:relative}
-.s7-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:32px}
-.s7-rule{width:40px;height:3px;background:var(--accent);margin-bottom:32px}
-.s7-quote{font-family:var(--serif);font-size:36px;line-height:1.35;max-width:720px;margin-bottom:32px;letter-spacing:-.01em}
-.s7-body{font-size:15px;color:var(--gray-4);line-height:1.75;max-width:600px}
-.s7-body strong{color:var(--black);font-weight:500}
+/* END */
+.s-end{background:var(--black);color:var(--white);flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative}
+.end-title{font-family:var(--serif);font-size:clamp(80px,12vw,160px);line-height:.88;letter-spacing:-.04em}
+.end-title em{font-style:italic;color:var(--accent)}
+.end-sub{font-size:14px;color:var(--gray-3);margin-top:24px}
+.end-footer{position:absolute;bottom:40px;font-size:11px;color:var(--gray-4);letter-spacing:.1em;text-transform:uppercase}
 
-/* ===== END ===== */
-.s8{background:var(--black);color:var(--white);flex-direction:column;justify-content:center;align-items:center;text-align:center}
-.s8-title{font-family:var(--serif);font-size:clamp(80px,12vw,160px);line-height:.88;letter-spacing:-.04em}
-.s8-title em{font-style:italic;color:var(--accent)}
-.s8-sub{font-size:14px;color:var(--gray-3);margin-top:24px}
-.s8-footer{position:absolute;bottom:40px;font-size:11px;color:var(--gray-4);letter-spacing:.1em;text-transform:uppercase}
-
-/* Nav */
 .nav-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:var(--gray-1);z-index:100}
 .nav-progress{height:100%;background:var(--accent);transition:width .3s ease}
 
 @media(max-width:900px){
-  .s3,.s5{flex-direction:column}
-  .s3-left,.s5-left,.s5-right{width:100%;padding:40px}
-  .s3-right{padding:40px}
-  .s4-grid{grid-template-columns:1fr}
+  .s-progress .prog-grid{grid-template-columns:1fr}
+  .prog-next{grid-column:span 1}
+  .s-news{flex-direction:column}
+  .news-left,.news-right{width:100%;padding:40px}
+  .news-left{border-right:none;border-bottom:1px solid var(--gray-1)}
+  .pc-gallery{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-<div class="deck" id="deck">
+<div class="deck">
 
-<!-- 1. COVER — 主題 -->
+<!-- COVER -->
 <div class="s s1 on">
   <div class="s1-top">
     <div class="s1-tag">CM Design · Weekly Status</div>
@@ -142,116 +135,111 @@ html,body{font-family:var(--sans);background:var(--white);color:var(--black);ove
   </div>
 </div>
 
-<!-- 2. SUMMARY — 只放大數字，一句話 context -->
-<div class="s s2">
-  <div class="s2-eyebrow">Summary</div>
-  <div class="s2-stats">
-    <div class="s2-stat">
-      <div class="s2-stat-n" style="color:var(--accent)">60<span style="font-size:40px;color:var(--gray-2)">%</span></div>
-      <div class="s2-stat-l">Chromium (Mac)</div>
-      <div class="s2-stat-sub">Core flows aligned</div>
+<!-- 1. SUMMARY -->
+<div class="s s-summary">
+  <div class="sum-eyebrow">Summary</div>
+  <div class="sum-stats">
+    <div class="sum-stat">
+      <div class="sum-stat-n" style="color:var(--accent)">60<span style="font-size:40px;color:var(--gray-2)">%</span></div>
+      <div class="sum-stat-l">Chromium (Mac)</div>
+      <div class="sum-stat-sub">Core flows aligned</div>
     </div>
-    <div class="s2-stat">
-      <div class="s2-stat-n" style="color:var(--green)">Done</div>
-      <div class="s2-stat-l">Annual Review</div>
-      <div class="s2-stat-sub">Shanying review delivered</div>
+    <div class="sum-stat">
+      <div class="sum-stat-n" style="color:var(--green)">Done</div>
+      <div class="sum-stat-l">Annual Review</div>
+      <div class="sum-stat-sub">Shanying review delivered</div>
     </div>
   </div>
-  <div class="s2-divider"></div>
-  <div class="s2-summary">聚焦兩件事：Chromium adoption 核心 flow 對齊並準備下週 review build，以及 Shanying annual review deck 的完成。</div>
+  <div class="sum-divider"></div>
+  <div class="sum-text">本週聚焦兩件事：Chromium adoption 核心 flow 對齊並準備下週 review build，以及團隊協作完成 Shanying annual review deck。</div>
 </div>
 
-<!-- 3. PROGRESS — Chromium 細節 + blockers + next steps -->
-<div class="s s3">
-  <div class="s3-left" style="position:relative">
-    <div class="s3-eyebrow">Progress</div>
-    <div class="s3-h">Chromium<br>Adoption</div>
-    <div class="s3-bar"><div class="s3-bar-fill" style="width:60%"></div></div>
-    <div class="s3-status">In Progress · 60%</div>
-    <div class="s3-detail">Chat, entry, 基礎交互已完成對齊，與原生設計保持一致。</div>
-    <div class="s3-pct">60</div>
+<!-- 2. PROGRESS STATUS -->
+<div class="s s-progress">
+  <div class="prog-header">
+    <div class="prog-label">Progress Status</div>
+    <div class="prog-label">C3 Wk4 · 2026.03.27</div>
   </div>
-  <div class="s3-right">
-    <div class="s3-section">
-      <div class="s3-section-label">Framework 要求</div>
-      <p><strong>Sergey</strong> 對 initial framework 的要求：內容區需頂對齊，sidebar 收起時側邊欄導航不顯示（與 Copilot Mac native 一致）。</p>
+  <div class="prog-grid">
+    <div class="prog-card primary">
+      <div class="pc-status ip">In Progress · 60%</div>
+      <div class="pc-title">Chromium (Mac) Adoption</div>
+      <div class="pc-bar"><div class="pc-bar-track"><div class="pc-bar-fill" style="width:60%;background:var(--accent)"></div></div></div>
+      <div class="pc-desc">
+        Chat, entry, 基礎交互已完成對齊。<strong>Sergey</strong> 對 framework 的要求：內容區頂對齊，sidebar 收起時不顯示側邊導航。<br><br>
+        <span style="color:var(--accent)">⚠</span> 嚴格頂對齊 + sidebar 邏輯需重構，等 <strong>Xiaolin & Sergey</strong> 確認方案。
+      </div>
     </div>
-    <div class="s3-section">
-      <div class="s3-section-label" style="color:var(--accent)">⚠ 技術挑戰</div>
-      <p>按現有實現方式嚴格遵循頂對齊 + 收起 sidebar 邏輯，需要一定重構。需等待 <strong>Xiaolin 與 Sergey</strong> 確認最終方案落地。</p>
+    <div class="prog-card">
+      <div class="pc-status done">Complete</div>
+      <div class="pc-title">Annual Review Deck</div>
+      <div class="pc-bar"><div class="pc-bar-track"><div class="pc-bar-fill" style="width:100%;background:var(--green)"></div></div></div>
+      <div class="pc-desc">團隊協作完成故事結構與模組分工，交付 Shanying review。</div>
+      <div class="pc-gallery">
+        <img src="assets/review-cover.png" alt="" loading="lazy">
+        <img src="assets/review-process.png" alt="" loading="lazy">
+        <img src="assets/review-podcast.png" alt="" loading="lazy">
+        <img src="assets/review-features.png" alt="" loading="lazy">
+      </div>
     </div>
-    <div class="s3-next">
-      <div class="s3-next-label">Next Steps</div>
+    <div class="prog-next">
+      <div class="prog-next-label">Next Steps</div>
       <ul>
-        <li>對開發 build 出來的第一版本進行 design review</li>
-        <li>等待 Xiaolin 反饋，根據確認結果調整實現方案或優先級</li>
+        <li>對第一版 dev build 進行 design review</li>
+        <li>等 Xiaolin 反饋，根據確認調整方案或優先級</li>
       </ul>
     </div>
   </div>
 </div>
 
-<!-- 4. ANNUAL REVIEW — 圖片展示 -->
-<div class="s s4">
-  <div class="s4-header">
-    <div class="s4-title">The Year Designers Became <em>Makers</em></div>
-    <div class="s4-sub">Annual Review · Completed</div>
+<!-- 3. NEWSLETTER -->
+<div class="s s-news">
+  <div class="news-left">
+    <div class="sum-eyebrow" style="margin-bottom:20px">Newsletter</div>
+    <div class="news-h">This<br>week.</div>
+    <div class="news-accent"></div>
+    <div class="news-intro">設計方向與團隊動態。</div>
   </div>
-  <div class="s4-grid">
-    <figure class="s4-img"><img src="assets/review-cover.png" alt="" loading="lazy"><figcaption>Cover — The Year Designers Became Makers</figcaption></figure>
-    <figure class="s4-img"><img src="assets/review-process.png" alt="" loading="lazy"><figcaption>Design Forward: From Pixel to Product</figcaption></figure>
-    <figure class="s4-img"><img src="assets/review-podcast.png" alt="" loading="lazy"><figcaption>Podcast Mini Player — Helix + Swift → HTML</figcaption></figure>
-    <figure class="s4-img"><img src="assets/review-features.png" alt="" loading="lazy"><figcaption>Swipe · Search · Imagine · Read Aloud</figcaption></figure>
-  </div>
-</div>
-
-<!-- 5. NEWSLETTER — 趨勢觀察，不重複 progress -->
-<div class="s s5">
-  <div class="s5-left">
-    <div class="s2-eyebrow" style="margin-bottom:20px">Newsletter</div>
-    <div class="s5-h">This<br>week.</div>
-    <div class="s5-accent"></div>
-    <div class="s5-intro">團隊動態與設計方向觀察。</div>
-  </div>
-  <div class="s5-right">
-    <div class="s5-article">
+  <div class="news-right">
+    <div class="news-article">
       <h4>團隊合作亮點</h4>
-      <p>Annual review 過程中，團隊在分工和故事結構上各抒己見，產出了充分體現 <strong>CM team 對 Copilot Mac Quality & Design 標準</strong>的 deck。合作氛圍非常好。</p>
+      <p>Annual review 過程中，團隊各抒己見，產出了充分體現 <strong>CM team 對 Copilot Mac 品質與設計標準</strong>的 deck。為方向轉變帶來了正面收獲。</p>
     </div>
-    <div class="s5-article">
-      <h4>Chromium 方向確認中</h4>
-      <p>核心流程已對齊，但 <strong>Sergey 的 framework 要求</strong>涉及重構。<strong>Xiaolin</strong> 是決策點 — 等確認後才能定實現路線。</p>
+    <div class="news-article">
+      <h4>Native 經驗的價值</h4>
+      <p>即便整體方向轉向 Chromium，native 開發中積累的經驗不會消失 — <strong>這些知識是可以傳遞的</strong>，分享給其他團隊時價值會持續放大。</p>
     </div>
-    <div class="s5-article" style="border:none">
+    <div class="news-article">
       <h4>Vibe Coding 分享邀請</h4>
-      <p>Yanti 邀請我們下週分享 <strong>Vibe Coding 製作 Mac native Liquid Glass</strong> 的經驗，將與 <strong>Yuchen</strong> 一起準備培訓。</p>
+      <p>Yanti 邀請下週分享 Vibe Coding × Liquid Glass 經驗，將與 <strong>Yuchen</strong> 合作準備培訓。</p>
     </div>
   </div>
 </div>
 
-<!-- 6. OTHERS — 單一事項居中 -->
-<div class="s s6-others">
-  <div class="s6-o-eyebrow">Others</div>
-  <div class="s6-o-h">Vibe Coding ×<br>Liquid Glass</div>
-  <div class="s6-o-p">Yanti 邀請我們下週分享使用 Vibe Coding 製作 Mac native Liquid Glass 的經驗。將與 <strong>Yuchen</strong> 一起準備並進行培訓。</div>
-  <div class="s6-o-meta"><span>📅 下週</span><span>👥 與 Yuchen 合作</span></div>
+<!-- 4. OTHERS -->
+<div class="s s-others">
+  <div class="oth-eyebrow">Others</div>
+  <div class="oth-h">Vibe Coding ×<br>Liquid Glass Workshop</div>
+  <div class="oth-p">Yanti 邀請我們分享使用 Vibe Coding 製作 Mac native Liquid Glass 的經驗。將與 <strong>Yuchen</strong> 一起準備並進行培訓。</div>
+  <div class="oth-meta"><span>📅 下週</span><span>👥 與 Yuchen 合作</span></div>
 </div>
 
-<!-- 7. TOP OF MIND — 獨立反思 -->
-<div class="s s7-mind">
-  <div class="s7-eyebrow">Top of Mind</div>
-  <div class="s7-rule"></div>
-  <div class="s7-quote">雖然整體方向正在向 Chromium 轉，但這段經驗可以沉澱下來，作為傳授給其他組同學的寶貴經驗。</div>
-  <div class="s7-body">
+<!-- 5. TOP OF MIND -->
+<div class="s s-mind">
+  <div class="mind-eyebrow">Top of Mind</div>
+  <div class="mind-rule"></div>
+  <div class="mind-quote">雖然整體方向正在向 Chromium 轉，但這段經驗可以沉澱下來，作為傳授給其他組同學的寶貴經驗。</div>
+  <div class="mind-body">
     這次 annual review 中，團隊在分工和故事結構上各抒己見。合作氛圍非常棒，也為這陣子努力付出後突然方向轉變的落差帶來了一些小確幸。<br><br>
-    <strong>這是最重要的收獲</strong> — 經驗不會消失，而是成為可以傳遞的東西。
+    <strong>經驗不會消失，而是成為可以傳遞的東西。</strong>
   </div>
 </div>
 
-<!-- 8. END -->
-<div class="s s8" style="position:relative">
-  <div class="s8-title">Thank<br><em>you.</em></div>
-  <div class="s8-sub">Questions? Let me know.</div>
-  <div class="s8-footer">David — C3 Week 4 — March 2026</div>
+<!-- END -->
+<div class="s s-end">
+  <div class="end-title">Thank<br><em>you.</em></div>
+  <div class="end-sub">Questions? Let me know.</div>
+  <div class="end-footer">David — C3 Week 4 — March 2026</div>
 </div>
 
 </div>
