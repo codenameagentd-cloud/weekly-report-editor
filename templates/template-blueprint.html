@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Status Update — Design Engineering</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{overflow:hidden}
+body{
+  font-family:'Inter',-apple-system,sans-serif;
+  background:#0c1929;color:#c8d6e5;
+  overflow:hidden;height:100vh;width:100vw;
+  -webkit-font-smoothing:antialiased;
+}
+
+.deck{position:relative;width:100%;height:100vh}
+.slide{
+  position:absolute;top:0;left:0;width:100%;height:100vh;
+  opacity:0;transition:opacity 0.4s ease;
+  pointer-events:none;visibility:hidden;
+  display:flex;flex-direction:column;padding:48px 64px;
+  background:
+    linear-gradient(rgba(56,103,214,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,103,214,0.04) 1px, transparent 1px);
+  background-size:40px 40px;
+}
+.slide.active{opacity:1;pointer-events:auto;visibility:visible}
+
+.slide-inner{max-width:960px;width:100%;margin:0 auto;flex:1;display:flex;flex-direction:column;justify-content:center}
+
+.dot-nav{position:fixed;right:28px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:100}
+.dot-nav button{width:8px;height:8px;border-radius:2px;border:1px solid rgba(56,103,214,0.4);background:transparent;cursor:pointer;padding:0;transition:all 0.3s}
+.dot-nav button.active{background:#3867d6;border-color:#3867d6;box-shadow:0 0 8px rgba(56,103,214,0.5)}
+
+/* shared */
+.bp-label{
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:#3867d6;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.bp-label::before{content:'◆';font-size:8px}
+h1,h2{font-family:'Inter',sans-serif;font-weight:700;color:#f5f6fa}
+.bp-body{font-size:15px;color:#8395a7;line-height:1.7}
+.bp-body strong{color:#c8d6e5}
+.bp-rule{border:none;border-top:1px solid rgba(56,103,214,0.2);margin:24px 0}
+
+/* TITLE */
+.slide-bp-title .slide-inner{justify-content:center}
+.slide-bp-title h1{
+  font-size:clamp(48px,7vw,80px);line-height:1.05;letter-spacing:-2px;margin-bottom:20px;
+}
+.slide-bp-title h1 span{color:#3867d6}
+.slide-bp-title .bp-sub{font-family:'Space Mono',monospace;font-size:14px;color:#576574;margin-bottom:8px}
+.slide-bp-title .bp-version{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Space Mono',monospace;font-size:12px;color:#3867d6;
+  border:1px solid rgba(56,103,214,0.3);padding:6px 14px;border-radius:4px;margin-top:16px;
+}
+.slide-bp-title .bp-version::before{content:'●';font-size:6px;color:#0be881}
+
+/* SUMMARY */
+.bp-summary-grid{
+  display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center;
+}
+.bp-gauge{
+  width:160px;height:160px;position:relative;
+}
+.bp-gauge svg{width:160px;height:160px;transform:rotate(-90deg)}
+.bp-gauge-bg{fill:none;stroke:rgba(56,103,214,0.15);stroke-width:6}
+.bp-gauge-fill{
+  fill:none;stroke:#3867d6;stroke-width:6;stroke-linecap:round;
+  stroke-dasharray:440;stroke-dashoffset:440;
+  transition:stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1) 0.3s;
+}
+.slide.active .bp-gauge-fill{stroke-dashoffset:176}
+.slide:not(.active) .bp-gauge-fill{stroke-dashoffset:440 !important}
+.bp-gauge-val{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Space Mono',monospace;font-size:36px;font-weight:700;color:#f5f6fa;
+}
+
+/* PROGRESS */
+.bp-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.bp-card{
+  background:rgba(56,103,214,0.06);border:1px solid rgba(56,103,214,0.15);
+  border-radius:6px;padding:20px 24px;position:relative;
+  transition:border-color 0.3s;
+}
+.bp-card:hover{border-color:rgba(56,103,214,0.4)}
+.bp-card .card-tag{
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;
+  display:flex;align-items:center;gap:6px;
+}
+.bp-card .card-tag::before{content:'';width:6px;height:6px;border-radius:50%}
+.tag-wip{color:#3867d6}.tag-wip::before{background:#3867d6}
+.tag-done{color:#0be881}.tag-done::before{background:#0be881}
+.tag-blocked{color:#f7b731}.tag-blocked::before{background:#f7b731}
+.tag-next{color:#576574}.tag-next::before{background:#576574}
+.bp-card h3{font-size:16px;font-weight:600;color:#f5f6fa;margin-bottom:8px}
+.bp-card p{font-size:13px;color:#8395a7;line-height:1.6}
+.bp-card p strong{color:#c8d6e5}
+
+/* FEATURE */
+.bp-feature-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+.bp-gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bp-gallery figure{overflow:hidden;border-radius:4px;border:1px solid rgba(56,103,214,0.2);background:#0a1220}
+.bp-gallery img{width:100%;height:120px;object-fit:cover;display:block;opacity:0.8}
+.bp-gallery figcaption{padding:6px 10px;font-family:'Space Mono',monospace;font-size:9px;color:#576574;letter-spacing:0.5px}
+
+/* NEWSLETTER */
+.bp-newsletter{max-width:640px}
+.bp-highlight{
+  background:rgba(56,103,214,0.08);border-left:3px solid #3867d6;
+  padding:16px 20px;margin:20px 0;border-radius:0 4px 4px 0;
+}
+.bp-highlight p{font-size:16px;font-weight:600;color:#f5f6fa;line-height:1.5}
+
+/* TOP OF MIND */
+.slide-bp-topofmind .slide-inner{justify-content:center;align-items:center;text-align:center}
+.bp-topofmind-text{
+  font-size:clamp(18px,2.5vw,24px);color:#c8d6e5;line-height:1.7;
+  max-width:700px;margin:0 auto;
+}
+.bp-topofmind-text strong{color:#3867d6}
+
+/* END */
+.slide-bp-end .slide-inner{justify-content:center;align-items:center;text-align:center}
+.slide-bp-end h1{font-size:clamp(48px,7vw,72px);letter-spacing:-2px;margin-bottom:12px}
+.slide-bp-end h1 span{color:#3867d6}
+.slide-bp-end .end-sub{font-family:'Space Mono',monospace;font-size:14px;color:#576574}
+
+/* Animations */
+@keyframes bpFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.slide.active .bp-label,.slide.active h1,.slide.active h2,.slide.active .bp-sub,
+.slide.active .bp-version,.slide.active .bp-body,.slide.active .bp-card,
+.slide.active .bp-summary-grid,.slide.active .bp-highlight,.slide.active .bp-topofmind-text,
+.slide.active .bp-feature-layout,.slide.active .end-sub{
+  animation:bpFade 0.4s cubic-bezier(0.4,0,0.2,1) both;
+}
+.slide.active>*:nth-child(1),.slide.active .bp-label{animation-delay:0s}
+.slide.active>*:nth-child(2),.slide.active h1,.slide.active h2{animation-delay:0.06s}
+.slide.active>*:nth-child(3){animation-delay:0.12s}
+.slide.active .bp-card:nth-child(1){animation-delay:0.1s}
+.slide.active .bp-card:nth-child(2){animation-delay:0.18s}
+.slide.active .bp-card:nth-child(3){animation-delay:0.26s}
+.slide.active .bp-card:nth-child(4){animation-delay:0.34s}
+.slide:not(.active) .bp-label,.slide:not(.active) h1,.slide:not(.active) h2,
+.slide:not(.active) .bp-sub,.slide:not(.active) .bp-version,.slide:not(.active) .bp-body,
+.slide:not(.active) .bp-card,.slide:not(.active) .bp-summary-grid,.slide:not(.active) .bp-highlight,
+.slide:not(.active) .bp-topofmind-text,.slide:not(.active) .bp-feature-layout,.slide:not(.active) .end-sub{opacity:0}
+
+@media(max-width:768px){
+  .slide{padding:32px 24px}
+  .bp-summary-grid{grid-template-columns:1fr;gap:24px}
+  .bp-card-grid{grid-template-columns:1fr}
+  .bp-feature-layout{grid-template-columns:1fr}
+  .bp-gallery{grid-template-columns:1fr}
+  .dot-nav{right:12px}
+}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- 1: TITLE -->
+  <section class="slide slide-bp-title active" data-slide="0">
+    <div class="slide-inner">
+      <div class="bp-label">Weekly Status</div>
+      <div class="bp-sub" data-content="date">2026 · 03 · 27</div>
+      <h1>Design<br><span>Blueprint</span></h1>
+      <div class="bp-version">Active Sprint — C3 Wk4</div>
+    </div>
+  </section>
+
+  <!-- 2: SUMMARY -->
+  <section class="slide" data-slide="1">
+    <div class="slide-inner">
+      <div class="bp-label">Summary</div>
+      <h2 style="font-size:28px;margin-bottom:20px">Two Focus Areas This Week</h2>
+      <div class="bp-summary-grid">
+        <div class="bp-gauge">
+          <svg viewBox="0 0 160 160">
+            <circle class="bp-gauge-bg" cx="80" cy="80" r="70"/>
+            <circle class="bp-gauge-fill" cx="80" cy="80" r="70"/>
+          </svg>
+          <div class="bp-gauge-val">60%</div>
+        </div>
+        <div>
+          <p class="bp-body" data-content="summary">Two main focuses this week: 1️⃣ Chromium adoption core flow alignment, preparing next week's review build for experience review; 2️⃣ Preparation and completion of Shanying's annual review deck.</p>
+          <hr class="bp-rule">
+          <p class="bp-body">Chromium core flows aligned with native design. Annual review deck completed and delivered. Vibe Coding training invited by Yanti for next week.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3: PROGRESS — Chromium -->
+  <section class="slide" data-slide="2">
+    <div class="slide-inner">
+      <div class="bp-label">Progress Status</div>
+      <h2 style="font-size:28px;margin-bottom:8px">Chromium (Mac) Adoption</h2>
+      <div class="bp-card-grid">
+        <div class="bp-card">
+          <div class="card-tag tag-wip">In Progress — 60%</div>
+          <h3>Core Flow Alignment</h3>
+          <p>Core flows aligned (chat / entry / basic interactions), consistent with native design. <strong>Sergey's requirement:</strong> content area must be top-aligned, sidebar collapsed = side navigation hidden.</p>
+        </div>
+        <div class="bp-card">
+          <div class="card-tag tag-blocked">Blocker</div>
+          <h3>Technical Challenge</h3>
+          <p>Strictly following content area top-alignment + collapsed sidebar logic requires some refactoring. Waiting on <strong>Xiaolin and Sergey</strong> to confirm the final approach.</p>
+        </div>
+        <div class="bp-card">
+          <div class="card-tag tag-next">Next Step</div>
+          <h3>Design Review</h3>
+          <p>Design review on the first version of the dev build once available.</p>
+        </div>
+        <div class="bp-card">
+          <div class="card-tag tag-next">Next Step</div>
+          <h3>Awaiting Feedback</h3>
+          <p>Awaiting <strong>Xiaolin's feedback</strong> — will adjust implementation approach or priorities based on confirmation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4: Annual Review -->
+  <section class="slide" data-slide="3">
+    <div class="slide-inner">
+      <div class="bp-label">Progress Status</div>
+      <h2 style="font-size:28px;margin-bottom:16px">Annual Review Deck — Complete</h2>
+      <div class="bp-feature-layout">
+        <div>
+          <p class="bp-body">Internal team discussion on story architecture and each member's module ownership. Completed overall narrative and layout design. Shanying's review — completed and delivered.</p>
+        </div>
+        <div class="bp-gallery">
+          <figure><img src="assets/review-cover.png" alt="" loading="lazy"><figcaption>Cover</figcaption></figure>
+          <figure><img src="assets/review-process.png" alt="" loading="lazy"><figcaption>Design Forward</figcaption></figure>
+          <figure><img src="assets/review-podcast.png" alt="" loading="lazy"><figcaption>Podcast Player</figcaption></figure>
+          <figure><img src="assets/review-features.png" alt="" loading="lazy"><figcaption>Features</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5: NEWSLETTER -->
+  <section class="slide" data-slide="4" data-section="newsletter">
+    <div class="slide-inner">
+      <div class="bp-label">Newsletter</div>
+      <h2 style="font-size:28px;margin-bottom:16px">Team Reflections</h2>
+      <div class="bp-newsletter">
+        <p class="bp-body">During the annual review, the team brought diverse perspectives on story structure and module ownership. The result genuinely reflects <strong>CM team's standard for Copilot Mac quality & design</strong>.</p>
+        <hr class="bp-rule">
+        <p class="bp-body">Even as we move toward Chromium, the craft from native work isn't lost — <strong>this knowledge is transferable</strong>, and sharing it with other teams is where value compounds.</p>
+        <hr class="bp-rule">
+        <p class="bp-body">Yanti invited us to share how we used Vibe Coding to build the Mac native Liquid Glass experience. Partnering with <strong>Yuchen</strong> to prepare the training next week.</p>
+        <div class="bp-highlight">
+          <p>The native craft experience is transferable — sharing it with other teams is where value compounds.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6: OTHERS -->
+  <section class="slide" data-slide="5">
+    <div class="slide-inner">
+      <div class="bp-label">Others</div>
+      <h2 style="font-size:28px;margin-bottom:16px">Vibe Coding × Liquid Glass</h2>
+      <p class="bp-body" style="max-width:600px">Yanti invited us to share next week how we used Vibe Coding to build the Mac native Liquid Glass experience. Will be partnering with <strong>Yuchen</strong> to prepare and deliver the training session.</p>
+    </div>
+  </section>
+
+  <!-- 7: TOP OF MIND -->
+  <section class="slide slide-bp-topofmind" data-slide="6" data-section="topofmind">
+    <div class="slide-inner">
+      <div class="bp-label">Top of Mind</div>
+      <div class="bp-topofmind-text">During this annual review, the team shared diverse opinions on division of work and story structure, producing a deck that's both engaging and fully representative of our CM team's standard for Copilot Mac Quality & Design. The collaborative atmosphere was wonderful, and brought a silver lining to the gap felt after the sudden shift in direction despite all the effort put in.<br><br><strong>I believe although the overall direction is shifting toward Chromium, this experience can be distilled and passed on to colleagues in other teams as valuable knowledge — and that's the most important takeaway.</strong></div>
+    </div>
+  </section>
+
+  <!-- 8: END -->
+  <section class="slide slide-bp-end" data-slide="7">
+    <div class="slide-inner">
+      <h1>End of <span>Sprint</span></h1>
+      <div class="end-sub">David — Principal Designer — C3 Wk4</div>
+    </div>
+  </section>
+
+</div>
+
+<nav class="dot-nav" id="dotNav" aria-label="Slide navigation"></nav>
+
+<script>
+(function(){
+  var slides=document.querySelectorAll('.slide'),dotNav=document.getElementById('dotNav'),current=0,total=slides.length,transitioning=false;
+  for(var i=0;i<total;i++){var btn=document.createElement('button');btn.dataset.index=i;if(i===0)btn.classList.add('active');dotNav.appendChild(btn)}
+  var dots=dotNav.querySelectorAll('button');
+  function goTo(index){if(index===current||index<0||index>=total||transitioning)return;transitioning=true;slides[current].classList.remove('active');dots[current].classList.remove('active');current=index;slides[current].classList.add('active');dots[current].classList.add('active');setTimeout(function(){transitioning=false},500)}
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();goTo(current+1)}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();goTo(current-1)}});
+  dotNav.addEventListener('click',function(e){if(e.target.tagName==='BUTTON')goTo(parseInt(e.target.dataset.index,10))});
+  var tx=0;document.addEventListener('touchstart',function(e){tx=e.changedTouches[0].screenX},{passive:true});
+  document.addEventListener('touchend',function(e){var d=e.changedTouches[0].screenX-tx;if(Math.abs(d)>50){d<0?goTo(current+1):goTo(current-1)}},{passive:true});
+})();
+</script>
+
+</body>
+</html>
