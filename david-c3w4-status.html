@@ -3,431 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weekly Status Update — C3 Wk4</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>C3 Wk4 — Weekly Status</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    :root {
-      --bg: #FAFAF9;
-      --text: #1C1917;
-      --muted: #78716C;
-      --light: #A8A29E;
-      --border: #E7E5E4;
-      --card: #FFFFFF;
-      --accent-1: #F97316;
-      --accent-2: #EA580C;
-      --accent-3: #DC2626;
-      --success: #16A34A;
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#0F172A;--surface:#1E293B;--surface-2:#334155;
+      --text:#F1F5F9;--text-2:#CBD5E1;--text-3:#94A3B8;--text-4:#64748B;
+      --accent:#818CF8;--accent-2:#6366F1;--accent-glow:rgba(129,140,248,.15);
+      --green:#34D399;--green-glow:rgba(52,211,153,.12);
+      --amber:#FBBF24;--amber-glow:rgba(251,191,36,.1);
+      --border:#1E293B;--border-2:#334155;
+      --sans:'Sora',system-ui,sans-serif;--serif:'Source Serif 4',Georgia,serif;
+      --radius:14px;
     }
-    
-    html, body {
-      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      overflow: hidden;
-      height: 100vh;
-    }
-    
-    .presentation { height: 100vh; overflow: hidden; }
-    
-    .slide {
-      display: none;
-      width: 100%;
-      min-height: 100vh;
-      padding: 48px 64px;
-      animation: fadeIn 0.4s ease;
-    }
-    
-    .slide.active {
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .slide-inner {
-      max-width: 1300px;
-      margin: 0 auto;
-      width: 100%;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 48px;
-    }
-    
-    .brand {
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-    
-    .page-num {
-      font-size: 13px;
-      color: var(--light);
-      font-weight: 500;
-    }
-    
-    .date-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 500;
-    }
-    
-    .date-badge::before {
-      content: '';
-      width: 8px;
-      height: 8px;
-      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-      border-radius: 50%;
-    }
-    
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
-    
-    .eyebrow::before {
-      content: '';
-      width: 40px;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
-    }
-    
-    h1 {
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(48px, 6vw, 72px);
-      font-weight: 900;
-      line-height: 1.0;
-      letter-spacing: -2px;
-      margin-bottom: 24px;
-    }
-    
-    h1 span {
-      background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-3) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    h2 {
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(32px, 4vw, 48px);
-      font-weight: 900;
-      line-height: 1.0;
-      letter-spacing: -1px;
-      margin-bottom: 20px;
-    }
-    
-    h2 span {
-      background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-3) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .subtitle {
-      font-size: 17px;
-      color: #57534E;
-      line-height: 1.7;
-      max-width: 640px;
-      font-weight: 400;
-    }
-    
-    .divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border), transparent);
-      margin: 32px 0;
-    }
-    
-    .footer {
-      margin-top: auto;
-      padding-top: 32px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--light);
-      font-weight: 500;
-    }
-    
-    .feature-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 16px;
-    }
-    
-    .feature-tag {
-      background: var(--card);
-      padding: 8px 16px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 500;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
-    
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-    
-    .stat-card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
-    
-    .stat-value {
-      font-family: 'Inter', sans-serif;
-      font-size: 32px;
-      font-weight: 800;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    
-    .stat-label {
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 500;
-    }
-    
-    .feature-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 24px;
-    }
-    
-    .feature-card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
-    
-    .feature-card.highlight {
-      background: var(--text);
-      color: white;
-    }
-    
-    .feature-card.highlight .feature-status { color: var(--accent-1); }
-    .feature-card.highlight .feature-desc { color: rgba(255,255,255,0.7); }
-    
-    .feature-status {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--success);
-      margin-bottom: 8px;
-    }
-    
-    .feature-status.wip { color: var(--accent-2); }
-    .feature-status.planned { color: var(--muted); }
-    
-    .feature-title {
-      font-family: 'Inter', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-    
-    .feature-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-    
-    .newsletter-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      margin-top: 24px;
-    }
-    
-    .newsletter-item {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 24px;
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      gap: 24px;
-      align-items: start;
-    }
-    
-    .newsletter-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-    }
-    
-    .newsletter-content {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-    
-    .newsletter-content strong {
-      color: var(--text);
-    }
-    
-    .highlight-box {
-      background: var(--text);
-      color: white;
-      border-radius: 16px;
-      padding: 24px;
-      margin-top: 16px;
-    }
-    
-    .highlight-box .newsletter-label { color: var(--accent-1); }
-    .highlight-box .newsletter-content { color: rgba(255,255,255,0.8); }
-    
-    .nav-hint {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      font-size: 11px;
-      color: var(--light);
-      background: var(--card);
-      padding: 8px 16px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      z-index: 100;
-    }
-    
-    .nav-hint kbd {
-      background: var(--bg);
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-family: inherit;
-      margin: 0 2px;
-    }
-    
-    .slide-cover .slide-inner { justify-content: center; }
-    .slide-cover h1 {
-      font-size: clamp(56px, 9vw, 100px);
-      letter-spacing: -3px;
-      line-height: 0.9;
-    }
-    
-    .presenter {
-      position: absolute;
-      bottom: 48px;
-      left: 64px;
-      font-size: 14px;
-      font-weight: 500;
-    }
-    
-    .presenter span {
-      color: var(--light);
-      font-weight: 400;
-    }
-    
-    .sprint-tag {
-      position: absolute;
-      bottom: 48px;
-      right: 64px;
-      background: var(--text);
-      color: white;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 12px 24px;
-      border-radius: 100px;
-    }
-    
-    .centered-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-    
-    .centered-content h1 {
-      font-size: clamp(64px, 12vw, 120px);
-    }
+    html,body{font-family:var(--sans);background:var(--bg);color:var(--text);overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased}
 
-    /* Gallery for Annual Review */
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 24px;
+    .presentation{height:100vh;overflow:hidden}
+    .slide{display:none;width:100%;min-height:100vh;padding:48px 64px;animation:fadeIn .4s ease}
+    .slide.active{display:flex;flex-direction:column}
+    .slide-inner{max-width:1300px;margin:0 auto;width:100%;flex:1;display:flex;flex-direction:column}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Top bar */
+    .top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:48px}
+    .brand{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-3)}
+    .page-num{font-size:13px;color:var(--text-4);font-weight:500}
+    .date-badge{display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--text-3);font-weight:500}
+    .date-badge::before{content:'';width:8px;height:8px;background:var(--accent);border-radius:50%;box-shadow:0 0 12px var(--accent)}
+
+    /* Eyebrow */
+    .eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-4);margin-bottom:20px}
+    .eyebrow::before{content:'';width:40px;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+
+    /* Typography */
+    h1{font-size:clamp(48px,6vw,72px);font-weight:800;line-height:1.0;letter-spacing:-2px;margin-bottom:24px;color:var(--text)}
+    h1 span{background:linear-gradient(135deg,var(--accent),#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    h2{font-size:clamp(32px,4vw,48px);font-weight:800;line-height:1.0;letter-spacing:-1px;margin-bottom:20px}
+    h2 span{background:linear-gradient(135deg,var(--accent),#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .subtitle{font-size:17px;color:var(--text-3);line-height:1.7;max-width:640px;font-weight:300}
+    .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border-2),transparent);margin:32px 0}
+    .footer{margin-top:auto;padding-top:32px;display:flex;justify-content:space-between;font-size:12px;color:var(--text-4);font-weight:500}
+
+    /* Cover */
+    .slide-cover .slide-inner{justify-content:center}
+    .slide-cover h1{font-size:clamp(56px,9vw,100px);letter-spacing:-3px;line-height:.9}
+    .presenter{position:absolute;bottom:48px;left:64px;font-size:14px;font-weight:500;color:var(--text-2)}
+    .presenter span{color:var(--text-4);font-weight:300}
+    .sprint-tag{position:absolute;bottom:48px;right:64px;background:var(--accent);color:var(--bg);font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:12px 24px;border-radius:100px;box-shadow:0 0 24px var(--accent-glow)}
+
+    /* Feature tags */
+    .feature-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .feature-tag{background:var(--surface);padding:8px 16px;border-radius:100px;font-size:13px;font-weight:500;color:var(--text-2);border:1px solid var(--border-2)}
+
+    /* Stats */
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .stat-card{background:var(--surface);border-radius:var(--radius);padding:24px;border:1px solid var(--border-2)}
+    .stat-value{font-size:32px;font-weight:800;line-height:1;margin-bottom:6px}
+    .stat-label{font-size:13px;color:var(--text-4);font-weight:500}
+
+    /* Feature cards */
+    .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px}
+    .feature-card{background:var(--surface);border-radius:var(--radius);padding:24px;border:1px solid var(--border-2);transition:border-color .2s}
+    .feature-card:hover{border-color:var(--surface-2)}
+    .feature-card.highlight{background:linear-gradient(135deg,var(--accent-2),#7C3AED);border:none;color:white}
+    .feature-card.highlight .feature-status{color:rgba(255,255,255,.7)}
+    .feature-card.highlight .feature-desc{color:rgba(255,255,255,.75)}
+    .feature-status{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+    .feature-status.wip{color:var(--amber)}
+    .feature-status.planned{color:var(--text-4)}
+    .feature-title{font-size:18px;font-weight:700;margin-bottom:8px}
+    .feature-desc{font-size:13px;color:var(--text-3);line-height:1.6}
+    .feature-desc strong{color:var(--text-2);font-weight:500}
+
+    /* Next steps box */
+    .next-box{margin-top:20px}
+    .next-card{background:var(--surface);border:1px dashed var(--border-2);border-radius:var(--radius);padding:24px}
+
+    /* Newsletter */
+    .newsletter-grid{display:grid;gap:16px;margin-top:24px}
+    .newsletter-item{background:var(--surface);border-radius:var(--radius);padding:24px;display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start;border:1px solid var(--border-2)}
+    .newsletter-label{font-size:14px;font-weight:700;color:var(--text)}
+    .newsletter-content{font-size:14px;color:var(--text-3);line-height:1.65}
+    .newsletter-content strong{color:var(--text)}
+    .highlight-box{background:linear-gradient(135deg,var(--accent-2),#7C3AED);border-radius:var(--radius);padding:24px;margin-top:16px}
+    .highlight-box .newsletter-label{color:rgba(255,255,255,.7)}
+    .highlight-box .newsletter-content{color:rgba(255,255,255,.9)}
+
+    /* Gallery */
+    .gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+    .gallery-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border-2);transition:border-color .2s}
+    .gallery-card:hover{border-color:var(--accent)}
+    .gallery-card img{width:100%;height:200px;object-fit:cover;display:block}
+    .gallery-caption{padding:14px 18px;font-size:12px;color:var(--text-3);font-weight:500}
+
+    /* Centered */
+    .centered-content{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+    .centered-content h1{font-size:clamp(64px,12vw,120px)}
+
+    /* Nav */
+    .nav-hint{position:fixed;bottom:24px;right:24px;font-size:11px;color:var(--text-4);background:var(--surface);padding:8px 16px;border-radius:8px;border:1px solid var(--border-2);z-index:100}
+    .nav-hint kbd{background:var(--bg);padding:2px 8px;border-radius:4px;font-family:inherit;margin:0 2px;color:var(--text-3)}
+
+    /* Background glow */
+    .bg-glow{position:fixed;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);pointer-events:none;z-index:0}
+    .slide-inner{position:relative;z-index:1}
+
+    @media(max-width:1024px){
+      .slide{padding:32px 40px}
+      .stats-grid{grid-template-columns:repeat(3,1fr)}
+      .feature-grid{grid-template-columns:1fr}
+      .newsletter-item{grid-template-columns:1fr;gap:12px}
+      .gallery-grid{grid-template-columns:1fr}
+      .presenter{left:40px;bottom:32px}
+      .sprint-tag{right:40px;bottom:32px}
     }
-    
-    .gallery-card {
-      background: var(--card);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
-    
-    .gallery-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      display: block;
-    }
-    
-    .gallery-card .gallery-caption {
-      padding: 14px 18px;
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 500;
-    }
-    
-    @media (max-width: 1024px) {
-      .slide { padding: 32px 40px; }
-      .stats-grid { grid-template-columns: repeat(3, 1fr); }
-      .feature-grid { grid-template-columns: 1fr; }
-      .newsletter-item { grid-template-columns: 1fr; gap: 12px; }
-      .gallery-grid { grid-template-columns: 1fr; }
-      .presenter { left: 40px; bottom: 32px; }
-      .sprint-tag { right: 40px; bottom: 32px; }
-    }
-    
-    @media (max-width: 768px) {
-      .slide { padding: 24px; }
-      .top-bar { margin-bottom: 24px; }
-      h1 { font-size: 42px; letter-spacing: -1px; }
-      h2 { font-size: 32px; }
-      .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-      .stat-card { padding: 16px; }
-      .stat-value { font-size: 24px; }
-      .nav-hint { display: none; }
-      .presenter { position: static; margin-top: 32px; }
-      .sprint-tag { position: static; margin-top: 16px; }
-      .slide-cover h1 { font-size: 48px; }
+    @media(max-width:768px){
+      .slide{padding:24px}
+      .top-bar{margin-bottom:24px}
+      h1{font-size:42px;letter-spacing:-1px}
+      h2{font-size:32px}
+      .stats-grid{grid-template-columns:1fr 1fr;gap:12px}
+      .stat-card{padding:16px}
+      .stat-value{font-size:24px}
+      .nav-hint{display:none}
+      .presenter{position:static;margin-top:32px}
+      .sprint-tag{position:static;margin-top:16px}
+      .slide-cover h1{font-size:48px}
     }
   </style>
 </head>
 <body>
+  <div class="bg-glow"></div>
   <div class="presentation">
     
     <!-- SLIDE 1: COVER -->
@@ -452,7 +159,7 @@
           <div class="brand">CM Design</div>
           <div class="page-num">01 / 07</div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; margin-bottom: 32px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-bottom:32px">
           <div>
             <div class="eyebrow">Current Work</div>
             <h2>Copilot Mac <span>C3 Wk4</span></h2>
@@ -465,11 +172,11 @@
           </div>
           <div class="stats-grid">
             <div class="stat-card">
-              <div class="stat-value" style="background:linear-gradient(135deg, var(--accent-1), var(--accent-3));-webkit-background-clip:text;-webkit-text-fill-color:transparent">60%</div>
+              <div class="stat-value" style="background:linear-gradient(135deg,var(--accent),#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent">60%</div>
               <div class="stat-label">Chromium (Mac)</div>
             </div>
             <div class="stat-card">
-              <div class="stat-value" style="color:var(--success)">Done</div>
+              <div class="stat-value" style="color:var(--green)">Done</div>
               <div class="stat-label">Annual Review</div>
             </div>
             <div class="stat-card">
@@ -479,7 +186,7 @@
           </div>
         </div>
         <div class="divider"></div>
-        <p style="font-size: 14px; color: var(--muted); line-height: 1.6;">Chromium core flows aligned with native design. Sergey's framework requirements need refactoring confirmation from Xiaolin. Annual review deck completed and delivered.</p>
+        <p style="font-size:14px;color:var(--text-3);line-height:1.6">Chromium core flows aligned with native design. Sergey's framework requirements need refactoring confirmation from Xiaolin. Annual review deck completed and delivered.</p>
         <div class="footer">
           <span>David — Principal Designer</span>
           <span>March 2026</span>
@@ -508,10 +215,10 @@
             <div class="feature-desc">Team collaborated on story structure & module ownership. Completed overall narrative, layout design, and delivered Shanying's review.</div>
           </div>
         </div>
-        <div style="margin-top: 20px;">
-          <div class="feature-card" style="background: var(--bg); border: 1px dashed var(--border);">
+        <div class="next-box">
+          <div class="next-card">
             <div class="feature-status wip">Next Steps — Chromium</div>
-            <div class="feature-desc" style="font-size: 14px;">
+            <div class="feature-desc" style="font-size:14px">
               → Design review on first dev build<br>
               → Await Xiaolin's feedback — adjust implementation or priorities accordingly
             </div>
@@ -578,7 +285,7 @@
           </div>
           <div class="highlight-box">
             <div class="newsletter-label">Key Takeaway</div>
-            <div class="newsletter-content" style="font-size: 20px; font-weight: 600; margin-top: 8px;">The native craft experience is transferable — sharing it with other teams is where value compounds.</div>
+            <div class="newsletter-content" style="font-size:20px;font-weight:600;margin-top:8px">The native craft experience is transferable — sharing it with other teams is where value compounds.</div>
           </div>
         </div>
         <div class="footer">
@@ -597,11 +304,11 @@
         </div>
         <div class="eyebrow">Others</div>
         <h2>Upcoming <span>Workshop</span></h2>
-        <div class="feature-grid" style="grid-template-columns: 1fr;">
+        <div class="feature-grid" style="grid-template-columns:1fr">
           <div class="feature-card highlight">
             <div class="feature-status">Next Week</div>
             <div class="feature-title">Vibe Coding × Liquid Glass Workshop</div>
-            <div class="feature-desc" style="max-width: 600px; font-size: 15px;">Yanti invited us to share how we used Vibe Coding to build the Mac native Liquid Glass experience. Partnering with Yuchen next week to prepare and deliver the training session for the broader team.</div>
+            <div class="feature-desc" style="max-width:600px;font-size:15px">Yanti invited us to share how we used Vibe Coding to build the Mac native Liquid Glass experience. Partnering with Yuchen next week to prepare and deliver the training session for the broader team.</div>
           </div>
         </div>
         <div class="footer">
@@ -621,12 +328,12 @@
         <div class="eyebrow">Top of Mind</div>
         <h2>Current <span>Focus</span></h2>
         <div class="feature-grid">
-          <div class="feature-card" style="grid-column: span 2;">
+          <div class="feature-card" style="grid-column:span 2">
             <div class="feature-status wip">Reflection</div>
             <div class="feature-title">Collaboration & Knowledge Transfer</div>
-            <div class="feature-desc" style="font-size: 15px; line-height: 1.7; max-width: 720px;">
+            <div class="feature-desc" style="font-size:15px;line-height:1.7;max-width:720px">
               The annual review surfaced something valuable — every team member brought their own perspective on story and structure, producing a deck that reflects our CM team's standard for quality & design. The collaboration felt especially meaningful after the shift in direction.<br><br>
-              Even as we move toward Chromium, the experience and craft from native work isn't lost — it becomes something we can pass on. <strong style="color: var(--text);">This knowledge is transferable</strong>, and sharing it with other teams is where the value compounds.
+              Even as we move toward Chromium, the experience and craft from native work isn't lost — it becomes something we can pass on. <strong>This knowledge is transferable</strong>, and sharing it with other teams is where the value compounds.
             </div>
           </div>
         </div>
@@ -647,7 +354,7 @@
         <div class="centered-content">
           <div class="eyebrow">That's a Wrap</div>
           <h1>Thank<br/><span>You</span></h1>
-          <p style="font-size: 17px; color: var(--muted); margin-top: 24px;">Questions? Let me know.</p>
+          <p style="font-size:17px;color:var(--text-3);margin-top:24px">Questions? Let me know.</p>
         </div>
         <div class="footer">
           <span>David — Principal Designer</span>
@@ -663,42 +370,13 @@
   </div>
 
   <script>
-    const slides = document.querySelectorAll('.slide');
-    let currentSlide = 0;
-    const totalSlides = slides.length;
-
-    function showSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === index);
-      });
-    }
-
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % totalSlides;
-      showSlide(currentSlide);
-    }
-
-    function prevSlide() {
-      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-      showSlide(currentSlide);
-    }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === ' ') {
-        e.preventDefault();
-        nextSlide();
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        prevSlide();
-      }
-    });
-
-    let tx = 0;
-    document.addEventListener('touchstart', e => tx = e.touches[0].clientX);
-    document.addEventListener('touchend', e => {
-      const d = e.changedTouches[0].clientX - tx;
-      if (Math.abs(d) > 50) d < 0 ? nextSlide() : prevSlide();
-    });
+    const slides=document.querySelectorAll('.slide');let cur=0;const total=slides.length;
+    function show(i){slides.forEach((s,n)=>s.classList.toggle('active',n===i))}
+    function next(){cur=(cur+1)%total;show(cur)}
+    function prev(){cur=(cur-1+total)%total;show(cur)}
+    document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next()}else if(e.key==='ArrowLeft'){e.preventDefault();prev()}});
+    let tx=0;document.addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+    document.addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)d<0?next():prev()});
   </script>
 </body>
 </html>
