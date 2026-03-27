@@ -4,246 +4,378 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>C3 Wk4</title>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
+/* === TYPE SYSTEM — 3 sizes only === */
 :root{
-  --black:#111;--white:#F8F7F4;--gray-1:#E8E6E1;--gray-2:#C4C1BA;
-  --gray-3:#8A8780;--gray-4:#5C5A55;--gray-5:#3A3936;
-  --accent:#D45A35;--green:#3B8C5E;
-  --serif:'Instrument Serif',Georgia,serif;
-  --sans:'DM Sans',-apple-system,sans-serif;
+  /* Display: titles only */
+  --display: 'Fraunces', Georgia, serif;
+  --display-size: clamp(52px, 7vw, 88px);
+  --display-weight: 700;
+  --display-lh: 0.95;
+  --display-ls: -0.03em;
+
+  /* Body: all readable text */
+  --body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  --body-size: 15px;
+  --body-lh: 1.7;
+
+  /* Caption: labels, metadata, eyebrows */
+  --caption-size: 11px;
+  --caption-ls: 0.15em;
+
+  /* Colors — minimal */
+  --bg: #FEFDFB;
+  --text: #1A1A1A;
+  --text-2: #555;
+  --text-3: #999;
+  --border: #E8E6E2;
+  --accent: #C0522E;
+  --surface: #F5F3EF;
 }
-html,body{font-family:var(--sans);background:var(--white);color:var(--black);overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased}
+
+html,body{
+  font-family: var(--body);
+  font-size: var(--body-size);
+  line-height: var(--body-lh);
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+}
+
 .deck{height:100vh;overflow:hidden}
 .s{display:none;width:100%;height:100vh;overflow:hidden}
-.s.on{display:flex}
+.s.on{display:block}
 
-/* COVER */
-.s1{background:var(--black);color:var(--white);flex-direction:column;position:relative}
-.s1-top{padding:40px 56px;display:flex;justify-content:space-between;align-items:center}
-.s1-tag{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray-3)}
-.s1-center{flex:1;display:flex;align-items:center;padding:0 56px}
-.s1-title{font-family:var(--serif);font-size:clamp(72px,10vw,128px);line-height:.92;letter-spacing:-.04em}
-.s1-title em{font-style:italic;color:var(--accent)}
-.s1-bottom{padding:40px 56px;display:flex;justify-content:space-between;align-items:flex-end}
-.s1-meta{font-size:14px;color:var(--gray-3);line-height:1.65;max-width:440px}
-.s1-date{font-size:13px;color:var(--gray-4);text-align:right;line-height:1.6}
+/* Shared elements */
+.eyebrow{
+  font-family: var(--body);
+  font-size: var(--caption-size);
+  font-weight: 600;
+  letter-spacing: var(--caption-ls);
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.display{
+  font-family: var(--display);
+  font-size: var(--display-size);
+  font-weight: var(--display-weight);
+  line-height: var(--display-lh);
+  letter-spacing: var(--display-ls);
+  color: var(--text);
+}
+.display em{font-style:italic;color:var(--accent)}
+.body-text{
+  font-size: var(--body-size);
+  color: var(--text-2);
+  line-height: var(--body-lh);
+  max-width: 520px;
+}
+.body-text strong{color:var(--text);font-weight:600}
 
-/* SUMMARY */
-.s-summary{flex-direction:column;padding:56px;justify-content:center;align-items:center;text-align:center}
-.sum-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:40px}
-.sum-stats{display:flex;gap:80px;margin-bottom:48px}
-.sum-stat{display:flex;flex-direction:column;align-items:center}
-.sum-stat-n{font-family:var(--serif);font-size:80px;line-height:1;letter-spacing:-.04em}
-.sum-stat-l{font-size:12px;color:var(--gray-3);letter-spacing:.1em;text-transform:uppercase;margin-top:8px}
-.sum-stat-sub{font-size:13px;color:var(--gray-4);margin-top:4px}
-.sum-divider{width:48px;height:1px;background:var(--gray-2);margin-bottom:36px}
-.sum-text{font-size:17px;color:var(--gray-4);line-height:1.7;max-width:600px}
+/* ========== 1. COVER ========== */
+.cover{
+  display:flex;flex-direction:column;
+  padding:48px 64px;
+  background:var(--text);color:var(--bg);
+}
+.cover .eyebrow{color:rgba(255,255,255,.4)}
+.cover-top{display:flex;justify-content:space-between;align-items:center}
+.cover-center{flex:1;display:flex;align-items:center}
+.cover .display{color:var(--bg);font-size:clamp(64px,9vw,112px)}
+.cover .display em{color:var(--accent)}
+.cover-bottom{display:flex;justify-content:space-between;align-items:flex-end}
+.cover-desc{font-size:var(--body-size);color:rgba(255,255,255,.5);max-width:420px;line-height:1.65}
+.cover-meta{text-align:right;font-size:13px;color:rgba(255,255,255,.35);line-height:1.6}
 
-/* PROGRESS STATUS */
-.s-progress{flex-direction:column;padding:56px}
-.prog-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:40px}
-.prog-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray-3)}
-.prog-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-content:start}
-.prog-card{border:1px solid var(--gray-1);border-radius:12px;padding:32px;display:flex;flex-direction:column}
-.prog-card.primary{background:var(--black);color:var(--white);border:none}
-.prog-card.primary .pc-desc{color:var(--gray-2)}
-.prog-card.primary .pc-desc strong{color:var(--white)}
-.prog-card.primary .pc-bar-track{background:var(--gray-5)}
-.pc-status{font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
-.pc-status.ip{color:var(--accent)}
-.pc-status.done{color:var(--green)}
-.pc-title{font-family:var(--serif);font-size:28px;margin-bottom:12px;line-height:1.15}
-.pc-bar{margin-bottom:16px}
-.pc-bar-track{height:3px;background:var(--gray-1);border-radius:2px;overflow:hidden}
-.pc-bar-fill{height:100%;border-radius:2px}
-.pc-desc{font-size:13px;color:var(--gray-4);line-height:1.65}
-.pc-desc strong{font-weight:500;color:var(--black)}
-.pc-gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;border-radius:8px;overflow:hidden}
-.pc-gallery img{width:100%;height:100px;object-fit:cover;display:block;opacity:.85}
-.prog-next{grid-column:span 2;padding:20px 24px;border:1px dashed var(--gray-2);border-radius:10px;margin-top:8px}
-.prog-next-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:500}
-.prog-next li{list-style:none;font-size:13px;color:var(--gray-4);line-height:1.6;padding-left:16px;position:relative}
+/* ========== 2. SUMMARY ========== */
+.summary{
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;
+  padding:64px;
+}
+.summary .eyebrow{margin-bottom:48px}
+.summary-stats{display:flex;gap:96px;margin-bottom:56px}
+.stat-number{
+  font-family:var(--display);
+  font-size:72px;font-weight:700;
+  line-height:1;letter-spacing:-0.03em;
+}
+.stat-label{
+  font-size:var(--caption-size);
+  letter-spacing:var(--caption-ls);
+  text-transform:uppercase;
+  color:var(--text-3);
+  margin-top:10px;
+}
+.summary-rule{width:40px;height:1px;background:var(--border);margin-bottom:40px}
+.summary .body-text{text-align:center;max-width:560px}
+
+/* ========== 3. PROGRESS ========== */
+.progress{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  height:100vh;
+}
+.prog-panel{
+  padding:56px;
+  display:flex;flex-direction:column;
+  justify-content:center;
+}
+.prog-panel.dark{background:var(--text);color:var(--bg)}
+.prog-panel.dark .eyebrow{color:rgba(255,255,255,.35)}
+.prog-panel.dark .body-text{color:rgba(255,255,255,.55)}
+.prog-panel.dark .body-text strong{color:var(--bg)}
+.prog-title{
+  font-family:var(--display);
+  font-size:36px;font-weight:700;
+  line-height:1.1;letter-spacing:-0.02em;
+  margin:16px 0;
+}
+.prog-bar{height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin:16px 0 20px;overflow:hidden}
+.prog-bar-fill{height:100%;border-radius:2px}
+.prog-bar-light{background:var(--border)}
+.prog-status{
+  font-size:var(--caption-size);
+  font-weight:600;
+  letter-spacing:var(--caption-ls);
+  text-transform:uppercase;
+}
+.prog-status.ip{color:var(--accent)}
+.prog-status.done{color:#4A8C64}
+.prog-gallery{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6px;margin-top:20px;border-radius:8px;overflow:hidden;
+}
+.prog-gallery img{width:100%;height:90px;object-fit:cover;display:block}
+.prog-next{
+  margin-top:auto;padding-top:24px;
+  border-top:1px dashed var(--border);
+}
+.prog-next-label{
+  font-size:var(--caption-size);font-weight:600;
+  letter-spacing:var(--caption-ls);text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px;
+}
+.prog-next li{
+  list-style:none;font-size:13px;color:var(--text-2);
+  line-height:1.6;padding-left:18px;position:relative;
+}
 .prog-next li::before{content:'→';position:absolute;left:0;color:var(--accent)}
 .prog-next li+li{margin-top:4px}
 
-/* NEWSLETTER */
-.s-news{flex-direction:row}
-.news-left{width:38%;padding:56px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--gray-1)}
-.news-right{width:62%;padding:56px;display:flex;flex-direction:column;justify-content:center;gap:28px}
-.news-h{font-family:var(--serif);font-size:44px;line-height:1.05;letter-spacing:-.02em;margin-bottom:12px}
-.news-accent{width:40px;height:3px;background:var(--accent);margin-bottom:20px}
-.news-intro{font-size:13px;color:var(--gray-3);line-height:1.6}
-.news-article{padding-bottom:24px;border-bottom:1px solid var(--gray-1)}
-.news-article:last-child{border:none;padding:0}
-.news-article h4{font-size:15px;font-weight:700;margin-bottom:6px}
-.news-article p{font-size:14px;color:var(--gray-4);line-height:1.7}
-.news-article p strong{color:var(--black);font-weight:500}
+/* ========== 4. NEWSLETTER ========== */
+.newsletter{
+  display:grid;
+  grid-template-columns:380px 1fr;
+  height:100vh;
+}
+.news-side{
+  padding:56px;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.news-side .display{font-size:44px;margin:16px 0}
+.news-accent{width:32px;height:2px;background:var(--accent);margin-bottom:16px}
+.news-main{
+  padding:56px;
+  display:flex;flex-direction:column;justify-content:center;
+  gap:32px;
+}
+.news-item h4{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.news-item p{color:var(--text-2);line-height:1.7}
+.news-item p strong{color:var(--text);font-weight:600}
+.news-divider{height:1px;background:var(--border)}
+.news-pull{
+  background:var(--text);color:var(--bg);
+  border-radius:10px;padding:28px 32px;
+}
+.news-pull p{
+  font-family:var(--display);font-size:18px;
+  font-style:italic;line-height:1.55;font-weight:300;
+  color:rgba(255,255,255,.8);
+}
 
-/* OTHERS */
-.s-others{flex-direction:column;justify-content:center;align-items:center;padding:56px;text-align:center}
-.oth-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:24px}
-.oth-h{font-family:var(--serif);font-size:48px;line-height:1.08;letter-spacing:-.02em;margin-bottom:20px;max-width:600px}
-.oth-p{font-size:16px;color:var(--gray-4);line-height:1.7;max-width:520px;margin-bottom:24px}
-.oth-p strong{color:var(--black);font-weight:500}
-.oth-meta{display:flex;gap:32px;font-size:13px;color:var(--gray-3)}
+/* ========== 5. OTHERS ========== */
+.others{
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;padding:64px;
+}
+.others .eyebrow{margin-bottom:28px}
+.others .display{font-size:clamp(40px,5vw,56px);margin-bottom:24px}
+.others .body-text{text-align:center;margin-bottom:28px}
+.others-meta{display:flex;gap:32px;font-size:13px;color:var(--text-3)}
 
-/* TOP OF MIND */
-.s-mind{flex-direction:column;justify-content:center;padding:56px 80px}
-.mind-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:32px}
-.mind-rule{width:40px;height:3px;background:var(--accent);margin-bottom:32px}
-.mind-quote{font-family:var(--serif);font-size:36px;line-height:1.35;max-width:720px;margin-bottom:32px;letter-spacing:-.01em}
-.mind-body{font-size:15px;color:var(--gray-4);line-height:1.75;max-width:600px}
-.mind-body strong{color:var(--black);font-weight:500}
+/* ========== 6. TOP OF MIND ========== */
+.mind{
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:64px 80px;
+}
+.mind .eyebrow{margin-bottom:36px}
+.mind-rule{width:32px;height:2px;background:var(--accent);margin-bottom:36px}
+.mind-quote{
+  font-family:var(--display);
+  font-size:clamp(28px,3.5vw,38px);
+  font-weight:400;line-height:1.4;
+  max-width:700px;margin-bottom:36px;
+  letter-spacing:-0.01em;
+}
+.mind .body-text{max-width:580px}
 
-/* END */
-.s-end{background:var(--black);color:var(--white);flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative}
-.end-title{font-family:var(--serif);font-size:clamp(80px,12vw,160px);line-height:.88;letter-spacing:-.04em}
-.end-title em{font-style:italic;color:var(--accent)}
-.end-sub{font-size:14px;color:var(--gray-3);margin-top:24px}
-.end-footer{position:absolute;bottom:40px;font-size:11px;color:var(--gray-4);letter-spacing:.1em;text-transform:uppercase}
+/* ========== 7. END ========== */
+.end{
+  background:var(--text);color:var(--bg);
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;position:relative;
+}
+.end .display{color:var(--bg);font-size:clamp(80px,12vw,140px)}
+.end-sub{font-size:var(--body-size);color:rgba(255,255,255,.4);margin-top:24px}
+.end-footer{
+  position:absolute;bottom:40px;
+  font-size:var(--caption-size);color:rgba(255,255,255,.25);
+  letter-spacing:var(--caption-ls);text-transform:uppercase;
+}
 
-.nav-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:var(--gray-1);z-index:100}
-.nav-progress{height:100%;background:var(--accent);transition:width .3s ease}
+/* Progress bar */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;height:2px;background:var(--border);z-index:100}
+.nav-fill{height:100%;background:var(--accent);transition:width .3s ease}
 
 @media(max-width:900px){
-  .s-progress .prog-grid{grid-template-columns:1fr}
-  .prog-next{grid-column:span 1}
-  .s-news{flex-direction:column}
-  .news-left,.news-right{width:100%;padding:40px}
-  .news-left{border-right:none;border-bottom:1px solid var(--gray-1)}
-  .pc-gallery{grid-template-columns:1fr}
+  .progress,.newsletter{grid-template-columns:1fr}
+  .news-side{border-right:none;border-bottom:1px solid var(--border)}
+  .prog-gallery{grid-template-columns:1fr}
+  .cover,.summary,.others,.mind{padding:40px}
 }
 </style>
 </head>
 <body>
 <div class="deck">
 
-<!-- COVER -->
-<div class="s s1 on">
-  <div class="s1-top">
-    <div class="s1-tag">CM Design · Weekly Status</div>
-    <div class="s1-tag">C3 Week 4</div>
+<!-- 1. COVER -->
+<div class="s cover on">
+  <div class="cover-top">
+    <div class="eyebrow">CM Design · Weekly Status</div>
+    <div class="eyebrow">C3 Week 4</div>
   </div>
-  <div class="s1-center">
-    <div class="s1-title">Alignment<br><em>&</em> Closure</div>
+  <div class="cover-center">
+    <div class="display">Alignment<br><em>& Closure</em></div>
   </div>
-  <div class="s1-bottom">
-    <div class="s1-meta">Chromium core flow alignment completed. Annual review deck delivered.</div>
-    <div class="s1-date">David<br>Principal Designer<br>March 27, 2026</div>
+  <div class="cover-bottom">
+    <div class="cover-desc">Chromium core flow alignment completed. Annual review deck delivered as a team.</div>
+    <div class="cover-meta">David<br>Principal Designer<br>March 27, 2026</div>
   </div>
 </div>
 
-<!-- 1. SUMMARY -->
-<div class="s s-summary">
-  <div class="sum-eyebrow">Summary</div>
-  <div class="sum-stats">
-    <div class="sum-stat">
-      <div class="sum-stat-n" style="color:var(--accent)">60<span style="font-size:40px;color:var(--gray-2)">%</span></div>
-      <div class="sum-stat-l">Chromium (Mac)</div>
-      <div class="sum-stat-sub">Core flows aligned</div>
+<!-- 2. SUMMARY -->
+<div class="s summary">
+  <div class="eyebrow">Summary</div>
+  <div class="summary-stats">
+    <div>
+      <div class="stat-number" style="color:var(--accent)">60%</div>
+      <div class="stat-label">Chromium (Mac)</div>
     </div>
-    <div class="sum-stat">
-      <div class="sum-stat-n" style="color:var(--green)">Done</div>
-      <div class="sum-stat-l">Annual Review</div>
-      <div class="sum-stat-sub">Shanying review delivered</div>
+    <div>
+      <div class="stat-number" style="color:#4A8C64">Done</div>
+      <div class="stat-label">Annual Review</div>
     </div>
   </div>
-  <div class="sum-divider"></div>
-  <div class="sum-text">Two focuses this week: aligning Chromium adoption core flows for next week&#x27;s review build, and completing Shanying&#x27;s annual review deck as a team.</div>
+  <div class="summary-rule"></div>
+  <div class="body-text">Two focuses this week: aligning Chromium adoption core flows for next week's review build, and completing Shanying's annual review deck as a team.</div>
 </div>
 
-<!-- 2. PROGRESS STATUS -->
-<div class="s s-progress">
-  <div class="prog-header">
-    <div class="prog-label">Progress Status</div>
-    <div class="prog-label">C3 Wk4 · 2026.03.27</div>
-  </div>
-  <div class="prog-grid">
-    <div class="prog-card primary">
-      <div class="pc-status ip">In Progress · 60%</div>
-      <div class="pc-title">Chromium (Mac) Adoption</div>
-      <div class="pc-bar"><div class="pc-bar-track"><div class="pc-bar-fill" style="width:60%;background:var(--accent)"></div></div></div>
-      <div class="pc-desc">
-        Chat, entry, and basic interactions aligned with native design.<strong>Sergey&#x27;s</strong> framework requirements: content area top-aligned, sidebar collapsed = no side nav.<br><br>
-        <span style="color:var(--accent)">⚠</span> 嚴格頂對齊 + sidebar 邏輯需重構，等 <strong>Xiaolin & Sergey</strong> 確認方案。
-      </div>
+<!-- 3. PROGRESS STATUS -->
+<div class="s progress">
+  <div class="prog-panel dark">
+    <div class="eyebrow">Progress Status</div>
+    <div class="prog-title">Chromium (Mac)<br>Adoption</div>
+    <div class="prog-bar"><div class="prog-bar-fill" style="width:60%;background:var(--accent)"></div></div>
+    <div class="prog-status ip">In Progress · 60%</div>
+    <div class="body-text" style="margin-top:20px">
+      Chat, entry, and basic interactions aligned with native design. <strong>Sergey's framework:</strong> content area top-aligned, sidebar collapsed = no side nav.<br><br>
+      <span style="color:var(--accent)">⚠</span> Strict top-alignment + collapsed sidebar logic requires refactoring. Waiting on <strong>Xiaolin & Sergey</strong> to confirm approach.
     </div>
-    <div class="prog-card">
-      <div class="pc-status done">Complete</div>
-      <div class="pc-title">Annual Review Deck</div>
-      <div class="pc-bar"><div class="pc-bar-track"><div class="pc-bar-fill" style="width:100%;background:var(--green)"></div></div></div>
-      <div class="pc-desc">Team collaborated on story structure &amp; module ownership. Delivered Shanying&#x27;s review.</div>
-      <div class="pc-gallery">
-        <img src="assets/review-cover.png" alt="" loading="lazy">
-        <img src="assets/review-process.png" alt="" loading="lazy">
-        <img src="assets/review-podcast.png" alt="" loading="lazy">
-        <img src="assets/review-features.png" alt="" loading="lazy">
-      </div>
+  </div>
+  <div class="prog-panel">
+    <div class="eyebrow">Progress Status</div>
+    <div class="prog-title">Annual Review<br>Deck</div>
+    <div class="prog-bar prog-bar-light"><div class="prog-bar-fill" style="width:100%;background:#4A8C64"></div></div>
+    <div class="prog-status done">Complete</div>
+    <div class="body-text" style="margin-top:20px">Team collaborated on story structure & module ownership. Delivered Shanying's review.</div>
+    <div class="prog-gallery">
+      <img src="assets/review-cover.png" alt="" loading="lazy">
+      <img src="assets/review-process.png" alt="" loading="lazy">
+      <img src="assets/review-podcast.png" alt="" loading="lazy">
+      <img src="assets/review-features.png" alt="" loading="lazy">
     </div>
     <div class="prog-next">
       <div class="prog-next-label">Next Steps</div>
       <ul>
         <li>Design review on first dev build</li>
-        <li>Await Xiaolin&#x27;s feedback — adjust implementation or priorities accordingly</li>
+        <li>Await Xiaolin's feedback — adjust implementation or priorities</li>
       </ul>
     </div>
   </div>
 </div>
 
-<!-- 3. NEWSLETTER -->
-<div class="s s-news">
-  <div class="news-left">
-    <div class="sum-eyebrow" style="margin-bottom:20px">Newsletter</div>
-    <div class="news-h">This<br>week.</div>
+<!-- 4. NEWSLETTER -->
+<div class="s newsletter">
+  <div class="news-side">
+    <div class="eyebrow">Newsletter</div>
+    <div class="display">This<br>week.</div>
     <div class="news-accent"></div>
-    <div class="news-intro">Design direction and team updates.</div>
+    <div class="body-text" style="font-size:13px;color:var(--text-3)">Design direction and team updates.</div>
   </div>
-  <div class="news-right">
-    <div class="news-article">
+  <div class="news-main">
+    <div class="news-item">
       <h4>Team Collaboration</h4>
-      <p>During the annual review, the team brought diverse perspectives, producing a deck that genuinely reflects <strong>CM team&#x27;s standard for Copilot Mac quality &amp; design</strong>. A positive takeaway amid the direction shift.</p>
+      <p>During the annual review, the team brought diverse perspectives, producing a deck that genuinely reflects <strong>CM team's standard for Copilot Mac quality & design</strong>. A positive takeaway amid the direction shift.</p>
     </div>
-    <div class="news-article">
+    <div class="news-divider"></div>
+    <div class="news-item">
       <h4>Value of Native Experience</h4>
-      <p>Even as we move toward Chromium, the craft from native work isn&#x27;t lost — <strong>this knowledge is transferable</strong>, and sharing it with other teams is where value compounds.</p>
+      <p>Even as we move toward Chromium, the craft from native work isn't lost — <strong>this knowledge is transferable</strong>, and sharing it with other teams is where value compounds.</p>
     </div>
-    <div class="news-article">
+    <div class="news-divider"></div>
+    <div class="news-item">
       <h4>Vibe Coding Invitation</h4>
       <p>Yanti invited us to share the Vibe Coding × Liquid Glass experience next week. Partnering with <strong>Yuchen</strong> to prepare the training.</p>
     </div>
   </div>
 </div>
 
-<!-- 4. OTHERS -->
-<div class="s s-others">
-  <div class="oth-eyebrow">Others</div>
-  <div class="oth-h">Vibe Coding ×<br>Liquid Glass Workshop</div>
-  <div class="oth-p">Yanti invited us to share how we used Vibe Coding to build the Mac native Liquid Glass experience. Partnering with <strong>Yuchen</strong> to prepare and deliver the training.</div>
-  <div class="oth-meta"><span>📅 Next week</span><span>👥 With Yuchen</span></div>
+<!-- 5. OTHERS -->
+<div class="s others">
+  <div class="eyebrow">Others</div>
+  <div class="display">Vibe Coding ×<br><em>Liquid Glass</em></div>
+  <div class="body-text">Yanti invited us to share how we used Vibe Coding to build the Mac native Liquid Glass experience. Partnering with <strong>Yuchen</strong> to prepare and deliver the training.</div>
+  <div class="others-meta"><span>📅 Next week</span><span>👥 With Yuchen</span></div>
 </div>
 
-<!-- 5. TOP OF MIND -->
-<div class="s s-mind">
-  <div class="mind-eyebrow">Top of Mind</div>
+<!-- 6. TOP OF MIND -->
+<div class="s mind">
+  <div class="eyebrow">Top of Mind</div>
   <div class="mind-rule"></div>
   <div class="mind-quote">Even as the direction shifts toward Chromium, the experience we built can be distilled and passed on to other teams.</div>
-  <div class="mind-body">
-    The annual review surfaced something valuable — every team member brought their own perspective on story and structure. The collaboration felt especially meaningful after the shift in direction.<br><br>
-    <strong>The experience doesn&#x27;t disappear — it becomes something we can pass on.</strong>
-  </div>
+  <div class="body-text">The annual review surfaced something valuable — every team member brought their own perspective on story and structure. The collaboration felt especially meaningful after the shift in direction.<br><br><strong>The experience doesn't disappear — it becomes something we can pass on.</strong></div>
 </div>
 
-<!-- END -->
-<div class="s s-end">
-  <div class="end-title">Thank<br><em>you.</em></div>
+<!-- 7. END -->
+<div class="s end">
+  <div class="display">Thank<br><em>you.</em></div>
   <div class="end-sub">Questions? Let me know.</div>
   <div class="end-footer">David — C3 Week 4 — March 2026</div>
 </div>
 
 </div>
-<div class="nav-bar"><div class="nav-progress" id="prog"></div></div>
+<div class="nav-bar"><div class="nav-fill" id="prog"></div></div>
 <script>
 const ss=document.querySelectorAll('.s');let c=0;const t=ss.length;
 const prog=document.getElementById('prog');
