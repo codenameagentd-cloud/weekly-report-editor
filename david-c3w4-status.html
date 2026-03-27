@@ -4,275 +4,232 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>C3 Wk4 — Weekly Status</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0C0C0C;--surface:#161616;--surface-2:#1E1E1E;
-  --text:#E0E0E0;--text-muted:#8D8D8D;--text-dim:#525252;
-  --accent:#78A9FF;--accent-2:#BE95FF;--green:#42BE65;--yellow:#F1C21B;--red:#FF8389;
-  --border:#262626;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+  --cream:#F7F5F0;--warm:#EDE8DF;--ink:#1A1A18;--ink-60:rgba(26,26,24,.6);
+  --ink-30:rgba(26,26,24,.3);--ink-10:rgba(26,26,24,.1);
+  --terracotta:#C4654A;--sage:#6B8F71;--slate:#4A5568;
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'Inter',-apple-system,sans-serif;
 }
-html,body{font-family:var(--sans);background:var(--bg);color:var(--text);overflow:hidden;height:100vh}
+html,body{font-family:var(--sans);background:var(--cream);color:var(--ink);overflow:hidden;height:100vh}
 .deck{height:100vh;overflow:hidden}
-.slide{display:none;width:100%;height:100vh;padding:56px 72px;flex-direction:column;animation:fadeIn .35s ease}
+.slide{display:none;width:100%;height:100vh;animation:enter .5s cubic-bezier(.22,1,.36,1)}
 .slide.active{display:flex}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-/* Top bar */
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:auto;padding-bottom:32px;border-bottom:1px solid var(--border)}
-.topbar-left{font-family:var(--mono);font-size:12px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase}
-.topbar-right{font-family:var(--mono);font-size:12px;color:var(--text-dim)}
+/* ---- SLIDE 1: COVER ---- */
+.cover{flex-direction:column;padding:0}
+.cover-top{flex:1;display:flex;align-items:flex-end;padding:0 80px 0}
+.cover-bottom{height:280px;background:var(--ink);color:var(--cream);display:flex;align-items:center;padding:0 80px}
+.cover-title{font-family:var(--serif);font-size:84px;line-height:1;letter-spacing:-.03em;margin-bottom:16px}
+.cover-sub{font-size:14px;font-weight:400;color:var(--ink-60);letter-spacing:.12em;text-transform:uppercase}
+.cover-meta{font-size:15px;font-weight:300;line-height:1.7;max-width:520px;color:rgba(247,245,240,.7)}
+.cover-meta strong{color:var(--cream);font-weight:500}
+.cover-week{font-family:var(--serif);font-size:160px;color:rgba(247,245,240,.06);position:absolute;right:80px;bottom:40px;line-height:1;pointer-events:none}
+.cover-nav{position:absolute;bottom:32px;left:80px;display:flex;gap:6px}
 
-/* Slide content area */
-.content{flex:1;display:flex;flex-direction:column;justify-content:center}
+/* ---- SLIDE 2: PROGRESS ---- */
+.progress-slide{flex-direction:row}
+.progress-left{width:380px;background:var(--ink);color:var(--cream);padding:64px 48px;display:flex;flex-direction:column;justify-content:space-between;flex-shrink:0}
+.progress-right{flex:1;padding:56px 64px;overflow-y:auto;display:flex;flex-direction:column;gap:36px}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-30)}
+.feat{border-bottom:1px solid var(--ink-10);padding-bottom:32px}
+.feat:last-child{border-bottom:none}
+.feat-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.feat-name{font-size:20px;font-weight:600}
+.feat-pct{font-family:var(--serif);font-size:36px;letter-spacing:-.02em}
+.feat-bar{height:3px;background:var(--ink-10);border-radius:2px;margin:12px 0 14px;overflow:hidden}
+.feat-bar-fill{height:100%;border-radius:2px}
+.feat-desc{font-size:14px;color:var(--ink-60);line-height:1.7}
+.feat-desc strong{color:var(--ink);font-weight:500}
+.feat-next{margin-top:14px;padding:14px 18px;background:var(--warm);border-radius:6px}
+.feat-next-label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-30);margin-bottom:8px}
+.feat-next ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.feat-next li{font-size:13px;color:var(--ink-60);padding-left:16px;position:relative}
+.feat-next li::before{content:'→';position:absolute;left:0;color:var(--terracotta);font-size:12px}
+.tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:3px}
+.tag-progress{background:rgba(196,101,74,.1);color:var(--terracotta)}
+.tag-done{background:rgba(107,143,113,.1);color:var(--sage)}
 
-/* Navigation */
-.nav{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid var(--border);margin-top:auto}
-.nav-dots{display:flex;gap:8px}
-.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .2s}
-.nav-dot.active{background:var(--accent);width:24px;border-radius:4px}
-.nav-hint{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
+/* ---- SLIDE 3: NEWSLETTER ---- */
+.news-slide{flex-direction:column;padding:64px 80px}
+.news-grid{display:grid;grid-template-columns:1fr 1px 1fr;gap:0;flex:1;align-items:start;margin-top:40px}
+.news-divider{background:var(--ink-10);align-self:stretch;margin:0 40px}
+.news-col h4{font-family:var(--serif);font-size:28px;margin-bottom:16px;line-height:1.2}
+.news-col p{font-size:15px;color:var(--ink-60);line-height:1.75}
+.news-accent{width:32px;height:3px;margin-bottom:16px}
 
-/* Typography */
-h1{font-size:56px;font-weight:700;line-height:1.1;letter-spacing:-.03em;margin-bottom:20px}
-h2{font-size:36px;font-weight:600;line-height:1.2;letter-spacing:-.02em;margin-bottom:16px}
-h3{font-size:14px;font-family:var(--mono);font-weight:500;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
-p{font-size:17px;line-height:1.65;color:var(--text-muted);max-width:680px}
-.large-p{font-size:20px;line-height:1.6;color:var(--text-muted);max-width:720px}
+/* ---- SLIDE 4: OTHERS ---- */
+.others-slide{flex-direction:row}
+.others-left{flex:1;padding:64px 80px;display:flex;flex-direction:column;justify-content:center}
+.others-right{width:45%;background:var(--warm);display:flex;align-items:center;justify-content:center;padding:64px}
+.others-right-inner{max-width:360px}
+.others-icon{font-size:64px;margin-bottom:24px}
+.others-title{font-family:var(--serif);font-size:36px;line-height:1.2;margin-bottom:16px}
+.others-desc{font-size:16px;color:var(--ink-60);line-height:1.7}
+.others-meta{display:flex;gap:24px;margin-top:24px;font-size:13px;color:var(--ink-30);font-weight:500}
 
-/* Tags */
-.tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:3px;letter-spacing:.04em}
-.tag-blue{background:rgba(120,169,255,.12);color:var(--accent)}
-.tag-purple{background:rgba(190,149,255,.12);color:var(--accent-2)}
-.tag-green{background:rgba(66,190,101,.12);color:var(--green)}
-.tag-yellow{background:rgba(241,194,27,.12);color:var(--yellow)}
+/* ---- SLIDE 5: TOP OF MIND ---- */
+.mind-slide{flex-direction:column;justify-content:center;align-items:center;padding:80px;text-align:center}
+.mind-quote{font-family:var(--serif);font-size:42px;line-height:1.35;max-width:740px;margin-bottom:40px;letter-spacing:-.01em}
+.mind-body{font-size:16px;color:var(--ink-60);line-height:1.75;max-width:600px;text-align:left}
+.mind-body strong{color:var(--ink);font-weight:500}
+.mind-rule{width:48px;height:2px;background:var(--terracotta);margin:0 auto 40px}
 
-/* Progress */
-.progress-track{height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden;width:100%}
-.progress-fill{height:100%;border-radius:2px;transition:width .6s ease}
-
-/* Cards grid */
-.cards{display:grid;gap:20px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px 32px}
-.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
-.card-title{font-size:18px;font-weight:600}
-.card-desc{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:16px}
-.card-meta{display:flex;gap:12px;align-items:center;font-family:var(--mono);font-size:12px;color:var(--text-dim)}
-
-/* Stat */
-.stat{font-size:64px;font-weight:700;letter-spacing:-.04em;line-height:1}
-.stat-label{font-size:13px;color:var(--text-dim);font-family:var(--mono);margin-top:4px;text-transform:uppercase;letter-spacing:.06em}
-
-/* Divider */
-.divider{width:48px;height:2px;background:var(--border);margin:24px 0}
-
-/* Two col */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
-.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
-
-/* Quote block */
-.quote{border-left:3px solid var(--accent);padding-left:24px;font-size:19px;line-height:1.65;color:var(--text);font-weight:400;max-width:640px}
-
-/* List */
-.checklist{list-style:none;display:flex;flex-direction:column;gap:12px}
-.checklist li{font-size:15px;color:var(--text-muted);padding-left:24px;position:relative;line-height:1.5}
-.checklist li::before{content:'→';position:absolute;left:0;color:var(--accent);font-family:var(--mono)}
-
-/* Bullet */
-.bullet-list{list-style:none;display:flex;flex-direction:column;gap:10px}
-.bullet-list li{font-size:15px;color:var(--text-muted);padding-left:20px;position:relative;line-height:1.55}
-.bullet-list li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--text-dim)}
+/* Nav dots */
+.nav{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ink-10);transition:all .3s}
+.dot.active{background:var(--ink);width:20px;border-radius:4px}
 </style>
 </head>
 <body>
 <div class="deck" id="deck">
 
-<!-- SLIDE 1 — Summary -->
-<div class="slide active">
-  <div class="topbar">
-    <div class="topbar-left">Weekly Status — C3 Wk4</div>
-    <div class="topbar-right">2026.03.27</div>
-  </div>
-  <div class="content">
-    <h3>Summary</h3>
-    <h1 style="max-width:820px">Chromium alignment<br>& Annual Review done.</h1>
-    <div class="divider"></div>
-    <p class="large-p" style="margin-bottom:40px">
-      Two things this week: locking down the core flows for Chromium adoption and getting the review build ready for next week — plus wrapping up Shanying's annual review deck as a team.
-    </p>
-    <div style="display:flex;gap:48px">
-      <div><div class="stat">60<span style="font-size:32px;color:var(--text-dim)">%</span></div><div class="stat-label">Chromium (Mac)</div></div>
-      <div><div class="stat" style="color:var(--green)">Done</div><div class="stat-label">Annual Review</div></div>
+<!-- SLIDE 1 — Cover -->
+<div class="slide cover active" style="position:relative">
+  <div class="cover-top">
+    <div>
+      <div class="cover-sub" style="margin-bottom:20px">Weekly Status</div>
+      <div class="cover-title">Alignment<br>& Closure.</div>
     </div>
   </div>
-  <div class="nav">
-    <div class="nav-dots"><div class="nav-dot active"></div><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot"></div></div>
-    <div class="nav-hint">← → or click</div>
+  <div class="cover-bottom" style="position:relative;overflow:hidden">
+    <div class="cover-meta">
+      Two focuses this week: <strong>Chromium core flow alignment</strong> with review build prep for next week, and completing <strong>Shanying's annual review</strong> as a team effort.
+    </div>
+    <div class="cover-week">W4</div>
   </div>
 </div>
 
-<!-- SLIDE 2 — Progress Status -->
-<div class="slide">
-  <div class="topbar">
-    <div class="topbar-left">Progress Status</div>
-    <div class="topbar-right">C3 Wk4</div>
-  </div>
-  <div class="content">
-    <div class="cards" style="grid-template-columns:1fr;max-width:900px;gap:24px">
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
-              <span class="card-title">Chromium (Mac) Adoption</span>
-              <span class="tag tag-blue">In Progress</span>
-            </div>
-          </div>
-          <span style="font-family:var(--mono);font-size:28px;font-weight:600;color:var(--accent)">60%</span>
-        </div>
-        <div class="progress-track" style="margin-bottom:16px"><div class="progress-fill" style="width:60%;background:var(--accent)"></div></div>
-        <div class="card-desc">
-          Core flows aligned — chat, entry, basic interactions match native design. Sergey's framework requirements: content area top-aligned, sidebar collapsed = no side nav (consistent with Copilot Mac native).
-        </div>
-        <div class="card-desc" style="color:var(--text-dim);font-size:13px">
-          <strong style="color:var(--yellow)">⚠ Blocker:</strong> Strict top-alignment + collapsed sidebar logic needs refactoring. Waiting on Xiaolin & Sergey to confirm final approach.
-        </div>
-        <div style="margin-top:16px">
-          <div style="font-family:var(--mono);font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Next Steps</div>
-          <ul class="checklist">
-            <li>Design review on first dev build</li>
-            <li>Await Xiaolin's feedback to adjust implementation or priorities</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
-              <span class="card-title">Annual Review Deck</span>
-              <span class="tag tag-green">Complete</span>
-            </div>
-          </div>
-          <span style="font-family:var(--mono);font-size:28px;font-weight:600;color:var(--green)">100%</span>
-        </div>
-        <div class="progress-track" style="margin-bottom:16px"><div class="progress-fill" style="width:100%;background:var(--green)"></div></div>
-        <div class="card-desc">
-          Team collaborated on story structure & module ownership. Completed overall narrative, layout design, and Shanying review.
-        </div>
-      </div>
-
+<!-- SLIDE 2 — Progress -->
+<div class="slide progress-slide">
+  <div class="progress-left">
+    <div>
+      <div class="section-label" style="color:rgba(247,245,240,.35);margin-bottom:24px">Progress</div>
+      <div style="font-family:var(--serif);font-size:72px;color:var(--cream);line-height:1">2</div>
+      <div style="font-size:13px;color:rgba(247,245,240,.5);margin-top:8px">Workstreams<br>this week</div>
     </div>
+    <div style="font-size:12px;color:rgba(247,245,240,.3)">C3 · Week 4<br>2026.03.27</div>
   </div>
-  <div class="nav">
-    <div class="nav-dots"><div class="nav-dot"></div><div class="nav-dot active"></div><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot"></div></div>
-    <div class="nav-hint">← → or click</div>
+  <div class="progress-right">
+    <div class="feat">
+      <div class="feat-head">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="feat-name">Chromium (Mac) Adoption</span>
+          <span class="tag tag-progress">In Progress</span>
+        </div>
+        <div class="feat-pct" style="color:var(--terracotta)">60%</div>
+      </div>
+      <div class="feat-bar"><div class="feat-bar-fill" style="width:60%;background:var(--terracotta)"></div></div>
+      <div class="feat-desc">
+        Core flows aligned — chat, entry, basic interactions consistent with native design. <strong>Sergey's framework requirement</strong>: content area top-aligned, sidebar collapsed = no side nav (matching Copilot Mac native behavior).
+      </div>
+      <div class="feat-desc" style="margin-top:8px">
+        <strong style="color:var(--terracotta)">Technical challenge:</strong> Strict top-alignment + collapsed sidebar logic requires refactoring. Pending Xiaolin & Sergey confirmation on final approach.
+      </div>
+      <div class="feat-next">
+        <div class="feat-next-label">Next Steps</div>
+        <ul>
+          <li>Design review on first dev build</li>
+          <li>Await Xiaolin's feedback — adjust implementation or priorities accordingly</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="feat-head">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="feat-name">Annual Review Deck</span>
+          <span class="tag tag-done">Complete</span>
+        </div>
+        <div class="feat-pct" style="color:var(--sage)">100%</div>
+      </div>
+      <div class="feat-bar"><div class="feat-bar-fill" style="width:100%;background:var(--sage)"></div></div>
+      <div class="feat-desc">
+        Team collaborated on story structure & module ownership. Completed overall narrative, layout design, and delivered Shanying's review.
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- SLIDE 3 — Newsletter -->
-<div class="slide">
-  <div class="topbar">
-    <div class="topbar-left">Newsletter</div>
-    <div class="topbar-right">C3 Wk4</div>
+<div class="slide news-slide">
+  <div>
+    <div class="section-label" style="margin-bottom:12px">Newsletter</div>
+    <h2 style="font-family:var(--serif);font-size:40px;letter-spacing:-.02em">What's happening</h2>
   </div>
-  <div class="content">
-    <h3>This Week</h3>
-    <h2 style="max-width:700px;margin-bottom:32px">What's happening on the team</h2>
-    <div class="two-col" style="max-width:900px">
-      <div>
-        <div style="font-size:15px;font-weight:600;margin-bottom:12px;color:var(--accent)">Chromium Direction</div>
-        <p style="font-size:15px;line-height:1.65">
-          Core Chromium flows now aligned with native design. The key debate: Sergey's framework asks for strict content top-alignment and sidebar behavior changes that need refactoring. Xiaolin is the decision point — waiting for confirmation before committing to implementation path.
-        </p>
-      </div>
-      <div>
-        <div style="font-size:15px;font-weight:600;margin-bottom:12px;color:var(--accent-2)">Annual Review</div>
-        <p style="font-size:15px;line-height:1.65">
-          The team came together to build Shanying's review deck — everyone contributed to story structure and owned their sections. The result: a deck that reflects the CM team's standard for Copilot Mac quality and design.
-        </p>
-      </div>
+  <div class="news-grid">
+    <div class="news-col">
+      <div class="news-accent" style="background:var(--terracotta)"></div>
+      <h4>Chromium Direction</h4>
+      <p>
+        Core Chromium flows now mirror native design. The open question: Sergey's framework asks for strict content top-alignment and sidebar behavior changes that need refactoring. Xiaolin is the decision point — waiting for confirmation before committing to the implementation path.
+      </p>
     </div>
-  </div>
-  <div class="nav">
-    <div class="nav-dots"><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot active"></div><div class="nav-dot"></div><div class="nav-dot"></div></div>
-    <div class="nav-hint">← → or click</div>
+    <div class="news-divider"></div>
+    <div class="news-col">
+      <div class="news-accent" style="background:var(--sage)"></div>
+      <h4>Annual Review</h4>
+      <p>
+        The team came together to build Shanying's review deck — everyone contributed to story structure and owned their sections. The result: a deck that genuinely reflects the CM team's standard for Copilot Mac quality & design.
+      </p>
+    </div>
   </div>
 </div>
 
 <!-- SLIDE 4 — Others -->
-<div class="slide">
-  <div class="topbar">
-    <div class="topbar-left">Others</div>
-    <div class="topbar-right">C3 Wk4</div>
-  </div>
-  <div class="content">
-    <div class="card" style="max-width:720px">
-      <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px">
-        <span class="tag tag-purple">Upcoming</span>
-        <span class="card-title">Vibe Coding — Liquid Glass Workshop</span>
-      </div>
-      <div class="card-desc" style="font-size:16px;line-height:1.7">
-        Yanti invited us to share how we used <strong style="color:var(--text)">Vibe Coding</strong> to build the Mac native Liquid Glass experience. Partnering with <strong style="color:var(--text)">Yuchen</strong> next week to prepare and deliver the training session.
-      </div>
-      <div class="card-meta" style="margin-top:20px">
-        <span>📅 Next week</span>
-        <span style="color:var(--border)">|</span>
-        <span>With Yuchen</span>
-      </div>
+<div class="slide others-slide">
+  <div class="others-left">
+    <div class="section-label" style="margin-bottom:32px">Others</div>
+    <div class="others-title">Vibe Coding ×<br>Liquid Glass</div>
+    <div class="others-desc">
+      Yanti invited us to share how we used Vibe Coding to build the Mac native Liquid Glass experience. Partnering with <strong style="color:var(--ink)">Yuchen</strong> next week to prepare and deliver the training session for the broader team.
+    </div>
+    <div class="others-meta">
+      <span>📅 Next week</span>
+      <span>👥 With Yuchen</span>
     </div>
   </div>
-  <div class="nav">
-    <div class="nav-dots"><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot active"></div><div class="nav-dot"></div></div>
-    <div class="nav-hint">← → or click</div>
+  <div class="others-right">
+    <div class="others-right-inner" style="text-align:center">
+      <div style="font-family:var(--serif);font-size:120px;line-height:1;color:var(--ink-10);margin-bottom:16px">✦</div>
+      <div style="font-size:13px;color:var(--ink-30);line-height:1.6">Sharing craft knowledge<br>across teams</div>
+    </div>
   </div>
 </div>
 
 <!-- SLIDE 5 — Top of Mind -->
-<div class="slide">
-  <div class="topbar">
-    <div class="topbar-left">Top of Mind</div>
-    <div class="topbar-right">C3 Wk4</div>
+<div class="slide mind-slide">
+  <div class="section-label" style="margin-bottom:40px">Top of Mind</div>
+  <div class="mind-quote">
+    The experience and craft from native work isn't lost — it becomes something we can pass on.
   </div>
-  <div class="content" style="max-width:720px">
-    <h3>Reflection</h3>
-    <div class="quote" style="margin-bottom:32px">
-      The annual review process surfaced something valuable — every team member brought their own perspective on story and structure, and the result genuinely reflects our CM team's standard for Copilot Mac quality & design.
-    </div>
-    <div class="divider"></div>
-    <p style="margin-top:24px;font-size:16px;line-height:1.7">
-      The collaboration felt especially meaningful after the shift in direction. Even as we move toward Chromium, the experience and craft from native work isn't lost — it becomes something we can pass on. That's the real takeaway: <strong style="color:var(--text)">this knowledge is transferable</strong>, and sharing it with other teams is where the value compounds.
-    </p>
-  </div>
-  <div class="nav">
-    <div class="nav-dots"><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot active"></div></div>
-    <div class="nav-hint">← → or click</div>
+  <div class="mind-rule"></div>
+  <div class="mind-body">
+    The annual review surfaced something valuable — every team member brought their own perspective on story and structure. The collaboration felt especially meaningful after the shift in direction. Even as we move toward Chromium, <strong>this knowledge is transferable</strong>, and sharing it with other teams is where the value compounds.
   </div>
 </div>
 
 </div>
+
+<!-- Nav dots -->
+<div class="nav" id="nav"></div>
 
 <script>
-const slides=document.querySelectorAll('.slide');
+const slides=document.querySelectorAll('.slide'),nav=document.getElementById('nav');
 let cur=0;
+slides.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>go(i);nav.appendChild(d)});
 function go(n){
   if(n<0||n>=slides.length)return;
-  slides[cur].classList.remove('active');
-  cur=n;
-  slides[cur].classList.add('active');
-  document.querySelectorAll('.nav-dots').forEach(nd=>{
-    nd.querySelectorAll('.nav-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
-  });
+  slides[cur].classList.remove('active');cur=n;slides[cur].classList.add('active');
+  nav.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
 }
-document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'||e.key===' ')go(cur+1);
-  if(e.key==='ArrowLeft')go(cur-1);
-});
-document.addEventListener('click',e=>{
-  const x=e.clientX/window.innerWidth;
-  x>.5?go(cur+1):go(cur-1);
-});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')go(cur+1);if(e.key==='ArrowLeft')go(cur-1)});
+let tx=0;document.addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+document.addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)d<0?go(cur+1):go(cur-1)});
 </script>
 </body>
 </html>
