@@ -10,17 +10,16 @@
 :root{
   --black:#111;--white:#F8F7F4;--gray-1:#E8E6E1;--gray-2:#C4C1BA;
   --gray-3:#8A8780;--gray-4:#5C5A55;--gray-5:#3A3936;
-  --accent:#D45A35;
+  --accent:#D45A35;--green:#3B8C5E;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
 }
 html,body{font-family:var(--sans);background:var(--white);color:var(--black);overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased}
-
 .deck{height:100vh;overflow:hidden}
 .s{display:none;width:100%;height:100vh;overflow:hidden}
 .s.on{display:flex}
 
-/* ============ S1 COVER ============ */
+/* ===== COVER ===== */
 .s1{background:var(--black);color:var(--white);flex-direction:column;position:relative}
 .s1-top{padding:40px 56px;display:flex;justify-content:space-between;align-items:center}
 .s1-tag{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray-3)}
@@ -28,51 +27,44 @@ html,body{font-family:var(--sans);background:var(--white);color:var(--black);ove
 .s1-title{font-family:var(--serif);font-size:clamp(72px,10vw,128px);line-height:.92;letter-spacing:-.04em}
 .s1-title em{font-style:italic;color:var(--accent)}
 .s1-bottom{padding:40px 56px;display:flex;justify-content:space-between;align-items:flex-end}
-.s1-meta{font-size:13px;color:var(--gray-3);line-height:1.6;max-width:420px}
+.s1-meta{font-size:14px;color:var(--gray-3);line-height:1.65;max-width:440px}
 .s1-date{font-size:13px;color:var(--gray-4);text-align:right;line-height:1.6}
 
-/* ============ S2 SUMMARY ============ */
-.s2{flex-direction:row}
-.s2-left{width:44%;background:var(--white);padding:56px;display:flex;flex-direction:column;justify-content:center}
-.s2-right{width:56%;background:var(--black);color:var(--white);padding:56px;display:flex;flex-direction:column;justify-content:center}
-.s2-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray-3);margin-bottom:24px}
-.s2-h{font-family:var(--serif);font-size:48px;line-height:1.05;letter-spacing:-.02em;margin-bottom:20px}
-.s2-p{font-size:15px;line-height:1.7;color:var(--gray-4);max-width:400px}
-.s2-stats{display:flex;gap:48px;margin-top:auto}
-.s2-stat-n{font-family:var(--serif);font-size:56px;line-height:1;letter-spacing:-.03em}
-.s2-stat-l{font-size:11px;color:var(--gray-3);letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
-.s2-items{display:flex;flex-direction:column;gap:20px}
-.s2-item{padding-bottom:20px;border-bottom:1px solid var(--gray-5)}
-.s2-item:last-child{border:none;padding:0}
-.s2-item-label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gray-3);margin-bottom:6px}
-.s2-item-text{font-size:15px;line-height:1.65;color:var(--gray-2)}
+/* ===== SUMMARY — 只放大數字和一句話 ===== */
+.s2{flex-direction:column;padding:56px;justify-content:center;align-items:center;text-align:center}
+.s2-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:40px}
+.s2-stats{display:flex;gap:80px;margin-bottom:48px}
+.s2-stat{display:flex;flex-direction:column;align-items:center}
+.s2-stat-n{font-family:var(--serif);font-size:80px;line-height:1;letter-spacing:-.04em}
+.s2-stat-l{font-size:12px;color:var(--gray-3);letter-spacing:.1em;text-transform:uppercase;margin-top:8px}
+.s2-stat-sub{font-size:13px;color:var(--gray-4);margin-top:4px}
+.s2-divider{width:48px;height:1px;background:var(--gray-2);margin-bottom:36px}
+.s2-summary{font-size:17px;color:var(--gray-4);line-height:1.7;max-width:600px}
 
-/* ============ S3 PROGRESS ============ */
-.s3{flex-direction:column;padding:56px}
-.s3-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:48px}
-.s3-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray-3)}
-.s3-cards{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-content:center}
-.s3-card{border:1px solid var(--gray-1);border-radius:12px;padding:32px;position:relative;overflow:hidden}
-.s3-card.primary{background:var(--black);color:var(--white);border:none}
-.s3-card.primary .s3-c-desc{color:var(--gray-2)}
-.s3-card.primary .s3-c-bar-track{background:var(--gray-5)}
-.s3-c-status{font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
-.s3-c-status.ip{color:var(--accent)}
-.s3-c-status.done{color:#4CAF50}
-.s3-c-title{font-family:var(--serif);font-size:28px;margin-bottom:12px;line-height:1.15}
-.s3-c-bar{margin-bottom:16px}
-.s3-c-bar-track{height:3px;background:var(--gray-1);border-radius:2px;overflow:hidden}
-.s3-c-bar-fill{height:100%;border-radius:2px}
-.s3-c-desc{font-size:13px;color:var(--gray-4);line-height:1.65}
-.s3-c-desc strong{font-weight:500;color:var(--black)}
-.s3-card.primary .s3-c-desc strong{color:var(--white)}
-.s3-c-pct{font-family:var(--serif);font-size:64px;position:absolute;top:28px;right:32px;color:rgba(255,255,255,.08);line-height:1;pointer-events:none}
-.s3-next{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.s3-next-card{background:var(--white);border:1px dashed var(--gray-2);border-radius:12px;padding:20px 24px}
+/* ===== PROGRESS — 只講 Chromium 細節 ===== */
+.s3{flex-direction:row}
+.s3-left{width:40%;background:var(--black);color:var(--white);padding:56px;display:flex;flex-direction:column;justify-content:center}
+.s3-right{flex:1;padding:56px;display:flex;flex-direction:column;justify-content:center}
+.s3-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray-3);margin-bottom:20px}
+.s3-h{font-family:var(--serif);font-size:48px;line-height:1.05;letter-spacing:-.02em;margin-bottom:12px}
+.s3-pct{font-family:var(--serif);font-size:120px;color:rgba(255,255,255,.06);position:absolute;right:32px;bottom:32px;line-height:1;pointer-events:none}
+.s3-bar{margin:20px 0;height:4px;background:var(--gray-5);border-radius:2px;overflow:hidden}
+.s3-bar-fill{height:100%;background:var(--accent);border-radius:2px}
+.s3-status{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.s3-detail{font-size:14px;color:var(--gray-2);line-height:1.7}
+.s3-detail strong{color:var(--white);font-weight:500}
+.s3-section{margin-bottom:28px}
+.s3-section:last-child{margin:0}
+.s3-section-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-3);margin-bottom:10px;font-weight:500}
+.s3-section p{font-size:14px;color:var(--gray-4);line-height:1.7}
+.s3-section p strong{color:var(--black);font-weight:500}
+.s3-next{padding:20px 24px;border:1px dashed var(--gray-2);border-radius:10px;margin-top:auto}
 .s3-next-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:500}
-.s3-next-text{font-size:13px;color:var(--gray-4);line-height:1.6}
+.s3-next li{list-style:none;font-size:13px;color:var(--gray-4);line-height:1.6;padding-left:16px;position:relative}
+.s3-next li::before{content:'→';position:absolute;left:0;color:var(--accent)}
+.s3-next li+li{margin-top:4px}
 
-/* ============ S4 GALLERY ============ */
+/* ===== GALLERY ===== */
 .s4{flex-direction:column;background:var(--black);color:var(--white)}
 .s4-header{padding:40px 56px 0;display:flex;justify-content:space-between;align-items:baseline}
 .s4-title{font-family:var(--serif);font-size:36px;letter-spacing:-.02em}
@@ -82,51 +74,52 @@ html,body{font-family:var(--sans);background:var(--white);color:var(--black);ove
 .s4-img{position:relative;overflow:hidden;border-radius:4px}
 .s4-img img{width:100%;height:100%;object-fit:cover;display:block;opacity:.88;transition:opacity .3s}
 .s4-img:hover img{opacity:1}
-.s4-img figcaption{position:absolute;bottom:0;left:0;right:0;padding:16px 20px;background:linear-gradient(transparent,rgba(0,0,0,.7));font-size:11px;color:var(--gray-2);letter-spacing:.02em}
+.s4-img figcaption{position:absolute;bottom:0;left:0;right:0;padding:16px 20px;background:linear-gradient(transparent,rgba(0,0,0,.7));font-size:11px;color:var(--gray-2)}
 
-/* ============ S5 NEWSLETTER ============ */
+/* ===== NEWSLETTER — 只講趨勢和觀察，不重複 progress ===== */
 .s5{flex-direction:row}
 .s5-left{width:38%;padding:56px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--gray-1)}
-.s5-right{width:62%;padding:56px;display:flex;flex-direction:column;justify-content:center;gap:32px}
-.s5-h{font-family:var(--serif);font-size:44px;line-height:1.05;letter-spacing:-.02em;margin-bottom:16px}
-.s5-accent{width:40px;height:3px;background:var(--accent);margin-bottom:24px}
-.s5-article h4{font-size:16px;font-weight:700;margin-bottom:8px}
+.s5-right{width:62%;padding:56px;display:flex;flex-direction:column;justify-content:center;gap:28px}
+.s5-h{font-family:var(--serif);font-size:44px;line-height:1.05;letter-spacing:-.02em;margin-bottom:12px}
+.s5-accent{width:40px;height:3px;background:var(--accent);margin-bottom:20px}
+.s5-intro{font-size:13px;color:var(--gray-3);line-height:1.6}
+.s5-article{padding-bottom:24px;border-bottom:1px solid var(--gray-1)}
+.s5-article:last-child{border:none;padding:0}
+.s5-article h4{font-size:15px;font-weight:700;margin-bottom:6px}
 .s5-article p{font-size:14px;color:var(--gray-4);line-height:1.7}
 .s5-article p strong{color:var(--black);font-weight:500}
-.s5-divider{height:1px;background:var(--gray-1)}
-.s5-pull{background:var(--black);color:var(--white);border-radius:12px;padding:28px 32px;margin-top:8px}
-.s5-pull p{font-family:var(--serif);font-size:18px;font-style:italic;line-height:1.55;color:var(--gray-2)}
 
-/* ============ S6 OTHERS + TOP OF MIND ============ */
-.s6{flex-direction:row}
-.s6-left{width:50%;background:var(--black);color:var(--white);padding:56px;display:flex;flex-direction:column;justify-content:center}
-.s6-right{width:50%;padding:56px;display:flex;flex-direction:column;justify-content:center}
-.s6-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray-3);margin-bottom:20px}
-.s6-h{font-family:var(--serif);font-size:36px;line-height:1.1;margin-bottom:16px;letter-spacing:-.01em}
-.s6-p{font-size:15px;line-height:1.7;color:var(--gray-3);max-width:400px}
-.s6-p strong{color:var(--white);font-weight:500}
-.s6-meta{display:flex;gap:24px;margin-top:24px;font-size:12px;color:var(--gray-4)}
-.s6-quote{font-family:var(--serif);font-size:28px;line-height:1.4;color:var(--black);margin-bottom:24px;letter-spacing:-.01em}
-.s6-body{font-size:14px;color:var(--gray-4);line-height:1.75;max-width:420px}
-.s6-body strong{color:var(--black);font-weight:500}
-.s6-rule{width:40px;height:3px;background:var(--accent);margin-bottom:24px}
+/* ===== OTHERS — 單一事項 ===== */
+.s6-others{flex-direction:column;justify-content:center;align-items:center;padding:56px;text-align:center}
+.s6-o-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:24px}
+.s6-o-h{font-family:var(--serif);font-size:48px;line-height:1.08;letter-spacing:-.02em;margin-bottom:20px;max-width:600px}
+.s6-o-p{font-size:16px;color:var(--gray-4);line-height:1.7;max-width:520px;margin-bottom:24px}
+.s6-o-p strong{color:var(--black);font-weight:500}
+.s6-o-meta{display:flex;gap:32px;font-size:13px;color:var(--gray-3)}
 
-/* ============ S7 END ============ */
-.s7{background:var(--white);flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative}
-.s7-title{font-family:var(--serif);font-size:clamp(80px,12vw,160px);line-height:.88;letter-spacing:-.04em;color:var(--black)}
-.s7-title em{font-style:italic;color:var(--accent)}
-.s7-sub{font-size:14px;color:var(--gray-3);margin-top:24px}
-.s7-footer{position:absolute;bottom:40px;font-size:11px;color:var(--gray-3);letter-spacing:.1em;text-transform:uppercase}
+/* ===== TOP OF MIND — 獨立一頁 ===== */
+.s7-mind{flex-direction:column;justify-content:center;padding:56px 80px;position:relative}
+.s7-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-3);margin-bottom:32px}
+.s7-rule{width:40px;height:3px;background:var(--accent);margin-bottom:32px}
+.s7-quote{font-family:var(--serif);font-size:36px;line-height:1.35;max-width:720px;margin-bottom:32px;letter-spacing:-.01em}
+.s7-body{font-size:15px;color:var(--gray-4);line-height:1.75;max-width:600px}
+.s7-body strong{color:var(--black);font-weight:500}
+
+/* ===== END ===== */
+.s8{background:var(--black);color:var(--white);flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.s8-title{font-family:var(--serif);font-size:clamp(80px,12vw,160px);line-height:.88;letter-spacing:-.04em}
+.s8-title em{font-style:italic;color:var(--accent)}
+.s8-sub{font-size:14px;color:var(--gray-3);margin-top:24px}
+.s8-footer{position:absolute;bottom:40px;font-size:11px;color:var(--gray-4);letter-spacing:.1em;text-transform:uppercase}
 
 /* Nav */
-.nav-bar{position:fixed;bottom:0;left:0;right:0;height:4px;background:var(--gray-1);z-index:100}
+.nav-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:var(--gray-1);z-index:100}
 .nav-progress{height:100%;background:var(--accent);transition:width .3s ease}
 
 @media(max-width:900px){
-  .s2,.s5,.s6{flex-direction:column}
-  .s2-left,.s2-right,.s5-left,.s5-right,.s6-left,.s6-right{width:100%;padding:40px}
-  .s3-cards{grid-template-columns:1fr}
-  .s3-next{grid-template-columns:1fr}
+  .s3,.s5{flex-direction:column}
+  .s3-left,.s5-left,.s5-right{width:100%;padding:40px}
+  .s3-right{padding:40px}
   .s4-grid{grid-template-columns:1fr}
 }
 </style>
@@ -134,7 +127,7 @@ html,body{font-family:var(--sans);background:var(--white);color:var(--black);ove
 <body>
 <div class="deck" id="deck">
 
-<!-- S1: COVER -->
+<!-- 1. COVER — 主題 -->
 <div class="s s1 on">
   <div class="s1-top">
     <div class="s1-tag">CM Design · Weekly Status</div>
@@ -144,90 +137,64 @@ html,body{font-family:var(--sans);background:var(--white);color:var(--black);ove
     <div class="s1-title">Alignment<br><em>&</em> Closure</div>
   </div>
   <div class="s1-bottom">
-    <div class="s1-meta">Chromium core flow alignment with review build prep — and closing out the annual review deck as a team.</div>
+    <div class="s1-meta">Chromium 核心流程對齊 + Annual Review 完成交付。</div>
     <div class="s1-date">David<br>Principal Designer<br>March 27, 2026</div>
   </div>
 </div>
 
-<!-- S2: SUMMARY -->
+<!-- 2. SUMMARY — 只放大數字，一句話 context -->
 <div class="s s2">
-  <div class="s2-left">
-    <div class="s2-eyebrow">Summary</div>
-    <div class="s2-h">Two things<br>this week.</div>
-    <div class="s2-p">Locking down Chromium adoption core flows for next week's review build, and wrapping up Shanying's annual review as a collaborative team effort.</div>
-    <div class="s2-stats" style="margin-top:48px">
-      <div>
-        <div class="s2-stat-n" style="color:var(--accent)">60<span style="font-size:28px;color:var(--gray-3)">%</span></div>
-        <div class="s2-stat-l">Chromium Mac</div>
-      </div>
-      <div>
-        <div class="s2-stat-n" style="color:#4CAF50">✓</div>
-        <div class="s2-stat-l">Annual Review</div>
-      </div>
+  <div class="s2-eyebrow">Summary</div>
+  <div class="s2-stats">
+    <div class="s2-stat">
+      <div class="s2-stat-n" style="color:var(--accent)">60<span style="font-size:40px;color:var(--gray-2)">%</span></div>
+      <div class="s2-stat-l">Chromium (Mac)</div>
+      <div class="s2-stat-sub">Core flows aligned</div>
+    </div>
+    <div class="s2-stat">
+      <div class="s2-stat-n" style="color:var(--green)">Done</div>
+      <div class="s2-stat-l">Annual Review</div>
+      <div class="s2-stat-sub">Shanying review delivered</div>
     </div>
   </div>
-  <div class="s2-right">
-    <div class="s2-items">
-      <div class="s2-item">
-        <div class="s2-item-label">Chromium Alignment</div>
-        <div class="s2-item-text">Core flows aligned — chat, entry, basic interactions match native design. Preparing review build for next week's design review.</div>
-      </div>
-      <div class="s2-item">
-        <div class="s2-item-label">Annual Review</div>
-        <div class="s2-item-text">Team collaborated on story structure & module ownership. Narrative, layout, and Shanying review — all delivered.</div>
-      </div>
-      <div class="s2-item">
-        <div class="s2-item-label">Coming Up</div>
-        <div class="s2-item-text">Vibe Coding × Liquid Glass workshop with Yuchen next week.</div>
-      </div>
-    </div>
-  </div>
+  <div class="s2-divider"></div>
+  <div class="s2-summary">聚焦兩件事：Chromium adoption 核心 flow 對齊並準備下週 review build，以及 Shanying annual review deck 的完成。</div>
 </div>
 
-<!-- S3: PROGRESS -->
+<!-- 3. PROGRESS — Chromium 細節 + blockers + next steps -->
 <div class="s s3">
-  <div class="s3-header">
-    <div class="s3-label">Progress Status</div>
-    <div class="s3-label">C3 Wk4 · 2026.03.27</div>
+  <div class="s3-left" style="position:relative">
+    <div class="s3-eyebrow">Progress</div>
+    <div class="s3-h">Chromium<br>Adoption</div>
+    <div class="s3-bar"><div class="s3-bar-fill" style="width:60%"></div></div>
+    <div class="s3-status">In Progress · 60%</div>
+    <div class="s3-detail">Chat, entry, 基礎交互已完成對齊，與原生設計保持一致。</div>
+    <div class="s3-pct">60</div>
   </div>
-  <div class="s3-cards">
-    <div class="s3-card primary">
-      <div class="s3-c-pct">60</div>
-      <div class="s3-c-status ip">In Progress</div>
-      <div class="s3-c-title">Chromium (Mac) Adoption</div>
-      <div class="s3-c-bar"><div class="s3-c-bar-track"><div class="s3-c-bar-fill" style="width:60%;background:var(--accent)"></div></div></div>
-      <div class="s3-c-desc">
-        Core flows aligned with native design. <strong>Sergey's framework:</strong> content area top-aligned, sidebar collapsed = no side nav.
-        <br><br>
-        <span style="color:var(--accent)">⚠</span> Strict top-alignment + collapsed sidebar logic requires refactoring. Waiting on <strong>Xiaolin & Sergey</strong> to confirm final approach.
-      </div>
+  <div class="s3-right">
+    <div class="s3-section">
+      <div class="s3-section-label">Framework 要求</div>
+      <p><strong>Sergey</strong> 對 initial framework 的要求：內容區需頂對齊，sidebar 收起時側邊欄導航不顯示（與 Copilot Mac native 一致）。</p>
     </div>
-    <div class="s3-card">
-      <div class="s3-c-status done">Complete</div>
-      <div class="s3-c-title">Annual Review Deck</div>
-      <div class="s3-c-bar"><div class="s3-c-bar-track"><div class="s3-c-bar-fill" style="width:100%;background:#4CAF50"></div></div></div>
-      <div class="s3-c-desc">
-        Team collaborated on story structure & module ownership. Completed overall narrative, layout design, and delivered <strong>Shanying's review</strong>.
-      </div>
+    <div class="s3-section">
+      <div class="s3-section-label" style="color:var(--accent)">⚠ 技術挑戰</div>
+      <p>按現有實現方式嚴格遵循頂對齊 + 收起 sidebar 邏輯，需要一定重構。需等待 <strong>Xiaolin 與 Sergey</strong> 確認最終方案落地。</p>
     </div>
-  </div>
-  <div class="s3-next">
-    <div class="s3-next-card">
-      <div class="s3-next-label">Next → Design Review</div>
-      <div class="s3-next-text">Review first dev build against native design specs.</div>
-    </div>
-    <div class="s3-next-card">
-      <div class="s3-next-label">Next → Xiaolin Feedback</div>
-      <div class="s3-next-text">Adjust implementation or priorities based on confirmation.</div>
+    <div class="s3-next">
+      <div class="s3-next-label">Next Steps</div>
+      <ul>
+        <li>對開發 build 出來的第一版本進行 design review</li>
+        <li>等待 Xiaolin 反饋，根據確認結果調整實現方案或優先級</li>
+      </ul>
     </div>
   </div>
 </div>
 
-<!-- S4: ANNUAL REVIEW GALLERY -->
+<!-- 4. ANNUAL REVIEW — 圖片展示 -->
 <div class="s s4">
   <div class="s4-header">
     <div class="s4-title">The Year Designers Became <em>Makers</em></div>
-    <div class="s4-sub">Annual Review · Aug 2025 – Mar 2026</div>
+    <div class="s4-sub">Annual Review · Completed</div>
   </div>
   <div class="s4-grid">
     <figure class="s4-img"><img src="assets/review-cover.png" alt="" loading="lazy"><figcaption>Cover — The Year Designers Became Makers</figcaption></figure>
@@ -237,57 +204,58 @@ html,body{font-family:var(--sans);background:var(--white);color:var(--black);ove
   </div>
 </div>
 
-<!-- S5: NEWSLETTER -->
+<!-- 5. NEWSLETTER — 趨勢觀察，不重複 progress -->
 <div class="s s5">
   <div class="s5-left">
-    <div class="s2-eyebrow">Newsletter</div>
-    <div class="s5-h">What's<br>happening.</div>
+    <div class="s2-eyebrow" style="margin-bottom:20px">Newsletter</div>
+    <div class="s5-h">This<br>week.</div>
     <div class="s5-accent"></div>
-    <div style="font-size:13px;color:var(--gray-3);line-height:1.6">Design direction, team updates, and the week's key decisions.</div>
+    <div class="s5-intro">團隊動態與設計方向觀察。</div>
   </div>
   <div class="s5-right">
     <div class="s5-article">
-      <h4>Chromium Direction</h4>
-      <p>Core flows now mirror native. The open question: <strong>Sergey's framework</strong> asks for strict content top-alignment and sidebar behavior changes that need refactoring. <strong>Xiaolin is the decision point</strong> — waiting for confirmation.</p>
+      <h4>團隊合作亮點</h4>
+      <p>Annual review 過程中，團隊在分工和故事結構上各抒己見，產出了充分體現 <strong>CM team 對 Copilot Mac Quality & Design 標準</strong>的 deck。合作氛圍非常好。</p>
     </div>
-    <div class="s5-divider"></div>
     <div class="s5-article">
-      <h4>Annual Review</h4>
-      <p>Everyone contributed to story structure and owned their sections. The result: a deck that <strong>genuinely reflects CM team's standard</strong> for quality & design.</p>
+      <h4>Chromium 方向確認中</h4>
+      <p>核心流程已對齊，但 <strong>Sergey 的 framework 要求</strong>涉及重構。<strong>Xiaolin</strong> 是決策點 — 等確認後才能定實現路線。</p>
     </div>
-    <div class="s5-pull">
-      <p>"The native craft experience is transferable — sharing it with other teams is where value compounds."</p>
+    <div class="s5-article" style="border:none">
+      <h4>Vibe Coding 分享邀請</h4>
+      <p>Yanti 邀請我們下週分享 <strong>Vibe Coding 製作 Mac native Liquid Glass</strong> 的經驗，將與 <strong>Yuchen</strong> 一起準備培訓。</p>
     </div>
   </div>
 </div>
 
-<!-- S6: OTHERS + TOP OF MIND -->
-<div class="s s6">
-  <div class="s6-left">
-    <div class="s6-eyebrow">Others</div>
-    <div class="s6-h">Vibe Coding ×<br>Liquid Glass</div>
-    <div class="s6-p">Yanti invited us to share how we used Vibe Coding to build the Mac native Liquid Glass experience. Partnering with <strong>Yuchen</strong> next week to deliver the training.</div>
-    <div class="s6-meta"><span>📅 Next week</span><span>👥 With Yuchen</span></div>
+<!-- 6. OTHERS — 單一事項居中 -->
+<div class="s s6-others">
+  <div class="s6-o-eyebrow">Others</div>
+  <div class="s6-o-h">Vibe Coding ×<br>Liquid Glass</div>
+  <div class="s6-o-p">Yanti 邀請我們下週分享使用 Vibe Coding 製作 Mac native Liquid Glass 的經驗。將與 <strong>Yuchen</strong> 一起準備並進行培訓。</div>
+  <div class="s6-o-meta"><span>📅 下週</span><span>👥 與 Yuchen 合作</span></div>
+</div>
+
+<!-- 7. TOP OF MIND — 獨立反思 -->
+<div class="s s7-mind">
+  <div class="s7-eyebrow">Top of Mind</div>
+  <div class="s7-rule"></div>
+  <div class="s7-quote">雖然整體方向正在向 Chromium 轉，但這段經驗可以沉澱下來，作為傳授給其他組同學的寶貴經驗。</div>
+  <div class="s7-body">
+    這次 annual review 中，團隊在分工和故事結構上各抒己見。合作氛圍非常棒，也為這陣子努力付出後突然方向轉變的落差帶來了一些小確幸。<br><br>
+    <strong>這是最重要的收獲</strong> — 經驗不會消失，而是成為可以傳遞的東西。
   </div>
-  <div class="s6-right">
-    <div class="s6-eyebrow">Top of Mind</div>
-    <div class="s6-rule"></div>
-    <div class="s6-quote">The experience from native work isn't lost — it becomes something we pass on.</div>
-    <div class="s6-body">Every team member brought their own perspective on story and structure. Even moving toward Chromium, <strong>this knowledge is transferable</strong>, and sharing it with other teams is where the value compounds.</div>
-  </div>
 </div>
 
-<!-- S7: END -->
-<div class="s s7">
-  <div class="s7-title">Thank<br><em>you.</em></div>
-  <div class="s7-sub">Questions? Let me know.</div>
-  <div class="s7-footer">David — C3 Week 4 — March 2026</div>
+<!-- 8. END -->
+<div class="s s8" style="position:relative">
+  <div class="s8-title">Thank<br><em>you.</em></div>
+  <div class="s8-sub">Questions? Let me know.</div>
+  <div class="s8-footer">David — C3 Week 4 — March 2026</div>
 </div>
 
 </div>
-
 <div class="nav-bar"><div class="nav-progress" id="prog"></div></div>
-
 <script>
 const ss=document.querySelectorAll('.s');let c=0;const t=ss.length;
 const prog=document.getElementById('prog');
