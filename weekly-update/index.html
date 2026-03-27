@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Update — Mar 24–28, 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #f6f3ee;
+    --ink: #1a1714;
+    --ink-mid: #5c564d;
+    --ink-light: #9b9488;
+    --rule: #d6cfc4;
+    --terra: #c4592a;
+    --terra-light: rgba(196,89,42,0.08);
+    --sage: #4a6b52;
+    --blue: #3d5a80;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+
+  .slide {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* COVER & CLOSING */
+  .cover, .closing {
+    align-items: center; justify-content: center; flex-direction: column;
+    background: var(--ink); color: var(--bg); text-align: center; padding: 60px;
+  }
+  .cover-eyebrow {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    letter-spacing: 6px; text-transform: uppercase; color: var(--ink-light); margin-bottom: 48px;
+  }
+  .cover h1, .closing h2 {
+    font-family: 'Instrument Serif', serif; font-weight: 400; line-height: 1.05;
+  }
+  .cover h1 { font-size: clamp(48px, 7vw, 96px); margin-bottom: 20px; }
+  .closing h2 { font-size: clamp(36px, 5vw, 72px); margin-bottom: 16px; }
+  .cover h1 em, .closing h2 em { font-style: italic; color: var(--terra); }
+  .cover-rule { width: 48px; height: 1px; background: var(--ink-light); margin: 32px auto; }
+  .cover-info {
+    display: flex; gap: 40px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; color: var(--ink-light); letter-spacing: 1px;
+  }
+  .closing-sub { font-size: 15px; color: var(--ink-light); font-weight: 300; }
+  .page-num {
+    position: absolute; bottom: 32px; right: 48px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-light);
+  }
+
+  /* CONTENT SLIDES */
+  .content-slide { flex-direction: column; padding: 80px 120px; }
+  @media (max-width: 768px) { .content-slide { padding: 48px 32px; } }
+
+  .slide-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    border-bottom: 1px solid var(--rule); padding-bottom: 16px; margin-bottom: 48px;
+  }
+  .slide-header h2 {
+    font-family: 'Instrument Serif', serif; font-size: clamp(32px, 4vw, 56px);
+    font-weight: 400; line-height: 1.1;
+  }
+  .slide-header h2 em { font-style: italic; color: var(--terra); }
+  .slide-num {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+    color: var(--ink-light); letter-spacing: 1px; flex-shrink: 0;
+  }
+  .slide-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+  /* SUMMARY */
+  .summary-body p {
+    font-size: 20px; line-height: 1.8; color: var(--ink-mid); font-weight: 300; max-width: 680px;
+  }
+  .summary-body strong { color: var(--ink); font-weight: 500; }
+
+  /* PROGRESS */
+  .progress-item {
+    display: grid; grid-template-columns: 200px 80px 1fr; gap: 32px;
+    padding: 32px 0; border-bottom: 1px solid var(--rule); align-items: start;
+  }
+  .progress-item:last-child { border-bottom: none; }
+  .pi-name {
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .pi-pct { font-family: 'Instrument Serif', serif; font-size: 36px; color: var(--terra); line-height: 1; }
+  .pi-details p { font-size: 15px; line-height: 1.65; color: var(--ink-mid); margin-bottom: 8px; }
+  .pi-tag {
+    display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; margin-top: 4px;
+  }
+  .pi-tag--next { background: var(--terra-light); color: var(--terra); }
+  .pi-tag--done { background: rgba(74,107,82,0.1); color: var(--sage); }
+  .pi-tag--upcoming { background: rgba(61,90,128,0.1); color: var(--blue); }
+  .next-list { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .next-list li { font-size: 14px; color: var(--ink-mid); padding-left: 16px; position: relative; }
+  .next-list li::before { content: '↳'; position: absolute; left: 0; color: var(--terra); }
+
+  /* ANNUAL REVIEW IMAGES */
+  .annual-wrap {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+  }
+  .annual-wrap .pi-details p { margin-bottom: 8px; }
+  .annual-imgs {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .annual-imgs img {
+    width: 100%; border-radius: 4px; border: 1px solid var(--rule);
+    transition: transform 0.3s ease;
+  }
+  .annual-imgs img:hover { transform: scale(1.03); }
+
+  /* VIBE CODING */
+  .vibe-body { max-width: 640px; }
+  .vibe-body p {
+    font-size: 18px; line-height: 1.75; color: var(--ink-mid); font-weight: 300;
+  }
+  .vibe-body strong { color: var(--ink); font-weight: 500; }
+  .vibe-highlight {
+    margin-top: 32px; padding: 28px 32px;
+    background: rgba(61,90,128,0.06); border-left: 3px solid var(--blue); border-radius: 0 8px 8px 0;
+  }
+  .vibe-highlight p {
+    font-size: 15px; line-height: 1.7; color: var(--ink-mid);
+  }
+
+  /* TOP OF MIND */
+  .mind-body { max-width: 720px; }
+  .mind-context {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--ink-light);
+    margin-bottom: 22px;
+  }
+  .mind-card {
+    background: rgba(255,255,255,0.54);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 32px 36px;
+  }
+  .mind-card blockquote {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(22px, 2.4vw, 30px);
+    line-height: 1.55;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .mind-card blockquote em { font-style: italic; color: var(--terra); }
+  .mind-divider {
+    width: 36px; height: 1px; background: var(--rule); margin-bottom: 20px;
+  }
+  .mind-second {
+    font-size: 16px; line-height: 1.8; color: var(--ink-mid);
+    font-weight: 300; margin-bottom: 14px;
+    max-width: 640px;
+  }
+  .mind-second:last-child { margin-bottom: 0; }
+
+  /* NAV */
+  .dot-nav {
+    position: fixed; right: 28px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 12px; z-index: 100; mix-blend-mode: difference;
+  }
+  .dot-nav a {
+    width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3);
+    display: block; transition: all 0.3s ease;
+  }
+  .dot-nav a.active { background: #fff; transform: scale(1.6); }
+
+  /* FADE */
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .d1 { transition-delay: 0.05s; } .d2 { transition-delay: 0.15s; }
+  .d3 { transition-delay: 0.25s; } .d4 { transition-delay: 0.4s; }
+
+  @media (max-width: 900px) {
+    .progress-item { grid-template-columns: 1fr; gap: 12px; }
+    .annual-wrap { grid-template-columns: 1fr; }
+    .mind-card { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="dot-nav">
+  <a href="#cover" class="active"></a>
+  <a href="#summary"></a>
+  <a href="#progress"></a>
+  <a href="#vibe"></a>
+  <a href="#mind"></a>
+  <a href="#closing"></a>
+</nav>
+
+<!-- 01 COVER -->
+<section id="cover" class="slide cover">
+  <div class="cover-eyebrow fade-in">Weekly Update</div>
+  <h1 class="fade-in d1">Building<br><em>Forward</em></h1>
+  <div class="cover-rule fade-in d2"></div>
+  <div class="cover-info fade-in d3">
+    <span>Mar 24 – 28, 2026</span>
+    <span>David</span>
+    <span>CM Design</span>
+  </div>
+  <div class="page-num">01 / 06</div>
+</section>
+
+<!-- 02 SUMMARY -->
+<section id="summary" class="slide content-slide">
+  <div class="slide-header fade-in">
+    <h2>This <em>Week</em></h2>
+    <span class="slide-num">02 / 06</span>
+  </div>
+  <div class="slide-body">
+    <div class="summary-body fade-in d1">
+      <p>This week centered on two key initiatives: aligning the <strong>Chromium adoption</strong> core flows and preparing the review build for next week's experience assessment, along with completing the <strong>annual review deck</strong> — from story architecture to final Shanying review.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 PROGRESS -->
+<section id="progress" class="slide content-slide">
+  <div class="slide-header fade-in">
+    <h2>Progress <em>Status</em></h2>
+    <span class="slide-num">03 / 06</span>
+  </div>
+  <div class="slide-body">
+    <div class="progress-grid">
+
+      <div class="progress-item fade-in d1">
+        <div class="pi-name">Chromium<br>(Mac) Adoption</div>
+        <div class="pi-pct">60%</div>
+        <div class="pi-details">
+          <p>Core flows aligned — chat, entry, and base interactions now consistent with native design. Sergey's framework requirements: content area top-aligned, sidebar nav hidden when collapsed (matching Copilot Mac native).</p>
+          <p>Technical challenge: strict top-alignment + collapsed sidebar logic requires refactoring; pending Xiaolin & Sergey's confirmation on final approach.</p>
+          <div>
+            <span class="pi-tag pi-tag--next">Next Steps</span>
+            <ul class="next-list">
+              <li>Design review on the first dev build</li>
+              <li>Await Xiaolin's feedback to adjust plan or reprioritize</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-item fade-in d2">
+        <div class="pi-name">Annual<br>Review Deck</div>
+        <div class="pi-pct" style="color:var(--sage)">Done</div>
+        <div class="pi-details">
+          <div class="annual-wrap">
+            <div>
+              <p>Team collaborated on story architecture and individual module ownership. Completed the overall narrative and layout design.</p>
+              <p>Shanying review completed successfully.</p>
+              <span class="pi-tag pi-tag--done">Complete</span>
+            </div>
+            <div class="annual-imgs">
+              <img src="img1.png" alt="Deck cover">
+              <img src="img2.png" alt="Design Forward">
+              <img src="img3.png" alt="Case study">
+              <img src="img4.png" alt="Feature grid">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 04 VIBE CODING -->
+<section id="vibe" class="slide content-slide">
+  <div class="slide-header fade-in">
+    <h2>Vibe Coding <em>Training</em></h2>
+    <span class="slide-num">04 / 06</span>
+  </div>
+  <div class="slide-body">
+    <div class="vibe-body fade-in d1">
+      <p>Invited by <strong>Yanti</strong> to share our experience building <strong>Mac native Liquid Glass</strong> with Vibe Coding next week. Will co-present the training session with <strong>Yuchen</strong>.</p>
+      <div class="vibe-highlight">
+        <p>A chance to demonstrate how designers can leverage AI-assisted coding to rapidly prototype and ship native-quality experiences — bridging the gap between design vision and production reality.</p>
+      </div>
+      <span class="pi-tag pi-tag--upcoming" style="margin-top:24px">Upcoming · Next Week</span>
+    </div>
+  </div>
+</section>
+
+<!-- 05 TOP OF MIND -->
+<section id="mind" class="slide content-slide">
+  <div class="slide-header fade-in">
+    <h2>Top of <em>Mind</em></h2>
+    <span class="slide-num">05 / 06</span>
+  </div>
+  <div class="slide-body">
+    <div class="mind-body fade-in d1">
+      <p class="mind-context">On building the Annual Review Deck together</p>
+      <div class="mind-card">
+        <blockquote>The team brought diverse perspectives to the story structure, producing a deck that truly reflects <em>our standard for Copilot Mac quality and design</em>.</blockquote>
+        <div class="mind-divider"></div>
+        <p class="mind-second">The collaborative energy was fantastic — a welcome silver lining after the pivot from the direction we'd invested so much into.</p>
+        <p class="mind-second">Even as we shift toward Chromium, this experience is worth preserving. Passing it on as hard-earned knowledge to other teams is perhaps the most valuable takeaway of all.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 CLOSING -->
+<section id="closing" class="slide closing">
+  <h2 class="fade-in">Keep <em>Building</em></h2>
+  <p class="closing-sub fade-in d1">See you next week ✦</p>
+  <div class="page-num">06 / 06</div>
+</section>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot-nav a');
+const navObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      dots.forEach(d => d.classList.remove('active'));
+      const a = document.querySelector(`.dot-nav a[href="#${e.target.id}"]`);
+      if (a) a.classList.add('active');
+    }
+  });
+}, { threshold: 0.5 });
+slides.forEach(s => navObs.observe(s));
+</script>
+
+</body>
+</html>
