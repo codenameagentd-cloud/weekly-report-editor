@@ -4,25 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>C3 Wk4 — Weekly Status</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     :root {
-      --bg: #FAFAF9;
-      --text: #1C1917;
-      --muted: #78716C;
-      --light: #A8A29E;
-      --border: #E7E5E4;
-      --card: #FFFFFF;
-      --accent-1: #F97316;
-      --accent-2: #EA580C;
-      --accent-3: #DC2626;
-      --success: #16A34A;
+      --bg: #0F172A;
+      --text: #F1F5F9;
+      --muted: #94A3B8;
+      --light: #64748B;
+      --border: #1E293B;
+      --card: #1E293B;
+      --accent-1: #D4A853;
+      --accent-2: #C09240;
+      --accent-3: #A67C2E;
+      --success: #4ADE80;
     }
     
     html, body {
-      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       overflow: hidden;
@@ -66,11 +66,12 @@
     }
     
     .brand {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
+      color: var(--accent-1);
     }
     
     .page-num {
@@ -116,9 +117,9 @@
     }
     
     h1 {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: clamp(48px, 6vw, 72px);
-      font-weight: 900;
+      font-weight: 800;
       line-height: 1.0;
       letter-spacing: -2px;
       margin-bottom: 24px;
@@ -132,9 +133,9 @@
     }
     
     h2 {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: clamp(32px, 4vw, 48px);
-      font-weight: 900;
+      font-weight: 800;
       line-height: 1.0;
       letter-spacing: -1px;
       margin-bottom: 20px;
@@ -149,7 +150,7 @@
     
     .subtitle {
       font-size: 17px;
-      color: #57534E;
+      color: var(--muted);
       line-height: 1.7;
       max-width: 640px;
       font-weight: 400;
@@ -184,7 +185,8 @@
       border-radius: 100px;
       font-size: 13px;
       font-weight: 500;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      color: var(--muted);
+      border: 1px solid #334155;
     }
     
     .stats-grid {
@@ -197,11 +199,11 @@
       background: var(--card);
       border-radius: 16px;
       padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      border: 1px solid #334155;
     }
     
     .stat-value {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 32px;
       font-weight: 800;
       line-height: 1;
@@ -225,16 +227,16 @@
       background: var(--card);
       border-radius: 16px;
       padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      border: 1px solid #334155;
     }
     
     .feature-card.highlight {
-      background: var(--text);
-      color: white;
+      background: linear-gradient(135deg, #1a2744, #1E293B);
+      border: 1px solid var(--accent-1);
     }
     
     .feature-card.highlight .feature-status { color: var(--accent-1); }
-    .feature-card.highlight .feature-desc { color: rgba(255,255,255,0.7); }
+    .feature-card.highlight .feature-desc { color: var(--muted); }
     
     .feature-status {
       font-size: 11px;
@@ -245,13 +247,13 @@
       margin-bottom: 8px;
     }
     
-    .feature-status.wip { color: var(--accent-2); }
-    .feature-status.planned { color: var(--muted); }
+    .feature-status.wip { color: var(--accent-1); }
+    .feature-status.planned { color: var(--light); }
     
     .feature-title {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 18px;
-      font-weight: 800;
+      font-weight: 700;
       margin-bottom: 8px;
     }
     
@@ -260,6 +262,8 @@
       color: var(--muted);
       line-height: 1.5;
     }
+    
+    .feature-desc strong { color: var(--text); }
     
     .newsletter-grid {
       display: grid;
@@ -276,10 +280,11 @@
       grid-template-columns: 200px 1fr;
       gap: 24px;
       align-items: start;
+      border: 1px solid #334155;
     }
     
     .newsletter-label {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 14px;
       font-weight: 700;
     }
@@ -295,8 +300,8 @@
     }
     
     .highlight-box {
-      background: var(--text);
-      color: white;
+      background: linear-gradient(135deg, #1a2744, #1E293B);
+      border: 1px solid var(--accent-1);
       border-radius: 16px;
       padding: 24px;
       margin-top: 16px;
@@ -314,7 +319,7 @@
       background: var(--card);
       padding: 8px 16px;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid #334155;
       z-index: 100;
     }
     
@@ -350,8 +355,8 @@
       position: absolute;
       bottom: 48px;
       right: 64px;
-      background: var(--text);
-      color: white;
+      background: var(--accent-1);
+      color: var(--bg);
       font-size: 12px;
       font-weight: 600;
       letter-spacing: 1px;
@@ -373,7 +378,6 @@
       font-size: clamp(64px, 12vw, 120px);
     }
 
-    /* Review gallery */
     .review-gallery {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -384,20 +388,20 @@
       border-radius: 12px;
       overflow: hidden;
       position: relative;
-      background: var(--text);
+      background: #000;
     }
     .review-gallery img {
       width: 100%;
       height: 160px;
       object-fit: cover;
       display: block;
-      opacity: 0.9;
+      opacity: 0.85;
     }
     .review-gallery figcaption {
       position: absolute;
       bottom: 0; left: 0; right: 0;
       padding: 10px 14px;
-      background: linear-gradient(transparent, rgba(0,0,0,0.6));
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
       font-size: 11px;
       color: rgba(255,255,255,0.75);
     }
@@ -500,7 +504,7 @@
           <div class="feature-card highlight">
             <div class="feature-status wip">In Progress — 60%</div>
             <div class="feature-title">Core Flow Alignment</div>
-            <div class="feature-desc">Core flows aligned (chat / entry / basic interactions), consistent with native design. Sergey's requirement for initial framework: content area must be top-aligned, sidebar collapsed = side navigation hidden (consistent with Copilot Mac native).</div>
+            <div class="feature-desc">Core flows aligned (chat / entry / basic interactions), consistent with native design. <strong>Sergey's requirement for initial framework:</strong> content area must be top-aligned, sidebar collapsed = side navigation hidden (consistent with Copilot Mac native).</div>
           </div>
           <div class="feature-card">
             <div class="feature-status wip">Blocker</div>
@@ -624,7 +628,7 @@
           <div class="feature-card">
             <div class="feature-status wip">Reflection</div>
             <div class="feature-title">Experience as Legacy</div>
-            <div class="feature-desc" style="font-size:14px;line-height:1.7;max-width:none">During this annual review, the team shared diverse opinions on division of work and story structure, producing a deck that's both engaging and fully representative of our CM team's standard for Copilot Mac Quality & Design. The collaborative atmosphere was wonderful, and brought a silver lining to the gap felt after the sudden shift in direction despite all the effort put in.<br><br><strong style="color:var(--text)">I believe although the overall direction is shifting toward Chromium, this experience can be distilled and passed on to colleagues in other teams as valuable knowledge — and that's the most important takeaway.</strong></div>
+            <div class="feature-desc" style="font-size:14px;line-height:1.7;max-width:none">During this annual review, the team shared diverse opinions on division of work and story structure, producing a deck that's both engaging and fully representative of our CM team's standard for Copilot Mac Quality & Design. The collaborative atmosphere was wonderful, and brought a silver lining to the gap felt after the sudden shift in direction despite all the effort put in.<br><br><strong>I believe although the overall direction is shifting toward Chromium, this experience can be distilled and passed on to colleagues in other teams as valuable knowledge — and that's the most important takeaway.</strong></div>
           </div>
         </div>
         <div class="footer">
