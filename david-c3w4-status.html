@@ -10,19 +10,19 @@
 :root{
   --display:'Fraunces',Georgia,serif;
   --body:'Plus Jakarta Sans',-apple-system,sans-serif;
-  --caption-size:11px;--caption-ls:0.15em;
+  --cap:11px;--cap-ls:0.15em;
   --bg:#FEFDFB;--text:#1A1A1A;--text-2:#555;--text-3:#999;
-  --border:#E8E6E2;--accent:#C0522E;--surface:#F5F3EF;--green:#4A8C64;
+  --border:#E8E6E2;--accent:#C0522E;--green:#4A8C64;--surface:#F5F3EF;
 }
-html,body{font-family:var(--body);font-size:15px;line-height:1.7;background:var(--bg);color:var(--text);overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased;font-weight:400}
+html,body{font-family:var(--body);font-size:15px;line-height:1.7;background:var(--bg);color:var(--text);overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased}
 .deck{height:100vh;overflow:hidden}
 .s{display:none;width:100%;height:100vh;overflow:hidden}
 .s.on{display:block}
 
-.eyebrow{font-family:var(--body);font-size:var(--caption-size);font-weight:600;letter-spacing:var(--caption-ls);text-transform:uppercase;color:var(--text-3)}
+.eyebrow{font-family:var(--body);font-size:var(--cap);font-weight:600;letter-spacing:var(--cap-ls);text-transform:uppercase;color:var(--text-3)}
 .display{font-family:var(--display);font-weight:700;line-height:.95;letter-spacing:-.03em;color:var(--text)}
 .display em{font-style:italic;color:var(--accent)}
-.body-text{font-size:15px;color:var(--text-2);line-height:1.7;max-width:520px}
+.body-text{font-size:15px;color:var(--text-2);line-height:1.7}
 .body-text strong{color:var(--text);font-weight:600}
 
 /* COVER */
@@ -33,50 +33,58 @@ html,body{font-family:var(--body);font-size:15px;line-height:1.7;background:var(
 .cover .display{color:var(--bg);font-size:clamp(64px,9vw,112px)}
 .cover .display em{color:var(--accent)}
 .cover-bottom{display:flex;justify-content:space-between;align-items:flex-end}
-.cover-desc{font-size:15px;color:rgba(255,255,255,.5);max-width:420px;line-height:1.65}
+.cover-desc{font-size:15px;color:rgba(255,255,255,.5);max-width:480px;line-height:1.65}
 .cover-meta{text-align:right;font-size:13px;color:rgba(255,255,255,.35);line-height:1.6}
 
 /* SUMMARY */
 .summary{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:64px}
 .summary .eyebrow{margin-bottom:48px}
-.summary-stats{display:flex;gap:96px;margin-bottom:56px}
-.stat-number{font-family:var(--display);font-size:72px;font-weight:700;line-height:1;letter-spacing:-.03em}
-.stat-label{font-size:var(--caption-size);letter-spacing:var(--caption-ls);text-transform:uppercase;color:var(--text-3);margin-top:10px}
-.summary-rule{width:40px;height:1px;background:var(--border);margin-bottom:40px}
-.summary .body-text{text-align:center;max-width:560px}
+.sum-stats{display:flex;gap:96px;margin-bottom:56px}
+.stat-n{font-family:var(--display);font-size:72px;font-weight:700;line-height:1;letter-spacing:-.03em}
+.stat-l{font-size:var(--cap);letter-spacing:var(--cap-ls);text-transform:uppercase;color:var(--text-3);margin-top:10px}
+.sum-rule{width:40px;height:1px;background:var(--border);margin-bottom:40px}
+.summary .body-text{text-align:center;max-width:620px}
 
-/* PROGRESS — Chromium */
-.prog-chrome{display:grid;grid-template-columns:1fr 1fr;height:100vh}
+/* PROGRESS — two-panel */
+.prog-split{display:grid;grid-template-columns:1fr 1fr;height:100vh}
 .prog-panel{padding:56px;display:flex;flex-direction:column;justify-content:center}
 .prog-panel.dark{background:var(--text);color:var(--bg)}
 .prog-panel.dark .eyebrow{color:rgba(255,255,255,.35)}
-.prog-panel.dark .body-text{color:rgba(255,255,255,.55)}
+.prog-panel.dark .body-text{color:rgba(255,255,255,.6)}
 .prog-panel.dark .body-text strong{color:var(--bg)}
 .prog-title{font-family:var(--display);font-size:36px;font-weight:700;line-height:1.1;letter-spacing:-.02em;margin:16px 0}
-.prog-bar{height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin:16px 0 20px;overflow:hidden}
-.prog-bar-fill{height:100%;border-radius:2px}
+.prog-bar{height:3px;border-radius:2px;margin:16px 0 20px;overflow:hidden}
+.prog-bar-dark{background:rgba(255,255,255,.1)}
 .prog-bar-light{background:var(--border)}
-.prog-status{font-size:var(--caption-size);font-weight:600;letter-spacing:var(--caption-ls);text-transform:uppercase}
+.prog-bar-fill{height:100%;border-radius:2px}
+.prog-status{font-size:var(--cap);font-weight:600;letter-spacing:var(--cap-ls);text-transform:uppercase}
 .prog-status.ip{color:var(--accent)}
 .prog-status.done{color:var(--green)}
-.prog-next{margin-top:auto;padding-top:24px;border-top:1px dashed var(--border)}
-.prog-next-label{font-size:var(--caption-size);font-weight:600;letter-spacing:var(--caption-ls);text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.prog-bullet{margin:0;padding:0;list-style:none}
+.prog-bullet li{font-size:14px;color:var(--text-2);line-height:1.7;padding-left:20px;position:relative;margin-bottom:8px}
+.prog-bullet li::before{content:'•';position:absolute;left:4px;color:var(--accent);font-weight:700}
+.prog-panel.dark .prog-bullet li{color:rgba(255,255,255,.6)}
+.prog-panel.dark .prog-bullet li strong{color:var(--bg)}
+.prog-panel.dark .prog-bullet li::before{color:var(--accent)}
+
+.prog-next{margin-top:auto;padding-top:20px;border-top:1px dashed var(--border)}
+.prog-next-label{font-size:var(--cap);font-weight:600;letter-spacing:var(--cap-ls);text-transform:uppercase;color:var(--accent);margin-bottom:10px}
 .prog-next li{list-style:none;font-size:13px;color:var(--text-2);line-height:1.6;padding-left:18px;position:relative}
 .prog-next li::before{content:'→';position:absolute;left:0;color:var(--accent)}
 .prog-next li+li{margin-top:4px}
 
-/* PROGRESS — Annual Review */
+/* PROGRESS — Annual Review full page */
 .prog-review{display:flex;flex-direction:column;padding:48px 64px;background:var(--surface)}
-.prog-review-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:32px}
-.prog-review-title{font-family:var(--display);font-size:32px;font-weight:700;line-height:1.1;letter-spacing:-.02em}
-.prog-review-title em{font-style:italic;color:var(--accent)}
-.prog-review-desc{font-size:15px;color:var(--text-2);line-height:1.7;max-width:640px;margin-bottom:28px}
-.prog-review-desc strong{color:var(--text);font-weight:600}
+.review-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px}
+.review-title{font-family:var(--display);font-size:32px;font-weight:700;line-height:1.1;letter-spacing:-.02em}
+.review-title em{font-style:italic;color:var(--accent)}
+.review-desc{margin-bottom:24px}
+.review-desc .body-text{max-width:640px}
 .review-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px;min-height:0}
 .review-card{border-radius:10px;overflow:hidden;position:relative;background:var(--text)}
 .review-card img{width:100%;height:100%;object-fit:cover;display:block;opacity:.9;transition:opacity .3s}
 .review-card:hover img{opacity:1}
-.review-card figcaption{position:absolute;bottom:0;left:0;right:0;padding:14px 18px;background:linear-gradient(transparent,rgba(0,0,0,.65));font-size:11px;color:rgba(255,255,255,.75);letter-spacing:.02em}
+.review-card figcaption{position:absolute;bottom:0;left:0;right:0;padding:14px 18px;background:linear-gradient(transparent,rgba(0,0,0,.65));font-size:11px;color:rgba(255,255,255,.75)}
 
 /* NEWSLETTER */
 .newsletter{display:grid;grid-template-columns:380px 1fr;height:100vh}
@@ -95,30 +103,31 @@ html,body{font-family:var(--body);font-size:15px;line-height:1.7;background:var(
 .others{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:64px}
 .others .eyebrow{margin-bottom:28px}
 .others .display{font-size:clamp(40px,5vw,56px);margin-bottom:24px}
-.others .body-text{text-align:center;margin-bottom:28px}
+.others .body-text{text-align:center;max-width:560px;margin-bottom:28px}
 .others-meta{display:flex;gap:32px;font-size:13px;color:var(--text-3)}
 
 /* TOP OF MIND */
 .mind{display:flex;flex-direction:column;justify-content:center;padding:64px 80px}
 .mind .eyebrow{margin-bottom:36px}
 .mind-rule{width:32px;height:2px;background:var(--accent);margin-bottom:36px}
-.mind-quote{font-family:var(--display);font-size:clamp(28px,3.5vw,38px);font-weight:400;line-height:1.4;max-width:700px;margin-bottom:36px;letter-spacing:-.01em}
-.mind .body-text{max-width:580px}
+.mind-quote{font-family:var(--display);font-size:clamp(26px,3.2vw,34px);font-weight:400;line-height:1.4;max-width:720px;margin-bottom:36px;letter-spacing:-.01em}
+.mind .body-text{max-width:620px}
 
 /* END */
 .end{background:var(--text);color:var(--bg);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative}
 .end .display{color:var(--bg);font-size:clamp(80px,12vw,140px)}
 .end-sub{font-size:15px;color:rgba(255,255,255,.4);margin-top:24px}
-.end-footer{position:absolute;bottom:40px;font-size:var(--caption-size);color:rgba(255,255,255,.25);letter-spacing:var(--caption-ls);text-transform:uppercase}
+.end-footer{position:absolute;bottom:40px;font-size:var(--cap);color:rgba(255,255,255,.25);letter-spacing:var(--cap-ls);text-transform:uppercase}
 
 .nav-bar{position:fixed;bottom:0;left:0;right:0;height:2px;background:var(--border);z-index:100}
 .nav-fill{height:100%;background:var(--accent);transition:width .3s ease}
 
 @media(max-width:900px){
-  .prog-chrome,.newsletter{grid-template-columns:1fr}
+  .prog-split,.newsletter{grid-template-columns:1fr}
   .news-side{border-right:none;border-bottom:1px solid var(--border)}
   .review-grid{grid-template-columns:1fr}
   .cover,.summary,.others,.mind,.prog-review{padding:40px}
+  .prog-panel{padding:40px}
 }
 </style>
 </head>
@@ -135,7 +144,7 @@ html,body{font-family:var(--body);font-size:15px;line-height:1.7;background:var(
     <div class="display">Alignment<br><em>& Closure</em></div>
   </div>
   <div class="cover-bottom">
-    <div class="cover-desc">Chromium core flow alignment completed. Annual review deck delivered as a team.</div>
+    <div class="cover-desc">Chromium adoption core flow alignment with review build prep, plus completing Shanying's annual review deck.</div>
     <div class="cover-meta">David<br>Principal Designer<br>March 27, 2026</div>
   </div>
 </div>
@@ -143,53 +152,64 @@ html,body{font-family:var(--body);font-size:15px;line-height:1.7;background:var(
 <!-- 2. SUMMARY -->
 <div class="s summary">
   <div class="eyebrow">Summary</div>
-  <div class="summary-stats">
+  <div class="sum-stats">
     <div>
-      <div class="stat-number" style="color:var(--accent)">60%</div>
-      <div class="stat-label">Chromium (Mac)</div>
+      <div class="stat-n" style="color:var(--accent)">60%</div>
+      <div class="stat-l">Chromium (Mac)</div>
     </div>
     <div>
-      <div class="stat-number" style="color:var(--green)">Done</div>
-      <div class="stat-label">Annual Review</div>
+      <div class="stat-n" style="color:var(--green)">Done</div>
+      <div class="stat-l">Annual Review</div>
     </div>
   </div>
-  <div class="summary-rule"></div>
-  <div class="body-text">Two focuses this week: aligning Chromium adoption core flows for next week's review build, and completing Shanying's annual review deck as a team.</div>
+  <div class="sum-rule"></div>
+  <div class="body-text">Two main focuses this week: 1️⃣ Chromium adoption core flow alignment, preparing next week's review build for experience review; 2️⃣ Preparation and completion of Shanying's annual review deck.</div>
 </div>
 
-<!-- 3. PROGRESS — Chromium -->
-<div class="s prog-chrome">
+<!-- 3. PROGRESS STATUS — Chromium -->
+<div class="s prog-split">
   <div class="prog-panel dark">
     <div class="eyebrow">Progress Status</div>
-    <div class="prog-title">Chromium (Mac)<br>Adoption</div>
-    <div class="prog-bar"><div class="prog-bar-fill" style="width:60%;background:var(--accent)"></div></div>
-    <div class="prog-status ip">In Progress · 60%</div>
-    <div class="body-text" style="margin-top:20px">
-      Chat, entry, and basic interactions aligned with native design. <strong>Sergey's framework:</strong> content area top-aligned, sidebar collapsed = no side nav.<br><br>
-      <span style="color:var(--accent)">⚠</span> Strict top-alignment + collapsed sidebar logic requires refactoring. Waiting on <strong>Xiaolin & Sergey</strong> to confirm approach.
-    </div>
+    <div class="prog-title">Chromium (Mac)<br>Adoption — 60%</div>
+    <div class="prog-bar prog-bar-dark"><div class="prog-bar-fill" style="width:60%;background:var(--accent)"></div></div>
+    <div class="prog-status ip">In Progress</div>
+    <ul class="prog-bullet" style="margin-top:20px">
+      <li>Core flows aligned (chat / entry / basic interactions), consistent with native design.</li>
+      <li><strong>Sergey's requirement for initial framework:</strong> content area must be top-aligned, sidebar collapsed = side navigation hidden (consistent with Copilot Mac native).</li>
+      <li><strong>Technical challenge:</strong> strictly following content area top-alignment + collapsed sidebar logic under current implementation requires some refactoring. Waiting on <strong>Xiaolin and Sergey</strong> to confirm the final approach.</li>
+    </ul>
   </div>
   <div class="prog-panel">
     <div class="eyebrow">Next Steps</div>
-    <div class="prog-title" style="font-size:28px">What's ahead</div>
-    <div class="body-text" style="margin-top:12px">
-      <strong>Design review</strong> on first dev build once available.<br><br>
-      Awaiting <strong>Xiaolin's feedback</strong> — will adjust implementation approach or priorities accordingly.<br><br>
-      The key decision point is whether the strict top-alignment requirement from Sergey's framework can be achieved within current architecture or needs a larger refactor.
+    <div class="prog-title" style="font-size:28px">What's ahead<br>for Chromium</div>
+    <ul class="prog-bullet" style="margin-top:20px">
+      <li>Design review on the first version of the dev build.</li>
+      <li>Awaiting <strong>Xiaolin's feedback</strong> — will adjust implementation approach or priorities based on confirmation.</li>
+    </ul>
+    <div style="flex:1"></div>
+    <div style="padding-top:24px;border-top:1px solid var(--border)">
+      <div class="body-text" style="font-size:13px;color:var(--text-3)">The key decision point: whether Sergey's strict top-alignment can be achieved within current architecture or requires a larger refactor.</div>
     </div>
   </div>
 </div>
 
-<!-- 4. PROGRESS — Annual Review -->
+<!-- 4. PROGRESS STATUS — Annual Review -->
 <div class="s prog-review">
-  <div class="prog-review-top">
+  <div class="review-top">
     <div>
-      <div class="eyebrow" style="margin-bottom:12px">Progress Status · Complete</div>
-      <div class="prog-review-title">The Year Designers<br>Became <em>Makers</em></div>
+      <div class="eyebrow" style="margin-bottom:12px">Progress Status · Annual Review Deck — 100%</div>
+      <div class="review-title">The Year Designers<br>Became <em>Makers</em></div>
     </div>
-    <div class="prog-status done" style="font-size:13px">✓ Delivered</div>
+    <div class="prog-status done" style="font-size:13px">✓ Complete</div>
   </div>
-  <div class="prog-review-desc">Team collaborated on story structure & module ownership. Everyone contributed to the overall narrative, layout design, and section content. Completed and delivered Shanying's annual review — a deck that genuinely reflects <strong>CM team's standard for Copilot Mac quality & design</strong>.</div>
+  <div class="review-desc">
+    <div class="body-text">
+      <ul class="prog-bullet">
+        <li>Internal team discussion on story architecture and each member's module ownership. Completed overall narrative and layout design.</li>
+        <li>Shanying's review — completed and delivered.</li>
+      </ul>
+    </div>
+  </div>
   <div class="review-grid">
     <figure class="review-card"><img src="assets/review-cover.png" alt="" loading="lazy"><figcaption>Cover — The Year Designers Became Makers</figcaption></figure>
     <figure class="review-card"><img src="assets/review-process.png" alt="" loading="lazy"><figcaption>Design Forward: From Pixel to Product</figcaption></figure>
@@ -204,22 +224,22 @@ html,body{font-family:var(--body);font-size:15px;line-height:1.7;background:var(
     <div class="eyebrow">Newsletter</div>
     <div class="display">This<br>week.</div>
     <div class="news-accent"></div>
-    <div class="body-text" style="font-size:13px;color:var(--text-3)">Design direction and team updates.</div>
+    <div class="body-text" style="font-size:13px;color:var(--text-3)">Design direction and team highlights.</div>
   </div>
   <div class="news-main">
     <div class="news-item">
-      <h4>Team Collaboration</h4>
-      <p>During the annual review, the team brought diverse perspectives, producing a deck that genuinely reflects <strong>CM team's standard for Copilot Mac quality & design</strong>. A positive takeaway amid the direction shift.</p>
+      <h4>Chromium Direction</h4>
+      <p>Core Chromium flows now aligned with native design. The open question: <strong>Sergey's framework requirements</strong> need refactoring confirmation from <strong>Xiaolin</strong> before committing to the implementation path.</p>
     </div>
     <div class="news-divider"></div>
     <div class="news-item">
-      <h4>Value of Native Experience</h4>
-      <p>Even as we move toward Chromium, the craft from native work isn't lost — <strong>this knowledge is transferable</strong>, and sharing it with other teams is where value compounds.</p>
+      <h4>Annual Review Delivered</h4>
+      <p>The team came together on story architecture and module ownership. Everyone contributed their perspective — the result is a deck that genuinely reflects <strong>CM team's standard for Copilot Mac quality & design</strong>.</p>
     </div>
     <div class="news-divider"></div>
     <div class="news-item">
-      <h4>Vibe Coding Invitation</h4>
-      <p>Yanti invited us to share the Vibe Coding × Liquid Glass experience next week. Partnering with <strong>Yuchen</strong> to prepare the training.</p>
+      <h4>Vibe Coding × Liquid Glass</h4>
+      <p>Invited by Yanti to share our experience building the Mac native Liquid Glass with Vibe Coding. Preparing with <strong>Yuchen</strong> for next week's training session.</p>
     </div>
     <div class="news-pull">
       <p>"The native craft experience is transferable — sharing it with other teams is where value compounds."</p>
@@ -231,7 +251,7 @@ html,body{font-family:var(--body);font-size:15px;line-height:1.7;background:var(
 <div class="s others">
   <div class="eyebrow">Others</div>
   <div class="display">Vibe Coding ×<br><em>Liquid Glass</em></div>
-  <div class="body-text">Yanti invited us to share how we used Vibe Coding to build the Mac native Liquid Glass experience. Partnering with <strong>Yuchen</strong> to prepare and deliver the training.</div>
+  <div class="body-text">Yanti invited us to share next week how we used Vibe Coding to build the Mac native Liquid Glass experience. Will be partnering with <strong>Yuchen</strong> to prepare and deliver the training session.</div>
   <div class="others-meta"><span>📅 Next week</span><span>👥 With Yuchen</span></div>
 </div>
 
@@ -239,8 +259,8 @@ html,body{font-family:var(--body);font-size:15px;line-height:1.7;background:var(
 <div class="s mind">
   <div class="eyebrow">Top of Mind</div>
   <div class="mind-rule"></div>
-  <div class="mind-quote">Even as the direction shifts toward Chromium, the experience we built can be distilled and passed on to other teams.</div>
-  <div class="body-text">The annual review surfaced something valuable — every team member brought their own perspective on story and structure. The collaboration felt especially meaningful after the shift in direction.<br><br><strong>The experience doesn't disappear — it becomes something we can pass on.</strong></div>
+  <div class="mind-quote">Although the overall direction is shifting toward Chromium, this experience can be distilled and passed on as valuable knowledge to colleagues in other teams — that's the most important takeaway.</div>
+  <div class="body-text">During this annual review, the team shared diverse opinions on division of work and story structure, producing a deck that's both engaging and fully representative of our CM team's standard for Copilot Mac Quality & Design. The collaborative atmosphere was wonderful, and brought a silver lining to the gap felt after the sudden shift in direction despite all the effort put in.<br><br><strong>I believe this experience can be distilled and passed on to other teams — and that's the most important takeaway.</strong></div>
 </div>
 
 <!-- 8. END -->
