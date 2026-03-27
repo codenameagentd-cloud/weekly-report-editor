@@ -7,252 +7,118 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-
-/* === TYPE SYSTEM — 3 sizes only === */
 :root{
-  /* Display: titles only */
-  --display: 'Fraunces', Georgia, serif;
-  --display-size: clamp(52px, 7vw, 88px);
-  --display-weight: 700;
-  --display-lh: 0.95;
-  --display-ls: -0.03em;
-
-  /* Body: all readable text */
-  --body: 'Plus Jakarta Sans', -apple-system, sans-serif;
-  --body-size: 15px;
-  --body-lh: 1.7;
-
-  /* Caption: labels, metadata, eyebrows */
-  --caption-size: 11px;
-  --caption-ls: 0.15em;
-
-  /* Colors — minimal */
-  --bg: #FEFDFB;
-  --text: #1A1A1A;
-  --text-2: #555;
-  --text-3: #999;
-  --border: #E8E6E2;
-  --accent: #C0522E;
-  --surface: #F5F3EF;
+  --display:'Fraunces',Georgia,serif;
+  --body:'Plus Jakarta Sans',-apple-system,sans-serif;
+  --caption-size:11px;--caption-ls:0.15em;
+  --bg:#FEFDFB;--text:#1A1A1A;--text-2:#555;--text-3:#999;
+  --border:#E8E6E2;--accent:#C0522E;--surface:#F5F3EF;--green:#4A8C64;
 }
-
-html,body{
-  font-family: var(--body);
-  font-size: var(--body-size);
-  line-height: var(--body-lh);
-  background: var(--bg);
-  color: var(--text);
-  overflow: hidden;
-  height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  font-weight: 400;
-}
-
+html,body{font-family:var(--body);font-size:15px;line-height:1.7;background:var(--bg);color:var(--text);overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased;font-weight:400}
 .deck{height:100vh;overflow:hidden}
 .s{display:none;width:100%;height:100vh;overflow:hidden}
 .s.on{display:block}
 
-/* Shared elements */
-.eyebrow{
-  font-family: var(--body);
-  font-size: var(--caption-size);
-  font-weight: 600;
-  letter-spacing: var(--caption-ls);
-  text-transform: uppercase;
-  color: var(--text-3);
-}
-.display{
-  font-family: var(--display);
-  font-size: var(--display-size);
-  font-weight: var(--display-weight);
-  line-height: var(--display-lh);
-  letter-spacing: var(--display-ls);
-  color: var(--text);
-}
+.eyebrow{font-family:var(--body);font-size:var(--caption-size);font-weight:600;letter-spacing:var(--caption-ls);text-transform:uppercase;color:var(--text-3)}
+.display{font-family:var(--display);font-weight:700;line-height:.95;letter-spacing:-.03em;color:var(--text)}
 .display em{font-style:italic;color:var(--accent)}
-.body-text{
-  font-size: var(--body-size);
-  color: var(--text-2);
-  line-height: var(--body-lh);
-  max-width: 520px;
-}
+.body-text{font-size:15px;color:var(--text-2);line-height:1.7;max-width:520px}
 .body-text strong{color:var(--text);font-weight:600}
 
-/* ========== 1. COVER ========== */
-.cover{
-  display:flex;flex-direction:column;
-  padding:48px 64px;
-  background:var(--text);color:var(--bg);
-}
+/* COVER */
+.cover{display:flex;flex-direction:column;padding:48px 64px;background:var(--text);color:var(--bg)}
 .cover .eyebrow{color:rgba(255,255,255,.4)}
 .cover-top{display:flex;justify-content:space-between;align-items:center}
 .cover-center{flex:1;display:flex;align-items:center}
 .cover .display{color:var(--bg);font-size:clamp(64px,9vw,112px)}
 .cover .display em{color:var(--accent)}
 .cover-bottom{display:flex;justify-content:space-between;align-items:flex-end}
-.cover-desc{font-size:var(--body-size);color:rgba(255,255,255,.5);max-width:420px;line-height:1.65}
+.cover-desc{font-size:15px;color:rgba(255,255,255,.5);max-width:420px;line-height:1.65}
 .cover-meta{text-align:right;font-size:13px;color:rgba(255,255,255,.35);line-height:1.6}
 
-/* ========== 2. SUMMARY ========== */
-.summary{
-  display:flex;flex-direction:column;
-  justify-content:center;align-items:center;
-  text-align:center;
-  padding:64px;
-}
+/* SUMMARY */
+.summary{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:64px}
 .summary .eyebrow{margin-bottom:48px}
 .summary-stats{display:flex;gap:96px;margin-bottom:56px}
-.stat-number{
-  font-family:var(--display);
-  font-size:72px;font-weight:700;
-  line-height:1;letter-spacing:-0.03em;
-}
-.stat-label{
-  font-size:var(--caption-size);
-  letter-spacing:var(--caption-ls);
-  text-transform:uppercase;
-  color:var(--text-3);
-  margin-top:10px;
-}
+.stat-number{font-family:var(--display);font-size:72px;font-weight:700;line-height:1;letter-spacing:-.03em}
+.stat-label{font-size:var(--caption-size);letter-spacing:var(--caption-ls);text-transform:uppercase;color:var(--text-3);margin-top:10px}
 .summary-rule{width:40px;height:1px;background:var(--border);margin-bottom:40px}
 .summary .body-text{text-align:center;max-width:560px}
 
-/* ========== 3. PROGRESS ========== */
-.progress{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  height:100vh;
-}
-.prog-panel{
-  padding:56px;
-  display:flex;flex-direction:column;
-  justify-content:center;
-}
+/* PROGRESS — Chromium */
+.prog-chrome{display:grid;grid-template-columns:1fr 1fr;height:100vh}
+.prog-panel{padding:56px;display:flex;flex-direction:column;justify-content:center}
 .prog-panel.dark{background:var(--text);color:var(--bg)}
 .prog-panel.dark .eyebrow{color:rgba(255,255,255,.35)}
 .prog-panel.dark .body-text{color:rgba(255,255,255,.55)}
 .prog-panel.dark .body-text strong{color:var(--bg)}
-.prog-title{
-  font-family:var(--display);
-  font-size:36px;font-weight:700;
-  line-height:1.1;letter-spacing:-0.02em;
-  margin:16px 0;
-}
+.prog-title{font-family:var(--display);font-size:36px;font-weight:700;line-height:1.1;letter-spacing:-.02em;margin:16px 0}
 .prog-bar{height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin:16px 0 20px;overflow:hidden}
 .prog-bar-fill{height:100%;border-radius:2px}
 .prog-bar-light{background:var(--border)}
-.prog-status{
-  font-size:var(--caption-size);
-  font-weight:600;
-  letter-spacing:var(--caption-ls);
-  text-transform:uppercase;
-}
+.prog-status{font-size:var(--caption-size);font-weight:600;letter-spacing:var(--caption-ls);text-transform:uppercase}
 .prog-status.ip{color:var(--accent)}
-.prog-status.done{color:#4A8C64}
-.prog-gallery{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:6px;margin-top:20px;border-radius:8px;overflow:hidden;
-}
-.prog-gallery img{width:100%;height:90px;object-fit:cover;display:block}
-.prog-next{
-  margin-top:auto;padding-top:24px;
-  border-top:1px dashed var(--border);
-}
-.prog-next-label{
-  font-size:var(--caption-size);font-weight:600;
-  letter-spacing:var(--caption-ls);text-transform:uppercase;
-  color:var(--accent);margin-bottom:10px;
-}
-.prog-next li{
-  list-style:none;font-size:13px;color:var(--text-2);
-  line-height:1.6;padding-left:18px;position:relative;
-}
+.prog-status.done{color:var(--green)}
+.prog-next{margin-top:auto;padding-top:24px;border-top:1px dashed var(--border)}
+.prog-next-label{font-size:var(--caption-size);font-weight:600;letter-spacing:var(--caption-ls);text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.prog-next li{list-style:none;font-size:13px;color:var(--text-2);line-height:1.6;padding-left:18px;position:relative}
 .prog-next li::before{content:'→';position:absolute;left:0;color:var(--accent)}
 .prog-next li+li{margin-top:4px}
 
-/* ========== 4. NEWSLETTER ========== */
-.newsletter{
-  display:grid;
-  grid-template-columns:380px 1fr;
-  height:100vh;
-}
-.news-side{
-  padding:56px;border-right:1px solid var(--border);
-  display:flex;flex-direction:column;justify-content:center;
-}
+/* PROGRESS — Annual Review */
+.prog-review{display:flex;flex-direction:column;padding:48px 64px;background:var(--surface)}
+.prog-review-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:32px}
+.prog-review-title{font-family:var(--display);font-size:32px;font-weight:700;line-height:1.1;letter-spacing:-.02em}
+.prog-review-title em{font-style:italic;color:var(--accent)}
+.prog-review-desc{font-size:15px;color:var(--text-2);line-height:1.7;max-width:640px;margin-bottom:28px}
+.prog-review-desc strong{color:var(--text);font-weight:600}
+.review-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px;min-height:0}
+.review-card{border-radius:10px;overflow:hidden;position:relative;background:var(--text)}
+.review-card img{width:100%;height:100%;object-fit:cover;display:block;opacity:.9;transition:opacity .3s}
+.review-card:hover img{opacity:1}
+.review-card figcaption{position:absolute;bottom:0;left:0;right:0;padding:14px 18px;background:linear-gradient(transparent,rgba(0,0,0,.65));font-size:11px;color:rgba(255,255,255,.75);letter-spacing:.02em}
+
+/* NEWSLETTER */
+.newsletter{display:grid;grid-template-columns:380px 1fr;height:100vh}
+.news-side{padding:56px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:center}
 .news-side .display{font-size:44px;margin:16px 0}
 .news-accent{width:32px;height:2px;background:var(--accent);margin-bottom:16px}
-.news-main{
-  padding:56px;
-  display:flex;flex-direction:column;justify-content:center;
-  gap:32px;
-}
-.news-item h4{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.news-main{padding:56px;display:flex;flex-direction:column;justify-content:center;gap:28px}
+.news-item h4{font-size:15px;font-weight:700;margin-bottom:6px}
 .news-item p{color:var(--text-2);line-height:1.7}
 .news-item p strong{color:var(--text);font-weight:600}
 .news-divider{height:1px;background:var(--border)}
-.news-pull{
-  background:var(--text);color:var(--bg);
-  border-radius:10px;padding:28px 32px;
-}
-.news-pull p{
-  font-family:var(--display);font-size:18px;
-  font-style:italic;line-height:1.55;font-weight:300;
-  color:rgba(255,255,255,.8);
-}
+.news-pull{background:var(--text);color:var(--bg);border-radius:10px;padding:28px 32px}
+.news-pull p{font-family:var(--display);font-size:18px;font-style:italic;line-height:1.55;font-weight:300;color:rgba(255,255,255,.8)}
 
-/* ========== 5. OTHERS ========== */
-.others{
-  display:flex;flex-direction:column;
-  justify-content:center;align-items:center;
-  text-align:center;padding:64px;
-}
+/* OTHERS */
+.others{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:64px}
 .others .eyebrow{margin-bottom:28px}
 .others .display{font-size:clamp(40px,5vw,56px);margin-bottom:24px}
 .others .body-text{text-align:center;margin-bottom:28px}
 .others-meta{display:flex;gap:32px;font-size:13px;color:var(--text-3)}
 
-/* ========== 6. TOP OF MIND ========== */
-.mind{
-  display:flex;flex-direction:column;
-  justify-content:center;
-  padding:64px 80px;
-}
+/* TOP OF MIND */
+.mind{display:flex;flex-direction:column;justify-content:center;padding:64px 80px}
 .mind .eyebrow{margin-bottom:36px}
 .mind-rule{width:32px;height:2px;background:var(--accent);margin-bottom:36px}
-.mind-quote{
-  font-family:var(--display);
-  font-size:clamp(28px,3.5vw,38px);
-  font-weight:400;line-height:1.4;
-  max-width:700px;margin-bottom:36px;
-  letter-spacing:-0.01em;
-}
+.mind-quote{font-family:var(--display);font-size:clamp(28px,3.5vw,38px);font-weight:400;line-height:1.4;max-width:700px;margin-bottom:36px;letter-spacing:-.01em}
 .mind .body-text{max-width:580px}
 
-/* ========== 7. END ========== */
-.end{
-  background:var(--text);color:var(--bg);
-  display:flex;flex-direction:column;
-  justify-content:center;align-items:center;
-  text-align:center;position:relative;
-}
+/* END */
+.end{background:var(--text);color:var(--bg);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative}
 .end .display{color:var(--bg);font-size:clamp(80px,12vw,140px)}
-.end-sub{font-size:var(--body-size);color:rgba(255,255,255,.4);margin-top:24px}
-.end-footer{
-  position:absolute;bottom:40px;
-  font-size:var(--caption-size);color:rgba(255,255,255,.25);
-  letter-spacing:var(--caption-ls);text-transform:uppercase;
-}
+.end-sub{font-size:15px;color:rgba(255,255,255,.4);margin-top:24px}
+.end-footer{position:absolute;bottom:40px;font-size:var(--caption-size);color:rgba(255,255,255,.25);letter-spacing:var(--caption-ls);text-transform:uppercase}
 
-/* Progress bar */
 .nav-bar{position:fixed;bottom:0;left:0;right:0;height:2px;background:var(--border);z-index:100}
 .nav-fill{height:100%;background:var(--accent);transition:width .3s ease}
 
 @media(max-width:900px){
-  .progress,.newsletter{grid-template-columns:1fr}
+  .prog-chrome,.newsletter{grid-template-columns:1fr}
   .news-side{border-right:none;border-bottom:1px solid var(--border)}
-  .prog-gallery{grid-template-columns:1fr}
-  .cover,.summary,.others,.mind{padding:40px}
+  .review-grid{grid-template-columns:1fr}
+  .cover,.summary,.others,.mind,.prog-review{padding:40px}
 }
 </style>
 </head>
@@ -283,7 +149,7 @@ html,body{
       <div class="stat-label">Chromium (Mac)</div>
     </div>
     <div>
-      <div class="stat-number" style="color:#4A8C64">Done</div>
+      <div class="stat-number" style="color:var(--green)">Done</div>
       <div class="stat-label">Annual Review</div>
     </div>
   </div>
@@ -291,8 +157,8 @@ html,body{
   <div class="body-text">Two focuses this week: aligning Chromium adoption core flows for next week's review build, and completing Shanying's annual review deck as a team.</div>
 </div>
 
-<!-- 3. PROGRESS STATUS -->
-<div class="s progress">
+<!-- 3. PROGRESS — Chromium -->
+<div class="s prog-chrome">
   <div class="prog-panel dark">
     <div class="eyebrow">Progress Status</div>
     <div class="prog-title">Chromium (Mac)<br>Adoption</div>
@@ -304,28 +170,35 @@ html,body{
     </div>
   </div>
   <div class="prog-panel">
-    <div class="eyebrow">Progress Status</div>
-    <div class="prog-title">Annual Review<br>Deck</div>
-    <div class="prog-bar prog-bar-light"><div class="prog-bar-fill" style="width:100%;background:#4A8C64"></div></div>
-    <div class="prog-status done">Complete</div>
-    <div class="body-text" style="margin-top:20px">Team collaborated on story structure & module ownership. Delivered Shanying's review.</div>
-    <div class="prog-gallery">
-      <img src="assets/review-cover.png" alt="" loading="lazy">
-      <img src="assets/review-process.png" alt="" loading="lazy">
-      <img src="assets/review-podcast.png" alt="" loading="lazy">
-      <img src="assets/review-features.png" alt="" loading="lazy">
-    </div>
-    <div class="prog-next">
-      <div class="prog-next-label">Next Steps</div>
-      <ul>
-        <li>Design review on first dev build</li>
-        <li>Await Xiaolin's feedback — adjust implementation or priorities</li>
-      </ul>
+    <div class="eyebrow">Next Steps</div>
+    <div class="prog-title" style="font-size:28px">What's ahead</div>
+    <div class="body-text" style="margin-top:12px">
+      <strong>Design review</strong> on first dev build once available.<br><br>
+      Awaiting <strong>Xiaolin's feedback</strong> — will adjust implementation approach or priorities accordingly.<br><br>
+      The key decision point is whether the strict top-alignment requirement from Sergey's framework can be achieved within current architecture or needs a larger refactor.
     </div>
   </div>
 </div>
 
-<!-- 4. NEWSLETTER -->
+<!-- 4. PROGRESS — Annual Review -->
+<div class="s prog-review">
+  <div class="prog-review-top">
+    <div>
+      <div class="eyebrow" style="margin-bottom:12px">Progress Status · Complete</div>
+      <div class="prog-review-title">The Year Designers<br>Became <em>Makers</em></div>
+    </div>
+    <div class="prog-status done" style="font-size:13px">✓ Delivered</div>
+  </div>
+  <div class="prog-review-desc">Team collaborated on story structure & module ownership. Everyone contributed to the overall narrative, layout design, and section content. Completed and delivered Shanying's annual review — a deck that genuinely reflects <strong>CM team's standard for Copilot Mac quality & design</strong>.</div>
+  <div class="review-grid">
+    <figure class="review-card"><img src="assets/review-cover.png" alt="" loading="lazy"><figcaption>Cover — The Year Designers Became Makers</figcaption></figure>
+    <figure class="review-card"><img src="assets/review-process.png" alt="" loading="lazy"><figcaption>Design Forward: From Pixel to Product</figcaption></figure>
+    <figure class="review-card"><img src="assets/review-podcast.png" alt="" loading="lazy"><figcaption>Podcast Mini Player — Helix + Swift → HTML</figcaption></figure>
+    <figure class="review-card"><img src="assets/review-features.png" alt="" loading="lazy"><figcaption>Swipe · Search · Imagine · Read Aloud</figcaption></figure>
+  </div>
+</div>
+
+<!-- 5. NEWSLETTER -->
 <div class="s newsletter">
   <div class="news-side">
     <div class="eyebrow">Newsletter</div>
@@ -348,10 +221,13 @@ html,body{
       <h4>Vibe Coding Invitation</h4>
       <p>Yanti invited us to share the Vibe Coding × Liquid Glass experience next week. Partnering with <strong>Yuchen</strong> to prepare the training.</p>
     </div>
+    <div class="news-pull">
+      <p>"The native craft experience is transferable — sharing it with other teams is where value compounds."</p>
+    </div>
   </div>
 </div>
 
-<!-- 5. OTHERS -->
+<!-- 6. OTHERS -->
 <div class="s others">
   <div class="eyebrow">Others</div>
   <div class="display">Vibe Coding ×<br><em>Liquid Glass</em></div>
@@ -359,7 +235,7 @@ html,body{
   <div class="others-meta"><span>📅 Next week</span><span>👥 With Yuchen</span></div>
 </div>
 
-<!-- 6. TOP OF MIND -->
+<!-- 7. TOP OF MIND -->
 <div class="s mind">
   <div class="eyebrow">Top of Mind</div>
   <div class="mind-rule"></div>
@@ -367,7 +243,7 @@ html,body{
   <div class="body-text">The annual review surfaced something valuable — every team member brought their own perspective on story and structure. The collaboration felt especially meaningful after the shift in direction.<br><br><strong>The experience doesn't disappear — it becomes something we can pass on.</strong></div>
 </div>
 
-<!-- 7. END -->
+<!-- 8. END -->
 <div class="s end">
   <div class="display">Thank<br><em>you.</em></div>
   <div class="end-sub">Questions? Let me know.</div>
