@@ -43,6 +43,8 @@
   .slide.active .a1 { animation: slam .3s cubic-bezier(.2,0,.8,.2) both; animation-delay: .08s; }
   .slide.active .a2 { animation: slam .3s cubic-bezier(.2,0,.8,.2) both; animation-delay: .16s; }
   .slide.active .a3 { animation: slam .3s cubic-bezier(.2,0,.8,.2) both; animation-delay: .24s; }
+  .slide.active .a4 { animation: slam .3s cubic-bezier(.2,0,.8,.2) both; animation-delay: .32s; }
+  .slide.active .a5 { animation: slam .3s cubic-bezier(.2,0,.8,.2) both; animation-delay: .40s; }
 
   /* ═══════════════════════════════════
      S1 — TITLE
@@ -333,11 +335,11 @@
 <div class="slide s3" data-i="2">
   <div class="top"><div class="slabel a0"><span class="label">Design Discussion</span></div></div>
   <div class="list">
-    <div class="item"><div class="item-num">01</div><div class="item-left"><div class="item-name">Navigation & Panel Layout</div><div class="item-desc">釐清 sidebar / IAB / browser panel 三者共存規則，提議統一 Pages 互斥邏輯，待 May 出新 spec</div></div><div class="item-right"><span class="tag tb">[SPEC]</span></div></div>
-    <div class="item"><div class="item-num">02</div><div class="item-left"><div class="item-name">Win→Mac Leverage 品質落差</div><div class="item-desc">從 Windows leverage 的還原度比 CMC 更差，建議優先對齊 CMC</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
-    <div class="item"><div class="item-num">03</div><div class="item-left"><div class="item-name">Browser 空條問題</div><div class="item-desc">MAC-11473 — 所有 browser window 頂部空白條，4/3 修復驗證通過</div></div><div class="item-right"><span class="tag ty">[FIXED]</span></div></div>
-    <div class="item"><div class="item-num">04</div><div class="item-left"><div class="item-name">Sidebar Profile 滾動</div><div class="item-desc">MAC-11601 — profile section 應固定不隨列表滾動，已歸類 Design-Fit</div></div><div class="item-right"><span class="tag tb">[FILED]</span></div></div>
-    <div class="item"><div class="item-num">05</div><div class="item-left"><div class="item-name">Browser 出現頻率</div><div class="item-desc">建議降低 browser panel 出現頻率，配合 Sergey 整體 vision</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
+    <div class="item a1"><div class="item-num">01</div><div class="item-left"><div class="item-name">Navigation & Panel Layout</div><div class="item-desc">釐清 sidebar / IAB / browser panel 三者共存規則，提議統一 Pages 互斥邏輯，待 May 出新 spec</div></div><div class="item-right"><span class="tag tb">[SPEC]</span></div></div>
+    <div class="item a2"><div class="item-num">02</div><div class="item-left"><div class="item-name">Win→Mac Leverage 品質落差</div><div class="item-desc">從 Windows leverage 的還原度比 CMC 更差，建議優先對齊 CMC</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
+    <div class="item a3"><div class="item-num">03</div><div class="item-left"><div class="item-name">Browser 空條問題</div><div class="item-desc">MAC-11473 — 所有 browser window 頂部空白條，4/3 修復驗證通過</div></div><div class="item-right"><span class="tag ty">[FIXED]</span></div></div>
+    <div class="item a4"><div class="item-num">04</div><div class="item-left"><div class="item-name">Sidebar Profile 滾動</div><div class="item-desc">MAC-11601 — profile section 應固定不隨列表滾動，已歸類 Design-Fit</div></div><div class="item-right"><span class="tag tb">[FILED]</span></div></div>
+    <div class="item a5"><div class="item-num">05</div><div class="item-left"><div class="item-name">Browser 出現頻率</div><div class="item-desc">建議降低 browser panel 出現頻率，配合 Sergey 整體 vision</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
   </div>
   <div class="deco deco1"></div>
 </div>
@@ -425,7 +427,7 @@
   function go(i){
     if(i<0||i>=t||i===c||lk)return;lk=true;
     var o=s[c];o.classList.remove('active');
-    o.querySelectorAll('.a0,.a1,.a2,.a3,.item,.tag').forEach(function(e){e.style.animation='none';void e.offsetHeight;e.style.animation=''});
+    o.querySelectorAll('.a0,.a1,.a2,.a3,.a4,.a5,.item,.tag').forEach(function(e){e.style.animation='none';void e.offsetHeight;e.style.animation=''});
     c=i;s[c].classList.add('active');ct.textContent=p(c+1)+'/'+p(t);
     setTimeout(function(){lk=false},400)
   }
