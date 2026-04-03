@@ -122,22 +122,26 @@
     justify-content: center;
   }
   .s3 .top { margin-bottom: 36px; }
-  .s3 .list { max-width: 800px; }
+  .s3 .list { max-width: 860px; }
   .s3 .item {
-    border: 3px solid #000; padding: 18px 24px; margin-top: -3px;
-    display: flex; align-items: center; justify-content: space-between;
+    border: 3px solid #000; padding: 20px 28px; margin-top: -3px;
+    display: flex; align-items: flex-start; gap: 20px;
   }
   .s3 .item:first-child { margin-top: 0; }
+  .s3 .item-num {
+    font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700;
+    opacity: .25; flex-shrink: 0; padding-top: 3px;
+  }
   .s3 .item-left { flex: 1; }
   .s3 .item-name {
     font-family: 'Inter', sans-serif; font-weight: 700;
-    font-size: clamp(15px, 1.8vw, 20px); letter-spacing: -.3px; margin-bottom: 2px;
+    font-size: clamp(16px, 1.8vw, 21px); letter-spacing: -.3px; margin-bottom: 4px;
   }
   .s3 .item-desc {
     font-family: 'Inter', sans-serif; font-weight: 400;
-    font-size: clamp(12px, 1.2vw, 14px); opacity: .4;
+    font-size: clamp(12px, 1.3vw, 15px); opacity: .45; line-height: 1.45;
   }
-  .s3 .item-right { flex-shrink: 0; margin-left: 20px; }
+  .s3 .item-right { flex-shrink: 0; margin-left: 12px; align-self: center; }
 
   .slide.active .s3 .item:nth-child(1) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .06s; }
   .slide.active .s3 .item:nth-child(2) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .12s; }
@@ -326,12 +330,12 @@
 <!-- S3: DESIGN DISCUSSIONS -->
 <div class="slide s3" data-i="2">
   <div class="top"><div class="slabel a0"><span class="label">Design Discussion</span></div></div>
-  <div class="list a1">
-    <div class="item"><div class="item-left"><div class="item-name">Navigation & Panel Layout</div><div class="item-desc">提議統一 Pages 互斥邏輯，待 May 出新 spec</div></div><div class="item-right"><span class="tag tb">[SPEC]</span></div></div>
-    <div class="item"><div class="item-left"><div class="item-name">Win→Mac Leverage 品質落差</div><div class="item-desc">建議優先對齊 CMC 而非 Windows</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
-    <div class="item"><div class="item-left"><div class="item-name">Browser 空條問題</div><div class="item-desc">MAC-11473 — 4/3 修復驗證通過</div></div><div class="item-right"><span class="tag ty">[FIXED]</span></div></div>
-    <div class="item"><div class="item-left"><div class="item-name">Sidebar Profile 滾動</div><div class="item-desc">MAC-11601 — 已歸類 Design-Fit</div></div><div class="item-right"><span class="tag tb">[FILED]</span></div></div>
-    <div class="item"><div class="item-left"><div class="item-name">Browser 出現頻率</div><div class="item-desc">建議降低，配合 Sergey 整體 vision</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
+  <div class="list">
+    <div class="item"><div class="item-num">01</div><div class="item-left"><div class="item-name">Navigation & Panel Layout</div><div class="item-desc">釐清 sidebar / IAB / browser panel 三者共存規則，提議統一 Pages 互斥邏輯，待 May 出新 spec</div></div><div class="item-right"><span class="tag tb">[SPEC]</span></div></div>
+    <div class="item"><div class="item-num">02</div><div class="item-left"><div class="item-name">Win→Mac Leverage 品質落差</div><div class="item-desc">從 Windows leverage 的還原度比 CMC 更差，建議優先對齊 CMC</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
+    <div class="item"><div class="item-num">03</div><div class="item-left"><div class="item-name">Browser 空條問題</div><div class="item-desc">MAC-11473 — 所有 browser window 頂部空白條，4/3 修復驗證通過</div></div><div class="item-right"><span class="tag ty">[FIXED]</span></div></div>
+    <div class="item"><div class="item-num">04</div><div class="item-left"><div class="item-name">Sidebar Profile 滾動</div><div class="item-desc">MAC-11601 — profile section 應固定不隨列表滾動，已歸類 Design-Fit</div></div><div class="item-right"><span class="tag tb">[FILED]</span></div></div>
+    <div class="item"><div class="item-num">05</div><div class="item-left"><div class="item-name">Browser 出現頻率</div><div class="item-desc">建議降低 browser panel 出現頻率，配合 Sergey 整體 vision</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
   </div>
   <div class="deco deco1"></div>
 </div>
