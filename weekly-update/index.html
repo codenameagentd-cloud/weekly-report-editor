@@ -1,342 +1,440 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weekly Update — Mar 24–28, 2026</title>
+<title>Weekly Update — David Chen</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
-  :root {
-    --bg: #f6f3ee;
-    --ink: #1a1714;
-    --ink-mid: #5c564d;
-    --ink-light: #9b9488;
-    --rule: #d6cfc4;
-    --terra: #c4592a;
-    --terra-light: rgba(196,89,42,0.08);
-    --sage: #4a6b52;
-    --blue: #3d5a80;
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: #fff; color: #000; -webkit-font-smoothing: antialiased;
   }
-
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
 
   .slide {
-    min-height: 100vh;
-    scroll-snap-align: start;
-    display: flex;
-    position: relative;
+    position: absolute; inset: 0;
+    opacity: 0; pointer-events: none;
+    display: flex; flex-direction: column;
     overflow: hidden;
   }
+  .slide.active { opacity: 1; pointer-events: auto; }
 
-  /* COVER & CLOSING */
-  .cover, .closing {
-    align-items: center; justify-content: center; flex-direction: column;
-    background: var(--ink); color: var(--bg); text-align: center; padding: 60px;
-  }
-  .cover-eyebrow {
-    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
-    letter-spacing: 6px; text-transform: uppercase; color: var(--ink-light); margin-bottom: 48px;
-  }
-  .cover h1, .closing h2 {
-    font-family: 'Instrument Serif', serif; font-weight: 400; line-height: 1.05;
-  }
-  .cover h1 { font-size: clamp(48px, 7vw, 96px); margin-bottom: 20px; }
-  .closing h2 { font-size: clamp(36px, 5vw, 72px); margin-bottom: 16px; }
-  .cover h1 em, .closing h2 em { font-style: italic; color: var(--terra); }
-  .cover-rule { width: 48px; height: 1px; background: var(--ink-light); margin: 32px auto; }
-  .cover-info {
-    display: flex; gap: 40px; font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px; color: var(--ink-light); letter-spacing: 1px;
-  }
-  .closing-sub { font-size: 15px; color: var(--ink-light); font-weight: 300; }
-  .page-num {
-    position: absolute; bottom: 32px; right: 48px;
-    font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-light);
+  #counter {
+    position: fixed; top: 32px; left: 40px;
+    font-family: 'Space Mono', monospace; font-size: 32px; font-weight: 700;
+    letter-spacing: 2px; z-index: 1000;
   }
 
-  /* CONTENT SLIDES */
-  .content-slide { flex-direction: column; padding: 80px 120px; }
-  @media (max-width: 768px) { .content-slide { padding: 48px 32px; } }
+  /* ── Tokens ── */
+  .yh { background: #FFD600; display: inline; padding: 0 12px; line-height: 1.15; position: relative; z-index: -1; }
+  .label { font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; }
+  .slabel { border: 3px solid #000; padding: 10px 24px; display: inline-block; }
+  .tag { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 6px 14px; display: inline-block; line-height: 1; }
+  .ty { background: #FFD600; color: #000; border: 3px solid #000; }
+  .tb { background: #000; color: #fff; border: 3px solid #000; }
+  .deco { position: absolute; border: 4px solid #000; }
 
-  .slide-header {
-    display: flex; justify-content: space-between; align-items: flex-end;
-    border-bottom: 1px solid var(--rule); padding-bottom: 16px; margin-bottom: 48px;
-  }
-  .slide-header h2 {
-    font-family: 'Instrument Serif', serif; font-size: clamp(32px, 4vw, 56px);
-    font-weight: 400; line-height: 1.1;
-  }
-  .slide-header h2 em { font-style: italic; color: var(--terra); }
-  .slide-num {
-    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
-    color: var(--ink-light); letter-spacing: 1px; flex-shrink: 0;
-  }
-  .slide-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  /* ── Anim ── */
+  @keyframes slam { from { transform: translateY(-60px); } to { transform: translateY(0); } }
+  .slide.active .a0 { animation: slam .3s cubic-bezier(.2,0,.8,.2) both; }
+  .slide.active .a1 { animation: slam .3s cubic-bezier(.2,0,.8,.2) both; animation-delay: .08s; }
+  .slide.active .a2 { animation: slam .3s cubic-bezier(.2,0,.8,.2) both; animation-delay: .16s; }
+  .slide.active .a3 { animation: slam .3s cubic-bezier(.2,0,.8,.2) both; animation-delay: .24s; }
 
-  /* SUMMARY */
-  .summary-body p {
-    font-size: 20px; line-height: 1.8; color: var(--ink-mid); font-weight: 300; max-width: 680px;
+  /* ═══════════════════════════════════
+     S1 — TITLE
+     ═══════════════════════════════════ */
+  .s1 { padding: 80px; }
+  .s1 .tb0 { position: absolute; top: 120px; left: 80px; }
+  .s1 .tl {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(110px, 13vw, 180px); line-height: .88;
+    text-transform: uppercase; letter-spacing: -6px;
   }
-  .summary-body strong { color: var(--ink); font-weight: 500; }
+  .s1 .sub { font-family: 'Inter'; font-weight: 400; font-size: 18px; margin-top: 32px; opacity: .4; }
+  .s1 .db {
+    position: absolute; bottom: 80px; right: 80px;
+    border: 4px solid #000; padding: 20px 32px;
+    font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; letter-spacing: 4px;
+  }
+  .s1 .cm { position: absolute; bottom: 80px; left: 80px; font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; opacity: .4; }
+  .s1 .vr { position: absolute; top: 0; right: 35%; height: 100%; border-left: 3px solid #000; opacity: .06; }
+  .s1 .hr { position: absolute; left: 0; bottom: 45%; width: 100%; border-top: 3px solid #000; opacity: .06; }
 
-  /* PROGRESS */
-  .progress-item {
-    display: grid; grid-template-columns: 200px 80px 1fr; gap: 32px;
-    padding: 32px 0; border-bottom: 1px solid var(--rule); align-items: start;
+  /* ═══════════════════════════════════
+     S2 — CHROMIUM: hero + milestone + stats
+     One page, full Chromium picture
+     ═══════════════════════════════════ */
+  .s2 {
+    display: grid; grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto; padding: 0; height: 100vh;
   }
-  .progress-item:last-child { border-bottom: none; }
-  .pi-name {
-    font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500;
-    letter-spacing: 0.5px; text-transform: uppercase;
+  .s2 .header {
+    grid-column: 1 / -1; padding: 80px 80px 0;
   }
-  .pi-pct { font-family: 'Instrument Serif', serif; font-size: 36px; color: var(--terra); line-height: 1; }
-  .pi-details p { font-size: 15px; line-height: 1.65; color: var(--ink-mid); margin-bottom: 8px; }
-  .pi-tag {
-    display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px;
-    letter-spacing: 2px; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; margin-top: 4px;
+  .s2 .left {
+    padding: 32px 48px 48px 80px;
+    display: flex; flex-direction: column; justify-content: center;
   }
-  .pi-tag--next { background: var(--terra-light); color: var(--terra); }
-  .pi-tag--done { background: rgba(74,107,82,0.1); color: var(--sage); }
-  .pi-tag--upcoming { background: rgba(61,90,128,0.1); color: var(--blue); }
-  .next-list { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
-  .next-list li { font-size: 14px; color: var(--ink-mid); padding-left: 16px; position: relative; }
-  .next-list li::before { content: '↳'; position: absolute; left: 0; color: var(--terra); }
+  .s2 .big {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(80px, 10vw, 130px); line-height: .85; letter-spacing: -5px;
+  }
+  .s2 .big-sub {
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: 18px; opacity: .45; margin-top: 12px; letter-spacing: -.3px;
+  }
+  .s2 .right {
+    padding: 32px 80px 48px 0;
+    display: flex; flex-direction: column; justify-content: center; gap: 20px;
+  }
+  .s2 .callout {
+    background: #FFD600; border: 3px solid #000; padding: 16px 20px;
+  }
+  .s2 .callout li {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700;
+    line-height: 1.6; list-style: none;
+  }
+  .s2 .callout li::before { content: "■ "; }
+  .s2 .stat-row { display: flex; gap: 0; }
+  .s2 .st {
+    border: 3px solid #000; padding: 14px 18px; flex: 1; margin-left: -3px;
+  }
+  .s2 .st:first-child { margin-left: 0; }
+  .s2 .st-n {
+    font-family: 'Inter', sans-serif; font-weight: 900; font-size: 24px; letter-spacing: -1px;
+  }
+  .s2 .st-l {
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase; opacity: .35; margin-top: 2px;
+  }
+  .s2 .footer-rule {
+    grid-column: 1 / -1; border-top: 3px solid #000; opacity: .06;
+  }
+  .s2 .deco1 { right: 80px; top: 80px; width: 100px; height: 100px; }
 
-  /* ANNUAL REVIEW IMAGES */
-  .annual-wrap {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+  /* ═══════════════════════════════════
+     S3 — DESIGN DISCUSSIONS
+     ═══════════════════════════════════ */
+  .s3 {
+    padding: 80px; display: flex; flex-direction: column;
+    justify-content: center;
   }
-  .annual-wrap .pi-details p { margin-bottom: 8px; }
-  .annual-imgs {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  .s3 .top { margin-bottom: 36px; }
+  .s3 .list { max-width: 800px; }
+  .s3 .item {
+    border: 3px solid #000; padding: 18px 24px; margin-top: -3px;
+    display: flex; align-items: center; justify-content: space-between;
   }
-  .annual-imgs img {
-    width: 100%; border-radius: 4px; border: 1px solid var(--rule);
-    transition: transform 0.3s ease;
+  .s3 .item:first-child { margin-top: 0; }
+  .s3 .item-left { flex: 1; }
+  .s3 .item-name {
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: clamp(15px, 1.8vw, 20px); letter-spacing: -.3px; margin-bottom: 2px;
   }
-  .annual-imgs img:hover { transform: scale(1.03); }
+  .s3 .item-desc {
+    font-family: 'Inter', sans-serif; font-weight: 400;
+    font-size: clamp(12px, 1.2vw, 14px); opacity: .4;
+  }
+  .s3 .item-right { flex-shrink: 0; margin-left: 20px; }
 
-  /* VIBE CODING */
-  .vibe-body { max-width: 640px; }
-  .vibe-body p {
-    font-size: 18px; line-height: 1.75; color: var(--ink-mid); font-weight: 300;
-  }
-  .vibe-body strong { color: var(--ink); font-weight: 500; }
-  .vibe-highlight {
-    margin-top: 32px; padding: 28px 32px;
-    background: rgba(61,90,128,0.06); border-left: 3px solid var(--blue); border-radius: 0 8px 8px 0;
-  }
-  .vibe-highlight p {
-    font-size: 15px; line-height: 1.7; color: var(--ink-mid);
-  }
+  .slide.active .s3 .item:nth-child(1) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .06s; }
+  .slide.active .s3 .item:nth-child(2) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .12s; }
+  .slide.active .s3 .item:nth-child(3) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .18s; }
+  .slide.active .s3 .item:nth-child(4) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .24s; }
+  .slide.active .s3 .item:nth-child(5) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .30s; }
 
-  /* TOP OF MIND */
-  .mind-body { max-width: 720px; }
-  .mind-context {
-    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
-    letter-spacing: 2px; text-transform: uppercase; color: var(--ink-light);
-    margin-bottom: 22px;
-  }
-  .mind-card {
-    background: rgba(255,255,255,0.54);
-    border: 1px solid var(--rule);
-    border-radius: 14px;
-    padding: 32px 36px;
-  }
-  .mind-card blockquote {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(22px, 2.4vw, 30px);
-    line-height: 1.55;
-    font-weight: 400;
-    color: var(--ink);
-    margin-bottom: 24px;
-  }
-  .mind-card blockquote em { font-style: italic; color: var(--terra); }
-  .mind-divider {
-    width: 36px; height: 1px; background: var(--rule); margin-bottom: 20px;
-  }
-  .mind-second {
-    font-size: 16px; line-height: 1.8; color: var(--ink-mid);
-    font-weight: 300; margin-bottom: 14px;
-    max-width: 640px;
-  }
-  .mind-second:last-child { margin-bottom: 0; }
+  .s3 .deco1 { right: 80px; bottom: 80px; width: 120px; height: 120px; }
 
-  /* NAV */
-  .dot-nav {
-    position: fixed; right: 28px; top: 50%; transform: translateY(-50%);
-    display: flex; flex-direction: column; gap: 12px; z-index: 100; mix-blend-mode: difference;
+  /* ═══════════════════════════════════
+     S4 — PHASE 3: headline + roadmap + details
+     ═══════════════════════════════════ */
+  .s4 {
+    display: grid; grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr; padding: 0; height: 100vh;
   }
-  .dot-nav a {
-    width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3);
-    display: block; transition: all 0.3s ease;
+  .s4 .header { grid-column: 1 / -1; padding: 80px 80px 0; display: flex; align-items: baseline; gap: 32px; }
+  .s4 .header .big {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(48px, 6vw, 80px); line-height: .9; letter-spacing: -3px;
   }
-  .dot-nav a.active { background: #fff; transform: scale(1.6); }
+  .s4 .phases {
+    grid-column: 1 / -1; display: flex; gap: 0;
+    padding: 24px 80px 0; max-width: calc(100% - 0px);
+  }
+  .s4 .ph {
+    border: 3px solid #000; padding: 16px 20px; flex: 1; margin-left: -3px;
+  }
+  .s4 .ph:first-child { margin-left: 0; }
+  .s4 .ph.now { background: #FFD600; }
+  .s4 .ph-l {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; opacity: .3; margin-bottom: 4px;
+  }
+  .s4 .ph.now .ph-l { opacity: 1; }
+  .s4 .ph h3 {
+    font-family: 'Inter', sans-serif; font-weight: 900; font-size: 14px; letter-spacing: -.2px;
+  }
+  .s4 .ph:not(.now) h3 { opacity: .25; }
+  .s4 .ph li {
+    font-family: 'Inter', sans-serif; font-size: 11px; line-height: 1.5; list-style: none;
+  }
+  .s4 .ph:not(.now) li { opacity: .15; }
+  .s4 .ph.now li { opacity: .65; }
 
-  /* FADE */
-  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .fade-in.visible { opacity: 1; transform: translateY(0); }
-  .d1 { transition-delay: 0.05s; } .d2 { transition-delay: 0.15s; }
-  .d3 { transition-delay: 0.25s; } .d4 { transition-delay: 0.4s; }
-
-  @media (max-width: 900px) {
-    .progress-item { grid-template-columns: 1fr; gap: 12px; }
-    .annual-wrap { grid-template-columns: 1fr; }
-    .mind-card { padding: 24px; }
+  .s4 .detail-left {
+    padding: 24px 24px 48px 80px;
+    display: flex; flex-direction: column; justify-content: center;
   }
+  .s4 .detail-right {
+    padding: 24px 80px 48px 24px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .s4 .detail-title {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+    padding-bottom: 8px; border-bottom: 2px solid #000;
+  }
+  .s4 .detail-list { list-style: none; }
+  .s4 .detail-list li {
+    font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.65;
+    padding: 3px 0;
+  }
+  .s4 .detail-list li::before { content: "■ "; opacity: .25; }
+  .s4 .detail-list strong { font-weight: 700; }
+  .s4 .deco1 { right: 0; bottom: 100px; width: 25%; height: 0; border-top: 3px solid #000; opacity: .06; border-left: 0; border-right: 0; border-bottom: 0; }
+
+  /* ═══════════════════════════════════
+     S5 — BUG SKILL: hero + compare side by side
+     ═══════════════════════════════════ */
+  .s5 {
+    display: grid; grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto; padding: 0; height: 100vh;
+  }
+  .s5 .header { grid-column: 1 / -1; padding: 80px 80px 0; }
+  .s5 .left {
+    padding: 24px 24px 48px 80px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .s5 .big {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(100px, 14vw, 180px); line-height: .82; letter-spacing: -6px;
+  }
+  .s5 .big-sub {
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: 18px; opacity: .4; margin-top: 12px; letter-spacing: -.3px;
+  }
+  .s5 .right {
+    padding: 24px 80px 48px 0;
+    display: flex; flex-direction: column; justify-content: center; gap: 0;
+  }
+  .s5 .card {
+    border: 3px solid #000; padding: 20px 24px; margin-top: -3px;
+  }
+  .s5 .card:first-child { margin-top: 0; }
+  .s5 .card.after { background: #FFD600; }
+  .s5 .card-label {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .s5 .card.before .card-label { opacity: .3; }
+  .s5 .card li {
+    font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.6;
+    list-style: none; padding: 2px 0;
+  }
+  .s5 .card li::before { content: "— "; font-weight: 700; }
+  .s5 .card.before li { opacity: .25; text-decoration: line-through; text-decoration-color: rgba(0,0,0,.08); }
+  .s5 .footer-rule { grid-column: 1 / -1; border-top: 3px solid #000; opacity: .06; }
+  .s5 .deco1 { right: 80px; top: 80px; width: 100px; height: 100px; }
+
+  /* ═══════════════════════════════════
+     S6 — NEXT WEEK
+     ═══════════════════════════════════ */
+  .s6 {
+    padding: 80px; display: flex; flex-direction: column;
+    justify-content: center;
+  }
+  .s6 .mind {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(60px, 9vw, 130px); line-height: .92;
+    text-transform: uppercase; letter-spacing: -5px; margin-bottom: 36px;
+  }
+  .s6 .list { max-width: 720px; }
+  .s6 .item {
+    border: 3px solid #000; padding: 16px 24px; margin-top: -3px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .s6 .item:first-child { margin-top: 0; }
+  .s6 .item-name {
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: clamp(14px, 1.6vw, 18px); letter-spacing: -.2px;
+  }
+  .s6 .item-desc {
+    font-family: 'Inter', sans-serif; font-weight: 400;
+    font-size: clamp(11px, 1.1vw, 13px); opacity: .35; margin-top: 2px;
+  }
+  .s6 .item-right { flex-shrink: 0; margin-left: 20px; }
+  .s6 .ds { max-width: 500px; border-top: 4px solid #000; margin-top: 36px; }
+  .s6 .ds2 { max-width: 300px; border-top: 4px solid #000; margin-top: 12px; }
+  .s6 .deco1 { right: 80px; bottom: 80px; width: 200px; height: 200px; }
+  .s6 .deco2 { right: 100px; bottom: 100px; width: 120px; height: 120px; opacity: .15; }
+
+  .slide.active .s6 .item:nth-child(1) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .08s; }
+  .slide.active .s6 .item:nth-child(2) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .14s; }
+  .slide.active .s6 .item:nth-child(3) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .20s; }
+  .slide.active .s6 .item:nth-child(4) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .26s; }
+  .slide.active .s6 .item:nth-child(5) { animation: slam .25s cubic-bezier(.2,0,.8,.2) both; animation-delay: .32s; }
 </style>
 </head>
 <body>
 
-<nav class="dot-nav">
-  <a href="#cover" class="active"></a>
-  <a href="#summary"></a>
-  <a href="#progress"></a>
-  <a href="#vibe"></a>
-  <a href="#mind"></a>
-  <a href="#closing"></a>
-</nav>
+<div id="counter">01/06</div>
 
-<!-- 01 COVER -->
-<section id="cover" class="slide cover">
-  <div class="cover-eyebrow fade-in">Weekly Update</div>
-  <h1 class="fade-in d1">Building<br><em>Forward</em></h1>
-  <div class="cover-rule fade-in d2"></div>
-  <div class="cover-info fade-in d3">
-    <span>Mar 24 – 28, 2026</span>
-    <span>David</span>
-    <span>CM Design</span>
-  </div>
-  <div class="page-num">01 / 06</div>
-</section>
+<!-- S1: TITLE -->
+<div class="slide s1 active" data-i="0">
+  <div class="vr"></div><div class="hr"></div>
+  <div class="tb0 a0"><div class="tl">WEEKLY</div><div class="tl"><span class="yh">UPDATE</span></div><p class="sub">David Chen</p></div>
+  <div class="db a1">03.28 — 04.03</div>
+  <div class="cm"></div>
+</div>
 
-<!-- 02 SUMMARY -->
-<section id="summary" class="slide content-slide">
-  <div class="slide-header fade-in">
-    <h2>This <em>Week</em></h2>
-    <span class="slide-num">02 / 06</span>
+<!-- S2: CHROMIUM — full picture -->
+<div class="slide s2" data-i="1">
+  <div class="header"><div class="slabel a0"><span class="label">Copilot Mac Chromium</span></div></div>
+  <div class="left a1">
+    <div class="big"><span class="yh">179</span></div>
+    <div class="big-sub">issues closed this week · 158 Chromium-labeled</div>
   </div>
-  <div class="slide-body">
-    <div class="summary-body fade-in d1">
-      <p>This week centered on two key initiatives: aligning the <strong>Chromium adoption</strong> core flows and preparing the review build for next week's experience assessment, along with completing the <strong>annual review deck</strong> — from story architecture to final Shanying review.</p>
+  <div class="right">
+    <div class="callout a2">
+      <ul>
+        <li>Dev Build 正式發布 workstream-wide internal dogfood on staging</li>
+        <li>被列入官方公告核心貢獻者（Designer / Tester / PM 代表）on Slack</li>
+      </ul>
+    </div>
+    <div class="stat-row a3">
+      <div class="st"><div class="st-n">171</div><div class="st-l">In Progress</div></div>
+      <div class="st"><div class="st-n">58</div><div class="st-l">PR / Merged</div></div>
+      <div class="st"><div class="st-n">250+</div><div class="st-l">Backlog</div></div>
     </div>
   </div>
-</section>
+  <div class="footer-rule"></div>
+  <div class="deco deco1"></div>
+</div>
 
-<!-- 03 PROGRESS -->
-<section id="progress" class="slide content-slide">
-  <div class="slide-header fade-in">
-    <h2>Progress <em>Status</em></h2>
-    <span class="slide-num">03 / 06</span>
+<!-- S3: DESIGN DISCUSSIONS -->
+<div class="slide s3" data-i="2">
+  <div class="top"><div class="slabel a0"><span class="label">Design Discussion</span></div></div>
+  <div class="list a1">
+    <div class="item"><div class="item-left"><div class="item-name">Navigation & Panel Layout</div><div class="item-desc">提議統一 Pages 互斥邏輯，待 May 出新 spec</div></div><div class="item-right"><span class="tag tb">[SPEC]</span></div></div>
+    <div class="item"><div class="item-left"><div class="item-name">Win→Mac Leverage 品質落差</div><div class="item-desc">建議優先對齊 CMC 而非 Windows</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
+    <div class="item"><div class="item-left"><div class="item-name">Browser 空條問題</div><div class="item-desc">MAC-11473 — 4/3 修復驗證通過</div></div><div class="item-right"><span class="tag ty">[FIXED]</span></div></div>
+    <div class="item"><div class="item-left"><div class="item-name">Sidebar Profile 滾動</div><div class="item-desc">MAC-11601 — 已歸類 Design-Fit</div></div><div class="item-right"><span class="tag tb">[FILED]</span></div></div>
+    <div class="item"><div class="item-left"><div class="item-name">Browser 出現頻率</div><div class="item-desc">建議降低，配合 Sergey 整體 vision</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
   </div>
-  <div class="slide-body">
-    <div class="progress-grid">
+  <div class="deco deco1"></div>
+</div>
 
-      <div class="progress-item fade-in d1">
-        <div class="pi-name">Chromium<br>(Mac) Adoption</div>
-        <div class="pi-pct">60%</div>
-        <div class="pi-details">
-          <p>Core flows aligned — chat, entry, and base interactions now consistent with native design. Sergey's framework requirements: content area top-aligned, sidebar nav hidden when collapsed (matching Copilot Mac native).</p>
-          <p>Technical challenge: strict top-alignment + collapsed sidebar logic requires refactoring; pending Xiaolin & Sergey's confirmation on final approach.</p>
-          <div>
-            <span class="pi-tag pi-tag--next">Next Steps</span>
-            <ul class="next-list">
-              <li>Design review on the first dev build</li>
-              <li>Await Xiaolin's feedback to adjust plan or reprioritize</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+<!-- S4: PHASE 3 — all-in-one -->
+<div class="slide s4" data-i="3">
+  <div class="header">
+    <div class="slabel a0"><span class="label">AI Transformation</span></div>
+    <div class="big a1">Phase <span class="yh">3</span></div>
+  </div>
+  <div class="phases a2">
+    <div class="ph"><div class="ph-l">Phase 1</div><h3>Get everyone started</h3><ul><li>AI curiosity</li><li>Experimentation</li><li>Learning by doing</li></ul></div>
+    <div class="ph"><div class="ph-l">Phase 2</div><h3>Change how we design</h3><ul><li>Static → dynamic</li><li>Designers → builders</li><li>AI-augmented craft</li></ul></div>
+    <div class="ph now"><div class="ph-l">Phase 3 · Now</div><h3>Change how we work</h3><ul><li>AI as team memory</li><li>Knowledge automation</li><li>Intelligent workflows</li></ul></div>
+  </div>
+  <div class="detail-left a3">
+    <div class="detail-title">本週推進</div>
+    <ul class="detail-list">
+      <li>組織 4/1、4/3 兩場 hands-on session</li>
+      <li>帶領團隊完成 <strong>Claude Code + connector</strong> 配置</li>
+      <li>接入 <strong>Slack、M365、Linear</strong> 三大數據源</li>
+    </ul>
+  </div>
+  <div class="detail-right a3">
+    <div class="detail-title">Why It Matters</div>
+    <ul class="detail-list">
+      <li><strong>Connector = AI agent team memory</strong></li>
+      <li>即時排除 MCP、路徑、proxy 等環境故障</li>
+      <li>目標：全員覆蓋，可複製 onboarding 流程</li>
+    </ul>
+  </div>
+  <div class="deco deco1"></div>
+</div>
 
-      <div class="progress-item fade-in d2">
-        <div class="pi-name">Annual<br>Review Deck</div>
-        <div class="pi-pct" style="color:var(--sage)">Done</div>
-        <div class="pi-details">
-          <div class="annual-wrap">
-            <div>
-              <p>Team collaborated on story architecture and individual module ownership. Completed the overall narrative and layout design.</p>
-              <p>Shanying review completed successfully.</p>
-              <span class="pi-tag pi-tag--done">Complete</span>
-            </div>
-            <div class="annual-imgs">
-              <img src="img1.png" alt="Deck cover">
-              <img src="img2.png" alt="Design Forward">
-              <img src="img3.png" alt="Case study">
-              <img src="img4.png" alt="Feature grid">
-            </div>
-          </div>
-        </div>
-      </div>
-
+<!-- S5: BUG SKILL — hero + compare -->
+<div class="slide s5" data-i="4">
+  <div class="header"><div class="slabel a0"><span class="label">CMC Bug Reporting Skill · v1.2.0</span></div></div>
+  <div class="left a1">
+    <div class="big"><span class="yh">2×</span></div>
+    <div class="big-sub">faster bug filing — from ~5 min to ~2.5 min per issue</div>
+  </div>
+  <div class="right a2">
+    <div class="card before">
+      <div class="card-label">Before · ~5 min</div>
+      <ul>
+        <li>Linear 手動選 Team → Project → Label</li>
+        <li>重複填模板欄位</li>
+        <li>中文自己翻譯成英文</li>
+      </ul>
+    </div>
+    <div class="card after">
+      <div class="card-label">After · ~2.5 min</div>
+      <ul>
+        <li>回答問題即可建立 issue</li>
+        <li>中文直接輸入，自動翻譯</li>
+        <li>截圖自動判斷類型</li>
+        <li>版本號記憶，自動帶入</li>
+      </ul>
     </div>
   </div>
-</section>
+  <div class="footer-rule"></div>
+  <div class="deco deco1"></div>
+</div>
 
-<!-- 04 VIBE CODING -->
-<section id="vibe" class="slide content-slide">
-  <div class="slide-header fade-in">
-    <h2>Vibe Coding <em>Training</em></h2>
-    <span class="slide-num">04 / 06</span>
+<!-- S6: NEXT WEEK -->
+<div class="slide s6" data-i="5">
+  <div class="mind a0">NEXT<br>WEEK</div>
+  <div class="list">
+    <div class="item"><div><div class="item-name">Chromium Dogfood</div><div class="item-desc">持續 design quality review，配合 critical PR merge</div></div><div class="item-right"><span class="tag tb">[ONGOING]</span></div></div>
+    <div class="item"><div><div class="item-name">Split-window spec</div><div class="item-desc">Follow up May 的新互斥邏輯設計</div></div><div class="item-right"><span class="tag ty">[NEW]</span></div></div>
+    <div class="item"><div><div class="item-name">MAC-11487</div><div class="item-desc">跟進 chat 雙擊頂部視窗切換問題</div></div><div class="item-right"><span class="tag tb">[BUG]</span></div></div>
+    <div class="item"><div><div class="item-name">Phase 3 推進</div><div class="item-desc">1:1 輔導，目標全員 connector 覆蓋</div></div><div class="item-right"><span class="tag tb">[ONGOING]</span></div></div>
+    <div class="item"><div><div class="item-name">CMC Bug Skill</div><div class="item-desc">根據團隊 feedback 迭代</div></div><div class="item-right"><span class="tag ty">[ITERATE]</span></div></div>
   </div>
-  <div class="slide-body">
-    <div class="vibe-body fade-in d1">
-      <p>Invited by <strong>Yanti</strong> to share our experience building <strong>Mac native Liquid Glass</strong> with Vibe Coding next week. Will co-present the training session with <strong>Yuchen</strong>.</p>
-      <div class="vibe-highlight">
-        <p>A chance to demonstrate how designers can leverage AI-assisted coding to rapidly prototype and ship native-quality experiences — bridging the gap between design vision and production reality.</p>
-      </div>
-      <span class="pi-tag pi-tag--upcoming" style="margin-top:24px">Upcoming · Next Week</span>
-    </div>
-  </div>
-</section>
-
-<!-- 05 TOP OF MIND -->
-<section id="mind" class="slide content-slide">
-  <div class="slide-header fade-in">
-    <h2>Top of <em>Mind</em></h2>
-    <span class="slide-num">05 / 06</span>
-  </div>
-  <div class="slide-body">
-    <div class="mind-body fade-in d1">
-      <p class="mind-context">On building the Annual Review Deck together</p>
-      <div class="mind-card">
-        <blockquote>The team brought diverse perspectives to the story structure, producing a deck that truly reflects <em>our standard for Copilot Mac quality and design</em>.</blockquote>
-        <div class="mind-divider"></div>
-        <p class="mind-second">The collaborative energy was fantastic — a welcome silver lining after the pivot from the direction we'd invested so much into.</p>
-        <p class="mind-second">Even as we shift toward Chromium, this experience is worth preserving. Passing it on as hard-earned knowledge to other teams is perhaps the most valuable takeaway of all.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 06 CLOSING -->
-<section id="closing" class="slide closing">
-  <h2 class="fade-in">Keep <em>Building</em></h2>
-  <p class="closing-sub fade-in d1">See you next week ✦</p>
-  <div class="page-num">06 / 06</div>
-</section>
+  <div class="ds"></div>
+  <div class="ds2"></div>
+  <div class="deco deco1"></div>
+  <div class="deco deco2"></div>
+</div>
 
 <script>
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.15 });
-document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
-
-const slides = document.querySelectorAll('.slide');
-const dots = document.querySelectorAll('.dot-nav a');
-const navObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      dots.forEach(d => d.classList.remove('active'));
-      const a = document.querySelector(`.dot-nav a[href="#${e.target.id}"]`);
-      if (a) a.classList.add('active');
-    }
+(function(){
+  var c=0,s=document.querySelectorAll('.slide'),t=s.length,ct=document.getElementById('counter'),lk=false;
+  function p(n){return n<10?'0'+n:''+n}
+  function go(i){
+    if(i<0||i>=t||i===c||lk)return;lk=true;
+    var o=s[c];o.classList.remove('active');
+    o.querySelectorAll('.a0,.a1,.a2,.a3,.item,.tag').forEach(function(e){e.style.animation='none';void e.offsetHeight;e.style.animation=''});
+    c=i;s[c].classList.add('active');ct.textContent=p(c+1)+'/'+p(t);
+    setTimeout(function(){lk=false},400)
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();go(c+1)}
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();go(c-1)}
   });
-}, { threshold: 0.5 });
-slides.forEach(s => navObs.observe(s));
+  var tx=0;
+  document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX});
+  document.addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)go(c+(d<0?1:-1))});
+  document.addEventListener('click',function(e){
+    if(e.target.closest('.tag,a,button'))return;
+    if(e.clientX>innerWidth*.65)go(c+1);else if(e.clientX<innerWidth*.35)go(c-1)
+  });
+})();
 </script>
-
 </body>
 </html>
