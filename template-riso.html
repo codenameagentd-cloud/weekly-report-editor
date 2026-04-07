@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Update — David Chen</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: #F5F1EB; color: #1a1a1a; -webkit-font-smoothing: antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ── Slides ── */
+  .slide {
+    position: absolute; inset: 0;
+    opacity: 0; pointer-events: none;
+    display: flex; flex-direction: column;
+    overflow: hidden; padding: 60px 72px;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; }
+
+  /* ── Halftone Texture Overlay ── */
+  .halftone {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background: radial-gradient(circle, #2D5BE3 1px, transparent 1px);
+    background-size: 6px 6px; opacity: 0.04;
+  }
+
+  /* ── Overprint Decoration Circles ── */
+  .deco-circles {
+    position: fixed; pointer-events: none; z-index: 0;
+  }
+  .deco-circles .circle {
+    position: absolute; border-radius: 50%;
+  }
+  .deco-circles .circle-blue {
+    background: #2D5BE3; mix-blend-mode: multiply; opacity: 0.12;
+  }
+  .deco-circles .circle-pink {
+    background: #FF3366; mix-blend-mode: multiply; opacity: 0.10;
+  }
+
+  /* ── Counter ── */
+  #counter {
+    position: fixed; bottom: 36px; right: 48px;
+    font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+    letter-spacing: 4px; text-transform: uppercase; z-index: 1000;
+    color: #2D5BE3; opacity: 0.4;
+  }
+
+  /* ── Tokens ── */
+  .blue { color: #2D5BE3; }
+  .pink { color: #FF3366; }
+  .pink-bg { background: #FF3366; color: #2D5BE3; }
+  .blue-bg { background: #2D5BE3; color: #F5F1EB; }
+
+  .label {
+    font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 5px; color: #2D5BE3;
+    border-bottom: 3px solid #2D5BE3; padding-bottom: 6px; display: inline-block;
+    margin-bottom: 28px;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; padding: 4px 10px;
+    display: inline-block; line-height: 1; vertical-align: middle;
+  }
+  .tag-pink { background: #FF3366; color: #2D5BE3; }
+  .tag-blue { background: #2D5BE3; color: #F5F1EB; }
+
+  /* ── Dual-color heading ── */
+  .dual {
+    position: relative; display: inline-block;
+    color: #2D5BE3; font-family: 'Inter', sans-serif; font-weight: 900;
+    letter-spacing: -2px;
+  }
+  .dual::after {
+    content: attr(data-text);
+    position: absolute; left: 3px; top: 3px;
+    color: #FF3366; mix-blend-mode: multiply;
+    z-index: -1; pointer-events: none;
+  }
+
+  /* ── Condensed heading ── */
+  .big { font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -2px; }
+
+  /* ── Mono ── */
+  .mono { font-family: 'Space Mono', monospace; }
+
+  /* ── Borders ── */
+  .bdr { border: 3px solid #2D5BE3; }
+  .bdr-l { border-left: 3px solid #2D5BE3; }
+
+  /* ── Animations: Riso offset layers ── */
+  @keyframes slideOffset {
+    from { transform: translate(-8px, -8px); opacity: 0; }
+    to { transform: translate(0, 0); opacity: 1; }
+  }
+  @keyframes slideOffsetPink {
+    from { transform: translate(4px, 4px); opacity: 0; }
+    to { transform: translate(0, 0); opacity: 1; }
+  }
+  @keyframes fadeUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .slide.active .a0 { animation: slideOffset .5s cubic-bezier(.19,1,.22,1) both; }
+  .slide.active .a1 { animation: slideOffset .5s cubic-bezier(.19,1,.22,1) .06s both; }
+  .slide.active .a2 { animation: slideOffset .5s cubic-bezier(.19,1,.22,1) .12s both; }
+  .slide.active .a3 { animation: slideOffset .5s cubic-bezier(.19,1,.22,1) .18s both; }
+  .slide.active .a4 { animation: fadeUp .45s cubic-bezier(.19,1,.22,1) .24s both; }
+  .slide.active .a5 { animation: fadeUp .45s cubic-bezier(.19,1,.22,1) .30s both; }
+  .slide.active .a6 { animation: fadeUp .45s cubic-bezier(.19,1,.22,1) .36s both; }
+  .slide.active .a7 { animation: fadeUp .45s cubic-bezier(.19,1,.22,1) .42s both; }
+  .slide.active .a8 { animation: fadeUp .45s cubic-bezier(.19,1,.22,1) .48s both; }
+
+  .slide.active .p0 { animation: slideOffsetPink .5s cubic-bezier(.19,1,.22,1) .08s both; }
+  .slide.active .p1 { animation: slideOffsetPink .5s cubic-bezier(.19,1,.22,1) .14s both; }
+  .slide.active .p2 { animation: slideOffsetPink .5s cubic-bezier(.19,1,.22,1) .20s both; }
+
+  /* ── Utility ── */
+  .flex { display: flex; }
+  .gap-24 { gap: 24px; }
+  .gap-32 { gap: 32px; }
+  .gap-16 { gap: 16px; }
+  .flex-1 { flex: 1; }
+  .items-start { align-items: flex-start; }
+  .items-center { align-items: center; }
+  .wrap { flex-wrap: wrap; }
+  .col { flex-direction: column; }
+  .mb-8 { margin-bottom: 8px; }
+  .mb-12 { margin-bottom: 12px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-24 { margin-bottom: 24px; }
+  .mb-32 { margin-bottom: 32px; }
+  .mt-auto { margin-top: auto; }
+  .p-20 { padding: 20px; }
+  .p-16 { padding: 16px; }
+  .p-24 { padding: 24px; }
+
+  /* ── Item rows ── */
+  .item-row {
+    border-left: 3px solid #2D5BE3; padding: 12px 16px;
+    margin-bottom: 10px; background: rgba(45,91,227,0.03);
+  }
+  .item-row .title {
+    font-weight: 900; font-size: 14px; color: #2D5BE3; letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .item-row .desc {
+    font-size: 13px; color: #444; line-height: 1.5;
+    font-family: 'Inter', sans-serif; font-weight: 400;
+  }
+
+  /* ── Stat box ── */
+  .stat-box {
+    border: 3px solid #2D5BE3; padding: 14px 18px; text-align: center;
+    min-width: 120px;
+  }
+  .stat-box .num {
+    font-weight: 900; font-size: 28px; color: #2D5BE3; letter-spacing: -1px;
+    line-height: 1;
+  }
+  .stat-box .lbl {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; color: #666; margin-top: 6px;
+  }
+
+  /* ── Phase box ── */
+  .phase-box {
+    border: 3px solid #2D5BE3; padding: 16px; flex: 1; text-align: center;
+    font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; color: #2D5BE3;
+  }
+  .phase-box.current {
+    background: #FF3366; color: #F5F1EB; border-color: #FF3366;
+  }
+
+  /* ── Card ── */
+  .card {
+    border: 3px solid #2D5BE3; padding: 20px;
+  }
+  .card-pink {
+    background: #FF3366; border-color: #FF3366; color: #F5F1EB;
+  }
+  .card-muted {
+    background: rgba(45,91,227,0.04); border-color: rgba(45,91,227,0.2);
+    color: #888;
+  }
+
+  /* ── Callout ── */
+  .callout {
+    background: #FF3366; color: #2D5BE3; padding: 18px 20px;
+    font-size: 13px; line-height: 1.7; font-weight: 700;
+  }
+
+  /* ── Small type ── */
+  .small { font-size: 13px; line-height: 1.6; }
+  .xs { font-size: 11px; }
+  .bold { font-weight: 700; }
+  .xbold { font-weight: 900; }
+</style>
+</head>
+<body>
+
+<!-- Halftone overlay -->
+<div class="halftone"></div>
+
+<!-- Decorative overprint circles -->
+<div class="deco-circles" style="inset:0; position:fixed;">
+  <div class="circle circle-blue" style="width:280px;height:280px;top:-60px;right:-40px;"></div>
+  <div class="circle circle-pink" style="width:220px;height:220px;top:-30px;right:-10px;"></div>
+  <div class="circle circle-blue" style="width:180px;height:180px;bottom:-50px;left:-40px;"></div>
+  <div class="circle circle-pink" style="width:140px;height:140px;bottom:-20px;left:-10px;"></div>
+</div>
+
+<!-- Counter -->
+<div id="counter">01/06</div>
+
+<!-- ═══════════════ S1 — TITLE ═══════════════ -->
+<div class="slide active" style="justify-content:center; align-items:flex-start;">
+  <!-- Extra halftone texture on title -->
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,#FF3366 1px,transparent 1px);background-size:8px 8px;opacity:0.03;"></div>
+  <div style="position:relative;z-index:2;">
+    <div class="a0" style="font-size:96px;line-height:0.95;margin-bottom:32px;">
+      <span class="dual big" data-text="WEEKLY" style="font-size:96px;display:block;">WEEKLY</span>
+      <span class="dual big" data-text="UPDATE" style="font-size:96px;display:block;">UPDATE</span>
+    </div>
+    <div class="a1 flex gap-24 items-center" style="margin-bottom:16px;">
+      <span style="font-weight:900;font-size:20px;color:#2D5BE3;letter-spacing:-0.5px;">David Chen</span>
+    </div>
+    <div class="a2 mono" style="font-size:14px;font-weight:700;color:#FF3366;letter-spacing:2px;">
+      03.28 — 04.03
+    </div>
+  </div>
+  <!-- Decorative overprint circles -->
+  <div style="position:absolute;right:120px;bottom:140px;pointer-events:none;">
+    <div style="width:160px;height:160px;border-radius:50%;background:#2D5BE3;mix-blend-mode:multiply;opacity:0.15;position:absolute;top:0;left:0;" class="p0"></div>
+    <div style="width:160px;height:160px;border-radius:50%;background:#FF3366;mix-blend-mode:multiply;opacity:0.12;position:absolute;top:30px;left:40px;" class="p1"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ S2 — CHROMIUM ═══════════════ -->
+<div class="slide">
+  <div class="label a0">Copilot Mac Chromium</div>
+  <div class="flex gap-32 flex-1">
+    <!-- Left -->
+    <div style="flex:1.2;" class="flex col">
+      <div class="a1 mb-24">
+        <span class="dual big" data-text="179" style="font-size:120px;line-height:1;">179</span>
+      </div>
+      <div class="a2 small mb-24" style="color:#444;">
+        issues closed this week · <span class="bold blue">158</span> Chromium-labeled
+      </div>
+      <div class="a4 flex gap-16 wrap mt-auto">
+        <div class="stat-box">
+          <div class="num">171</div>
+          <div class="lbl">In Progress</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">58</div>
+          <div class="lbl">PR/Merged</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">250+</div>
+          <div class="lbl">Backlog</div>
+        </div>
+      </div>
+    </div>
+    <!-- Right -->
+    <div style="flex:1;" class="flex col">
+      <div class="a3 callout" style="margin-bottom:auto;">
+        <div style="margin-bottom:10px;">Dev Build 正式發布 workstream-wide internal dogfood on staging</div>
+        <div>被列入官方公告核心貢獻者（Designer / Tester / PM 代表）on Slack</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ S3 — DESIGN DISCUSSIONS ═══════════════ -->
+<div class="slide">
+  <div class="label a0">Design Discussion</div>
+  <div style="flex:1;overflow-y:auto;">
+    <div class="item-row a1">
+      <div class="flex items-center gap-16 mb-8">
+        <span class="title">Navigation & Panel Layout</span>
+        <span class="tag tag-blue">SPEC</span>
+      </div>
+      <div class="desc">釐清 sidebar / IAB / browser panel 三者共存規則，提議統一 Pages 互斥邏輯，待 May 出新 spec</div>
+    </div>
+    <div class="item-row a2">
+      <div class="flex items-center gap-16 mb-8">
+        <span class="title">Win→Mac Leverage 品質落差</span>
+        <span class="tag tag-blue">REVIEW</span>
+      </div>
+      <div class="desc">從 Windows leverage 的還原度比 CMC 更差，建議優先對齊 CMC</div>
+    </div>
+    <div class="item-row a3">
+      <div class="flex items-center gap-16 mb-8">
+        <span class="title">Browser 空條問題</span>
+        <span class="tag tag-pink">FIXED</span>
+      </div>
+      <div class="desc">MAC-11473 — 所有 browser window 頂部空白條，4/3 修復驗證通過</div>
+    </div>
+    <div class="item-row a4">
+      <div class="flex items-center gap-16 mb-8">
+        <span class="title">Sidebar Profile 滾動</span>
+        <span class="tag tag-blue">FILED</span>
+      </div>
+      <div class="desc">MAC-11601 — profile section 應固定不隨列表滾動，已歸類 Design-Fit</div>
+    </div>
+    <div class="item-row a5">
+      <div class="flex items-center gap-16 mb-8">
+        <span class="title">Browser 出現頻率</span>
+        <span class="tag tag-blue">REVIEW</span>
+      </div>
+      <div class="desc">建議降低 browser panel 出現頻率，配合 Sergey 整體 vision</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ S4 — AI TRANSFORMATION ═══════════════ -->
+<div class="slide">
+  <div class="label a0">AI Transformation</div>
+  <div class="a1 mb-24">
+    <span class="dual big" data-text="Phase 3" style="font-size:64px;">Phase 3</span>
+  </div>
+  <!-- Phase indicator boxes -->
+  <div class="flex gap-16 mb-32 a2">
+    <div class="phase-box">Phase 1</div>
+    <div class="phase-box">Phase 2</div>
+    <div class="phase-box current">Phase 3</div>
+  </div>
+  <!-- Details -->
+  <div class="flex gap-32 flex-1">
+    <div class="flex-1 a4">
+      <div class="bold blue mb-12" style="font-size:15px;letter-spacing:-0.5px;">本週推進</div>
+      <div class="card small" style="color:#444;line-height:1.8;">
+        <div style="margin-bottom:6px;">組織 4/1、4/3 兩場 hands-on session</div>
+        <div style="margin-bottom:6px;">帶領團隊完成 Claude Code + connector 配置</div>
+        <div>接入 Slack、M365、Linear 三大數據源</div>
+      </div>
+    </div>
+    <div class="flex-1 a5">
+      <div class="bold pink mb-12" style="font-size:15px;letter-spacing:-0.5px;">Why It Matters</div>
+      <div class="card small" style="color:#444;line-height:1.8;">
+        <div style="margin-bottom:6px;">Connector = AI agent team memory</div>
+        <div style="margin-bottom:6px;">即時排除 MCP、路徑、proxy 等環境故障</div>
+        <div>目標：全員覆蓋，可複製 onboarding 流程</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ S5 — BUG SKILL ═══════════════ -->
+<div class="slide">
+  <div class="label a0">CMC Bug Reporting Skill · v1.2.0</div>
+  <div class="flex gap-32 flex-1">
+    <!-- Left -->
+    <div style="flex:1;" class="flex col">
+      <div class="a1 mb-16">
+        <span class="dual big" data-text="2×" style="font-size:110px;line-height:1;">2×</span>
+      </div>
+      <div class="a2 small" style="color:#444;">
+        faster bug filing — from ~5 min to ~2.5 min per issue
+      </div>
+    </div>
+    <!-- Right -->
+    <div style="flex:1;" class="flex col gap-24">
+      <div class="a3">
+        <div class="mono xs bold blue mb-8" style="letter-spacing:2px;text-transform:uppercase;">Before</div>
+        <div class="card card-muted small" style="line-height:1.8;">
+          <div>手動截圖 + 貼圖 + 寫描述</div>
+          <div>反覆切換 browser / issue tracker</div>
+          <div>格式不一致，常漏關鍵資訊</div>
+        </div>
+      </div>
+      <div class="a5">
+        <div class="mono xs bold pink mb-8" style="letter-spacing:2px;text-transform:uppercase;">After</div>
+        <div class="card card-pink small" style="line-height:1.8;">
+          <div>一鍵觸發 skill，自動擷取畫面</div>
+          <div>自動填入 repro steps + expected/actual</div>
+          <div>統一格式，欄位完整度 100%</div>
+          <div>支援 batch filing（連續回報）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ S6 — NEXT WEEK ═══════════════ -->
+<div class="slide">
+  <div class="a0 mb-32">
+    <span class="dual big" data-text="NEXT WEEK" style="font-size:72px;">NEXT WEEK</span>
+  </div>
+  <div style="flex:1;">
+    <div class="item-row a1">
+      <div class="flex items-center gap-16 mb-8">
+        <span class="title">Chromium Dogfood</span>
+        <span class="tag tag-blue">ONGOING</span>
+      </div>
+      <div class="desc">持續 design quality review，配合 critical PR merge</div>
+    </div>
+    <div class="item-row a2">
+      <div class="flex items-center gap-16 mb-8">
+        <span class="title">Split-window spec</span>
+        <span class="tag tag-pink">NEW</span>
+      </div>
+      <div class="desc">Follow up May 的新互斥邏輯設計</div>
+    </div>
+    <div class="item-row a3">
+      <div class="flex items-center gap-16 mb-8">
+        <span class="title">MAC-11487</span>
+        <span class="tag tag-blue">BUG</span>
+      </div>
+      <div class="desc">跟進 chat 雙擊頂部視窗切換問題</div>
+    </div>
+    <div class="item-row a4">
+      <div class="flex items-center gap-16 mb-8">
+        <span class="title">Phase 3 推進</span>
+        <span class="tag tag-blue">ONGOING</span>
+      </div>
+      <div class="desc">1:1 輔導，目標全員 connector 覆蓋</div>
+    </div>
+    <div class="item-row a5">
+      <div class="flex items-center gap-16 mb-8">
+        <span class="title">CMC Bug Skill</span>
+        <span class="tag tag-pink">ITERATE</span>
+      </div>
+      <div class="desc">根據團隊 feedback 迭代</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var c=0,s=document.querySelectorAll('.slide'),t=s.length,ct=document.getElementById('counter'),lk=false;
+  function p(n){return n<10?'0'+n:''+n}
+  function go(i){
+    if(i<0||i>=t||i===c||lk)return;lk=true;
+    var o=s[c];o.classList.remove('active');
+    o.querySelectorAll('[class*="a0"],[class*="a1"],[class*="a2"],[class*="a3"],[class*="a4"],[class*="a5"],[class*="a6"],[class*="a7"],[class*="a8"],[class*="p0"],[class*="p1"],[class*="p2"]').forEach(function(e){e.style.animation='none';void e.offsetHeight;e.style.animation=''});
+    c=i;s[c].classList.add('active');ct.textContent=p(c+1)+'/'+p(t);
+    setTimeout(function(){lk=false},400)
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();go(c+1)}
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();go(c-1)}
+  });
+  var tx=0;
+  document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX});
+  document.addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)go(c+(d<0?1:-1))});
+  document.addEventListener('click',function(e){
+    if(e.target.closest('.tag,a,button'))return;
+    if(e.clientX>innerWidth*.65)go(c+1);else if(e.clientX<innerWidth*.35)go(c-1)
+  });
+})();
+</script>
+</body>
+</html>

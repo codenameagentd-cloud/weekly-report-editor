@@ -2,520 +2,237 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weekly Status Update</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Weekly Update — Gradient Mesh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;font-weight:400;color:#fff;background:#0a0a1a}
+body{
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(124,58,237,0.5), transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.5), transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgba(236,72,153,0.4), transparent 50%),
+    #0a0a1a;
+  background-attachment:fixed;
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.035;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:128px 128px;
+}
 
-  *, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+/* counter */
+#counter{position:fixed;top:32px;left:40px;font-family:'Space Mono',monospace;font-size:13px;color:rgba(255,255,255,0.5);z-index:100;letter-spacing:1px}
 
-  html {
-    overflow: hidden;
-    height: 100%;
-  }
+/* slides */
+.slide{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;padding:72px 80px;opacity:0;pointer-events:none;transition:opacity .35s ease}
+.slide.active{opacity:1;pointer-events:auto}
 
-  body {
-    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-    color: #ffffff;
-    height: 100%;
-    overflow: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+/* animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.slide.active .a0{animation:fadeUp .5s ease-out both}
+.slide.active .a1{animation:fadeUp .5s ease-out .08s both}
+.slide.active .a2{animation:fadeUp .5s ease-out .16s both}
+.slide.active .a3{animation:fadeUp .5s ease-out .24s both}
+.slide.active .a4{animation:fadeUp .5s ease-out .32s both}
+.slide.active .a5{animation:fadeUp .5s ease-out .40s both}
 
-  /* ── Slides ── */
+/* typography */
+.xbold{font-weight:900;font-size:clamp(48px,7.5vw,96px);line-height:1;color:#fff;text-shadow:0 0 40px rgba(124,58,237,0.4)}
+.tl{line-height:1.05}
+.yh{background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{font-weight:300;font-size:15px;margin-top:16px;color:rgba(255,255,255,0.6);letter-spacing:1px}
+.big{font-size:clamp(56px,8vw,112px);font-weight:700;line-height:1;text-shadow:0 0 50px rgba(124,58,237,0.35)}
+.big-sub{font-size:14px;font-weight:300;color:rgba(255,255,255,0.55);margin-top:8px;max-width:320px}
 
-  .slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.6s ease;
-    padding: 60px 80px;
-    overflow: hidden;
-  }
+/* labels & tags */
+.slabel{display:inline-block;background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:6px 18px}
+.label{font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.7)}
+.tag{display:inline-block;font-family:'Space Mono',monospace;font-size:10px;padding:3px 10px;border-radius:6px;letter-spacing:.5px}
+.tb{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.15)}
+.ty{background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none}
 
-  .slide.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
+/* glassmorphic base */
+.item,.callout,.card,.st,.ph{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;
+}
 
-  /* ── Gradient backgrounds ── */
+/* ---------- S1 ---------- */
+.s1{justify-content:center;align-items:flex-start}
+.s1 .tb0{margin-left:6vw}
+.s1 .db{position:absolute;bottom:72px;right:80px;font-family:'Space Mono',monospace;font-size:13px;color:rgba(255,255,255,0.4);letter-spacing:1px}
+.s1 .vr{position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,0.04)}
+.s1 .hr{position:absolute;top:50%;left:0;width:100%;height:1px;background:rgba(255,255,255,0.04)}
+.s1 .cm{position:absolute;top:50%;left:50%;width:12px;height:12px;border-radius:50%;transform:translate(-50%,-50%);border:1.5px solid rgba(255,255,255,0.15)}
 
-  .slide-1 { background: linear-gradient(135deg, #7C3AED, #2563EB); }
-  .slide-2 { background: linear-gradient(135deg, #2563EB, #0891B2); }
-  .slide-3 { background: linear-gradient(135deg, #0891B2, #059669); }
-  .slide-4 { background: linear-gradient(135deg, #7C3AED, #DB2777); }
-  .slide-5 { background: linear-gradient(135deg, #2563EB, #7C3AED); }
+/* ---------- S2 ---------- */
+.s2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto;gap:24px;align-items:start}
+.s2 .header{grid-column:1/-1}
+.s2 .left{padding-top:24px}
+.s2 .right{display:flex;flex-direction:column;gap:20px}
+.s2 .callout{padding:24px;font-size:13px;line-height:1.8;color:rgba(255,255,255,0.8)}
+.s2 .callout ul{padding-left:18px}
+.s2 .callout li{margin-bottom:4px}
+.s2 .stat-row{display:flex;gap:12px}
+.s2 .st{flex:1;padding:20px;text-align:center}
+.s2 .st-n{font-size:28px;font-weight:700}
+.s2 .st-l{font-size:11px;font-weight:300;color:rgba(255,255,255,0.5);margin-top:4px;letter-spacing:.5px}
+.s2 .footer-rule{grid-column:1/-1;height:1px;background:rgba(255,255,255,0.06)}
 
-  /* ── Floating orbs ── */
+/* ---------- S3 ---------- */
+.s3{display:flex;flex-direction:column;gap:16px}
+.s3 .top{margin-bottom:8px}
+.s3 .list{display:flex;flex-direction:column;gap:10px;flex:1;overflow-y:auto}
+.item{display:flex;align-items:center;gap:16px;padding:16px 20px}
+.item-num{font-family:'Space Mono',monospace;font-size:13px;color:rgba(255,255,255,0.3);min-width:28px}
+.item-left{flex:1}
+.item-name{font-weight:500;font-size:14px;margin-bottom:3px}
+.item-desc{font-weight:300;font-size:12px;color:rgba(255,255,255,0.55);line-height:1.6}
+.item-right{flex-shrink:0}
 
-  .orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.3;
-    pointer-events: none;
-    animation: orbFloat 8s ease-in-out infinite;
-  }
+/* ---------- S4 ---------- */
+.s4{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;gap:20px 32px}
+.s4 .header{grid-column:1/-1;display:flex;align-items:center;gap:24px}
+.s4 .header .big{font-size:clamp(40px,5vw,64px)}
+.s4 .phases{grid-column:1/-1;display:flex;gap:14px}
+.ph{flex:1;padding:24px;position:relative}
+.ph .ph-l{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:10px}
+.ph h3{font-size:15px;font-weight:600;margin-bottom:10px}
+.ph ul{padding-left:16px;font-size:12px;font-weight:300;color:rgba(255,255,255,0.65);line-height:1.8}
+.ph.now{background:rgba(255,255,255,0.12);border:1px solid transparent;background-clip:padding-box;position:relative}
+.ph.now::before{content:'';position:absolute;inset:-1px;border-radius:13px;padding:1px;background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.s4 .detail-left,.s4 .detail-right{padding:0 4px}
+.detail-title{font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.5);padding-bottom:8px;margin-bottom:12px;border-bottom:2px solid;border-image:linear-gradient(90deg,#7c3aed,transparent) 1}
+.detail-list{padding-left:16px;font-size:12px;font-weight:300;color:rgba(255,255,255,0.7);line-height:1.9}
+.detail-list strong{font-weight:600;color:#fff}
 
-  .slide .orb:nth-child(2) {
-    animation-delay: -2.5s;
-    animation-duration: 10s;
-  }
+/* ---------- S5 ---------- */
+.s5{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto;gap:24px;align-items:start}
+.s5 .header{grid-column:1/-1}
+.s5 .left{padding-top:16px}
+.s5 .right{display:flex;flex-direction:column;gap:16px}
+.card{padding:24px;position:relative}
+.card-label{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:12px}
+.card ul{padding-left:16px;font-size:12px;font-weight:300;color:rgba(255,255,255,0.7);line-height:1.9}
+.card.before{opacity:0.7}
+.card.after{background:rgba(255,255,255,0.1);position:relative}
+.card.after::before{content:'';position:absolute;inset:-1px;border-radius:13px;padding:1px;background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.s5 .footer-rule{grid-column:1/-1;height:1px;background:rgba(255,255,255,0.06)}
 
-  .slide .orb:nth-child(3) {
-    animation-delay: -5s;
-    animation-duration: 12s;
-  }
+/* ---------- S6 ---------- */
+.s6{display:flex;flex-direction:column;gap:16px}
+.s6 .mind{font-size:clamp(48px,7vw,88px);font-weight:900;line-height:1.05;margin-bottom:8px;text-shadow:0 0 40px rgba(124,58,237,0.4)}
+.s6 .list{display:flex;flex-direction:column;gap:10px;flex:1;overflow-y:auto}
+.s6 .item{display:flex;align-items:center;gap:16px;padding:16px 20px}
 
-  /* ── Glass card ── */
+/* ds lines */
+.ds{position:absolute;bottom:60px;left:80px;width:30%;height:1px;background:linear-gradient(90deg,#7c3aed,transparent)}
+.ds2{position:absolute;bottom:52px;left:80px;width:18%;height:1px;background:linear-gradient(90deg,rgba(236,72,153,0.5),transparent)}
 
-  .glass {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 24px;
-    padding: 40px;
-  }
+/* deco orbs */
+.deco{position:absolute;border-radius:50%;pointer-events:none;filter:blur(80px);opacity:0.25}
+.deco1{width:300px;height:300px;bottom:-80px;right:-60px;background:radial-gradient(circle,rgba(124,58,237,0.6),rgba(236,72,153,0.3),transparent 70%)}
+.deco2{width:200px;height:200px;top:-40px;left:-40px;background:radial-gradient(circle,rgba(59,130,246,0.5),transparent 70%)}
 
-  /* ── Pill label ── */
-
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    border-radius: 100px;
-    background: rgba(255, 255, 255, 0.16);
-    padding: 6px 18px;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-  }
-
-  .pill-sm {
-    padding: 4px 14px;
-    font-size: 12px;
-  }
-
-  /* ── Dot indicators ── */
-
-  .indicators {
-    position: fixed;
-    bottom: 36px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 1000;
-    align-items: center;
-  }
-
-  .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 100px;
-    background: rgba(255, 255, 255, 0.4);
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
-    cursor: pointer;
-  }
-
-  .dot.active {
-    width: 24px;
-    background: rgba(255, 255, 255, 0.95);
-  }
-
-  /* ═══════════════════════════════════
-     SLIDE 1 — Title
-     ═══════════════════════════════════ */
-
-  .slide-1 .title-main {
-    font-size: 88px;
-    font-weight: 800;
-    letter-spacing: -2.5px;
-    line-height: 1.05;
-    text-align: center;
-    margin-bottom: 28px;
-  }
-
-  .slide-1 .title-date {
-    margin-bottom: 20px;
-  }
-
-  .slide-1 .title-sub {
-    font-size: 20px;
-    font-weight: 400;
-    opacity: 0.7;
-    letter-spacing: 0.3px;
-  }
-
-  /* ═══════════════════════════════════
-     SLIDE 2 — Summary
-     ═══════════════════════════════════ */
-
-  .slide-2 .glass {
-    max-width: 800px;
-    width: 100%;
-  }
-
-  .slide-2 .summary-label {
-    margin-bottom: 32px;
-  }
-
-  .slide-2 .summary-text {
-    font-size: 34px;
-    font-weight: 400;
-    line-height: 1.45;
-    letter-spacing: -0.3px;
-  }
-
-  .slide-2 .highlight-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 16px;
-    padding: 12px 28px;
-    font-size: 56px;
-    font-weight: 800;
-    letter-spacing: -1px;
-    margin-top: 32px;
-  }
-
-  /* ═══════════════════════════════════
-     SLIDE 3 — Progress
-     ═══════════════════════════════════ */
-
-  .slide-3 .progress-row {
-    display: flex;
-    gap: 24px;
-    max-width: 1100px;
-    width: 100%;
-  }
-
-  .slide-3 .progress-card {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 32px;
-  }
-
-  .slide-3 .status-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-  }
-
-  .slide-3 .status-dot.done { background: #34D399; box-shadow: 0 0 12px rgba(52, 211, 153, 0.5); }
-  .slide-3 .status-dot.progress { background: #60A5FA; box-shadow: 0 0 12px rgba(96, 165, 250, 0.5); }
-  .slide-3 .status-dot.blocked { background: #FBBF24; box-shadow: 0 0 12px rgba(251, 191, 36, 0.5); }
-
-  .slide-3 .card-title {
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 12px;
-    line-height: 1.3;
-  }
-
-  .slide-3 .card-desc {
-    font-size: 16px;
-    font-weight: 400;
-    opacity: 0.7;
-    line-height: 1.5;
-    margin-bottom: auto;
-    padding-bottom: 24px;
-  }
-
-  .slide-3 .card-tag.done { background: rgba(52, 211, 153, 0.2); border-color: rgba(52, 211, 153, 0.3); }
-  .slide-3 .card-tag.progress { background: rgba(96, 165, 250, 0.2); border-color: rgba(96, 165, 250, 0.3); }
-  .slide-3 .card-tag.blocked { background: rgba(251, 191, 36, 0.2); border-color: rgba(251, 191, 36, 0.3); }
-
-  /* ═══════════════════════════════════
-     SLIDE 4 — Newsletter
-     ═══════════════════════════════════ */
-
-  .slide-4 .glass {
-    max-width: 800px;
-    width: 100%;
-  }
-
-  .slide-4 .newsletter-label {
-    margin-bottom: 32px;
-  }
-
-  .slide-4 .newsletter-text {
-    font-size: 32px;
-    font-weight: 400;
-    line-height: 1.45;
-    letter-spacing: -0.3px;
-  }
-
-  /* ═══════════════════════════════════
-     SLIDE 5 — Top of Mind
-     ═══════════════════════════════════ */
-
-  .slide-5 .glass {
-    max-width: 800px;
-    width: 100%;
-  }
-
-  .slide-5 .tom-label {
-    margin-bottom: 32px;
-  }
-
-  .slide-5 .tom-text {
-    font-size: 32px;
-    font-weight: 400;
-    line-height: 1.45;
-    letter-spacing: -0.3px;
-  }
-
-  /* ── Keyframes ── */
-
-  @keyframes gradientFloatUp {
-    from { opacity: 0; transform: translateY(40px); filter: blur(4px); }
-    to { opacity: 1; transform: translateY(0); filter: blur(0px); }
-  }
-
-  @keyframes gradientFadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes orbFloat {
-    0%, 100% { transform: translate(0, 0); }
-    25% { transform: translate(10px, -15px); }
-    50% { transform: translate(-5px, -25px); }
-    75% { transform: translate(-15px, -10px); }
-  }
-
-  /* ── Slide entry animations ── */
-
-  .slide.active .glass {
-    animation: gradientFloatUp 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: 0.1s;
-  }
-
-  .slide.active .title-main {
-    animation: gradientFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: 0.05s;
-  }
-
-  .slide.active .pill {
-    animation: gradientFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: 0.15s;
-  }
-
-  .slide.active .title-sub {
-    animation: gradientFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: 0.25s;
-  }
-
-  .slide.active .summary-text,
-  .slide.active .newsletter-text,
-  .slide.active .tom-text {
-    animation: gradientFadeUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: 0.2s;
-  }
-
-  .slide.active .highlight-badge {
-    animation: gradientFadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: 0.35s;
-  }
-
-  /* Progress cards stagger */
-  .slide.active .progress-card:nth-child(1) {
-    animation: gradientFloatUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: 0.1s;
-  }
-
-  .slide.active .progress-card:nth-child(2) {
-    animation: gradientFloatUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: 0.2s;
-  }
-
-  .slide.active .progress-card:nth-child(3) {
-    animation: gradientFloatUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-delay: 0.3s;
-  }
+/* responsive */
+@media(max-width:768px){
+  .slide{padding:48px 28px}
+  #counter{top:20px;left:24px}
+  .s2,.s5{grid-template-columns:1fr}
+  .s4{grid-template-columns:1fr}
+  .s4 .phases{flex-direction:column}
+  .xbold{font-size:clamp(36px,10vw,56px)}
+}
 </style>
 </head>
 <body>
-
-<!-- ════════════════════════════════════════
-     SLIDE 1 — Title
-     ════════════════════════════════════════ -->
-<div class="slide slide-1 active" data-slide="0">
-  <!-- Orbs -->
-  <div class="orb" style="width:480px;height:480px;top:-120px;right:-80px;background:radial-gradient(circle,rgba(165,100,255,0.6),transparent 70%);"></div>
-  <div class="orb" style="width:400px;height:400px;bottom:-100px;left:-60px;background:radial-gradient(circle,rgba(56,150,255,0.5),transparent 70%);"></div>
-  <div class="orb" style="width:320px;height:320px;top:40%;left:60%;background:radial-gradient(circle,rgba(120,80,255,0.35),transparent 70%);"></div>
-
-  <h1 class="title-main">Weekly Status</h1>
-  <div class="pill title-date" data-content="date">March 10, 2026</div>
-  <p class="title-sub">Design &amp; Engineering — Weekly Sync</p>
+<div id="counter">01/06</div>
+<div class="slide s1 active" data-i="0">
+  <div class="vr"></div><div class="hr"></div>
+  <div class="tb0 a0"><div class="tl xbold">WEEKLY</div><div class="tl xbold"><span class="yh">UPDATE</span></div><p class="sub">David Chen</p></div>
+  <div class="db a1">03.28 — 04.03</div>
+  <div class="cm"></div>
 </div>
-
-<!-- ════════════════════════════════════════
-     SLIDE 2 — Summary
-     ════════════════════════════════════════ -->
-<div class="slide slide-2" data-slide="1">
-  <!-- Orbs -->
-  <div class="orb" style="width:440px;height:440px;top:-80px;left:-100px;background:radial-gradient(circle,rgba(37,99,235,0.5),transparent 70%);"></div>
-  <div class="orb" style="width:360px;height:360px;bottom:-60px;right:-40px;background:radial-gradient(circle,rgba(8,145,178,0.5),transparent 70%);"></div>
-  <div class="orb" style="width:300px;height:300px;top:50%;right:20%;background:radial-gradient(circle,rgba(56,189,248,0.3),transparent 70%);"></div>
-
-  <div class="glass">
-    <div class="pill summary-label">Summary</div>
-    <p class="summary-text" data-content="summary">Copilot adoption reached <strong>85%</strong> across all engineering teams, exceeding our Q1 target of 75%.</p>
-    <div class="highlight-badge" data-content="summary-stat">85%</div>
+<div class="slide s2" data-i="1">
+  <div class="header"><div class="slabel a0"><span class="label">Copilot Mac Chromium</span></div></div>
+  <div class="left a1"><div class="big"><span class="yh">179</span></div><div class="big-sub">issues closed this week · 158 Chromium-labeled</div></div>
+  <div class="right">
+    <div class="callout a2"><ul><li>Dev Build 正式發布 workstream-wide internal dogfood on staging</li><li>被列入官方公告核心貢獻者（Designer / Tester / PM 代表）on Slack</li></ul></div>
+    <div class="stat-row a3"><div class="st"><div class="st-n">171</div><div class="st-l">In Progress</div></div><div class="st"><div class="st-n">58</div><div class="st-l">PR / Merged</div></div><div class="st"><div class="st-n">250+</div><div class="st-l">Backlog</div></div></div>
   </div>
+  <div class="footer-rule"></div><div class="deco deco1"></div>
 </div>
-
-<!-- ════════════════════════════════════════
-     SLIDE 3 — Progress
-     ════════════════════════════════════════ -->
-<div class="slide slide-3" data-slide="2">
-  <!-- Orbs -->
-  <div class="orb" style="width:500px;height:500px;top:-140px;left:10%;background:radial-gradient(circle,rgba(8,145,178,0.45),transparent 70%);"></div>
-  <div class="orb" style="width:380px;height:380px;bottom:-80px;right:5%;background:radial-gradient(circle,rgba(5,150,105,0.5),transparent 70%);"></div>
-  <div class="orb" style="width:300px;height:300px;top:60%;left:-60px;background:radial-gradient(circle,rgba(52,211,153,0.3),transparent 70%);"></div>
-
-  <div class="progress-row">
-    <!-- Card 1 — Done -->
-    <div class="glass progress-card">
-      <div class="status-dot done"></div>
-      <div class="card-title" data-content="progress-1-title">Design System v3</div>
-      <div class="card-desc" data-content="progress-1-desc">Shipped to production</div>
-      <div class="pill pill-sm card-tag done">Done</div>
-    </div>
-
-    <!-- Card 2 — In Progress -->
-    <div class="glass progress-card">
-      <div class="status-dot progress"></div>
-      <div class="card-title" data-content="progress-2-title">AI Assistant Integration</div>
-      <div class="card-desc" data-content="progress-2-desc">Development at 70%</div>
-      <div class="pill pill-sm card-tag progress">In Progress</div>
-    </div>
-
-    <!-- Card 3 — Blocked -->
-    <div class="glass progress-card">
-      <div class="status-dot blocked"></div>
-      <div class="card-title" data-content="progress-3-title">Accessibility Audit</div>
-      <div class="card-desc" data-content="progress-3-desc">Blocked by vendor response</div>
-      <div class="pill pill-sm card-tag blocked">Blocked</div>
-    </div>
+<div class="slide s3" data-i="2">
+  <div class="top"><div class="slabel a0"><span class="label">Design Discussion</span></div></div>
+  <div class="list">
+    <div class="item a1"><div class="item-num">01</div><div class="item-left"><div class="item-name">Navigation & Panel Layout</div><div class="item-desc">釐清 sidebar / IAB / browser panel 三者共存規則，提議統一 Pages 互斥邏輯，待 May 出新 spec</div></div><div class="item-right"><span class="tag tb">[SPEC]</span></div></div>
+    <div class="item a2"><div class="item-num">02</div><div class="item-left"><div class="item-name">Win→Mac Leverage 品質落差</div><div class="item-desc">從 Windows leverage 的還原度比 CMC 更差，建議優先對齊 CMC</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
+    <div class="item a3"><div class="item-num">03</div><div class="item-left"><div class="item-name">Browser 空條問題</div><div class="item-desc">MAC-11473 — 所有 browser window 頂部空白條，4/3 修復驗證通過</div></div><div class="item-right"><span class="tag ty">[FIXED]</span></div></div>
+    <div class="item a4"><div class="item-num">04</div><div class="item-left"><div class="item-name">Sidebar Profile 滾動</div><div class="item-desc">MAC-11601 — profile section 應固定不隨列表滾動，已歸類 Design-Fit</div></div><div class="item-right"><span class="tag tb">[FILED]</span></div></div>
+    <div class="item a5"><div class="item-num">05</div><div class="item-left"><div class="item-name">Browser 出現頻率</div><div class="item-desc">建議降低 browser panel 出現頻率，配合 Sergey 整體 vision</div></div><div class="item-right"><span class="tag tb">[REVIEW]</span></div></div>
   </div>
+  <div class="deco deco1"></div>
 </div>
-
-<!-- ════════════════════════════════════════
-     SLIDE 4 — Newsletter
-     ════════════════════════════════════════ -->
-<div class="slide slide-4" data-slide="3" data-section="newsletter">
-  <!-- Orbs -->
-  <div class="orb" style="width:460px;height:460px;top:-100px;right:-60px;background:radial-gradient(circle,rgba(219,39,119,0.5),transparent 70%);"></div>
-  <div class="orb" style="width:380px;height:380px;bottom:-80px;left:-40px;background:radial-gradient(circle,rgba(124,58,237,0.45),transparent 70%);"></div>
-  <div class="orb" style="width:320px;height:320px;top:30%;left:15%;background:radial-gradient(circle,rgba(236,72,153,0.3),transparent 70%);"></div>
-
-  <div class="glass">
-    <div class="pill newsletter-label">Newsletter</div>
-    <p class="newsletter-text" data-content="newsletter">Published Q1 design retrospective. Key finding: reducing visual noise improved task completion rate by <strong>23%</strong>.</p>
+<div class="slide s4" data-i="3">
+  <div class="header"><div class="slabel a0"><span class="label">AI Transformation</span></div><div class="big a1">Phase <span class="yh">3</span></div></div>
+  <div class="phases a2">
+    <div class="ph"><div class="ph-l">Phase 1</div><h3>Get everyone started</h3><ul><li>AI curiosity</li><li>Experimentation</li><li>Learning by doing</li></ul></div>
+    <div class="ph"><div class="ph-l">Phase 2</div><h3>Change how we design</h3><ul><li>Static → dynamic</li><li>Designers → builders</li><li>AI-augmented craft</li></ul></div>
+    <div class="ph now"><div class="ph-l">Phase 3 · Now</div><h3>Change how we work</h3><ul><li>AI as team memory</li><li>Knowledge automation</li><li>Intelligent workflows</li></ul></div>
   </div>
+  <div class="detail-left a3"><div class="detail-title">本週推進</div><ul class="detail-list"><li>組織 4/1、4/3 兩場 hands-on session</li><li>帶領團隊完成 <strong>Claude Code + connector</strong> 配置</li><li>接入 <strong>Slack、M365、Linear</strong> 三大數據源</li></ul></div>
+  <div class="detail-right a3"><div class="detail-title">Why It Matters</div><ul class="detail-list"><li><strong>Connector = AI agent team memory</strong></li><li>即時排除 MCP、路徑、proxy 等環境故障</li><li>目標：全員覆蓋，可複製 onboarding 流程</li></ul></div>
+  <div class="deco deco1"></div>
 </div>
-
-<!-- ════════════════════════════════════════
-     SLIDE 5 — Top of Mind
-     ════════════════════════════════════════ -->
-<div class="slide slide-5" data-slide="4" data-section="topofmind">
-  <!-- Orbs -->
-  <div class="orb" style="width:440px;height:440px;top:-90px;left:-80px;background:radial-gradient(circle,rgba(37,99,235,0.5),transparent 70%);"></div>
-  <div class="orb" style="width:400px;height:400px;bottom:-100px;right:-60px;background:radial-gradient(circle,rgba(124,58,237,0.5),transparent 70%);"></div>
-  <div class="orb" style="width:340px;height:340px;top:45%;right:25%;background:radial-gradient(circle,rgba(99,102,241,0.35),transparent 70%);"></div>
-
-  <div class="glass">
-    <div class="pill tom-label">Top of Mind</div>
-    <p class="tom-text" data-content="topofmind">Scaling the design review process without creating bottlenecks on senior designers.</p>
+<div class="slide s5" data-i="4">
+  <div class="header"><div class="slabel a0"><span class="label">CMC Bug Reporting Skill · v1.2.0</span></div></div>
+  <div class="left a1"><div class="big"><span class="yh">2×</span></div><div class="big-sub">faster bug filing — from ~5 min to ~2.5 min per issue</div></div>
+  <div class="right">
+    <div class="card before a2"><div class="card-label">Before · ~5 min</div><ul><li>Linear 手動選 Team → Project → Label</li><li>重複填模板欄位</li><li>中文自己翻譯成英文</li></ul></div>
+    <div class="card after a3"><div class="card-label">After · ~2.5 min</div><ul><li>回答問題即可建立 issue</li><li>中文直接輸入，自動翻譯</li><li>截圖自動判斷類型</li><li>版本號記憶，自動帶入</li></ul></div>
   </div>
+  <div class="footer-rule"></div><div class="deco deco1"></div>
 </div>
-
-<!-- ════════════════════════════════════════
-     Dot Indicators
-     ════════════════════════════════════════ -->
-<div class="indicators">
-  <div class="dot active" data-target="0"></div>
-  <div class="dot" data-target="1"></div>
-  <div class="dot" data-target="2"></div>
-  <div class="dot" data-target="3"></div>
-  <div class="dot" data-target="4"></div>
+<div class="slide s6" data-i="5">
+  <div class="mind a0">NEXT<br>WEEK</div>
+  <div class="list">
+    <div class="item a1"><div><div class="item-name">Chromium Dogfood</div><div class="item-desc">持續 design quality review，配合 critical PR merge</div></div><div class="item-right"><span class="tag tb">[ONGOING]</span></div></div>
+    <div class="item a2"><div><div class="item-name">Split-window spec</div><div class="item-desc">Follow up May 的新互斥邏輯設計</div></div><div class="item-right"><span class="tag ty">[NEW]</span></div></div>
+    <div class="item a3"><div><div class="item-name">MAC-11487</div><div class="item-desc">跟進 chat 雙擊頂部視窗切換問題</div></div><div class="item-right"><span class="tag tb">[BUG]</span></div></div>
+    <div class="item a4"><div><div class="item-name">Phase 3 推進</div><div class="item-desc">1:1 輔導，目標全員 connector 覆蓋</div></div><div class="item-right"><span class="tag tb">[ONGOING]</span></div></div>
+    <div class="item a5"><div><div class="item-name">CMC Bug Skill</div><div class="item-desc">根據團隊 feedback 迭代</div></div><div class="item-right"><span class="tag ty">[ITERATE]</span></div></div>
+  </div>
+  <div class="ds"></div><div class="ds2"></div><div class="deco deco1"></div><div class="deco deco2"></div>
 </div>
-
 <script>
-(function () {
-  var current = 0;
-  var total = 5;
-  var slides = document.querySelectorAll('.slide');
-  var dots = document.querySelectorAll('.dot');
-  var transitioning = false;
-
-  function go(index) {
-    if (index < 0 || index >= total || index === current || transitioning) return;
-    transitioning = true;
-
-    var oldSlide = slides[current];
-    oldSlide.classList.remove('active');
-    dots[current].classList.remove('active');
-
-    // Reset animations on content elements (not orbs)
-    var els = oldSlide.querySelectorAll('.glass, .title-main, .pill, .title-sub, .summary-text, .newsletter-text, .tom-text, .highlight-badge, .progress-card');
-    for (var j = 0; j < els.length; j++) {
-      els[j].style.animation = 'none';
-      els[j].offsetHeight;
-      els[j].style.animation = '';
-    }
-
-    current = index;
-    slides[current].classList.add('active');
-    dots[current].classList.add('active');
-
-    setTimeout(function() { transitioning = false; }, 620);
+(function(){
+  var c=0,s=document.querySelectorAll('.slide'),t=s.length,ct=document.getElementById('counter'),lk=false;
+  function p(n){return n<10?'0'+n:''+n}
+  function go(i){
+    if(i<0||i>=t||i===c||lk)return;lk=true;
+    var o=s[c];o.classList.remove('active');
+    o.querySelectorAll('.a0,.a1,.a2,.a3,.a4,.a5,.item,.tag').forEach(function(e){e.style.animation='none';void e.offsetHeight;e.style.animation=''});
+    c=i;s[c].classList.add('active');ct.textContent=p(c+1)+'/'+p(t);
+    setTimeout(function(){lk=false},400)
   }
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      e.preventDefault();
-      go(current + 1);
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      go(current - 1);
-    }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();go(c+1)}
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();go(c-1)}
   });
-
-  dots.forEach(function (dot) {
-    dot.addEventListener('click', function () {
-      go(parseInt(this.getAttribute('data-target'), 10));
-    });
+  var tx=0;
+  document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX});
+  document.addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)go(c+(d<0?1:-1))});
+  document.addEventListener('click',function(e){
+    if(e.target.closest('.tag,a,button'))return;
+    if(e.clientX>innerWidth*.65)go(c+1);else if(e.clientX<innerWidth*.35)go(c-1)
   });
 })();
 </script>
-
 </body>
 </html>
